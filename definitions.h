@@ -16,8 +16,8 @@
  * etc. */
 
 namespace gear2d {
-	/** @brief Type used to identify time difference in miliseconds */
-	typedef int timediff;
+	/** @brief Type used to identify time difference in seconds (SECONDS!) */
+	typedef float timediff;
 	
 	/** @brief Type that defines a file name */
 	typedef std::string filename;

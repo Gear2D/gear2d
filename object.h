@@ -44,7 +44,14 @@ namespace gear2d {
 				 * This is a object factory that, given an id, its able to load
 				 * the file with its components and configure them. An object factory
 				 * needs an component factory to work */
-				 class factory {
+				class factory {
+					public:
+						/**
+						 * @brief Signature that should be present in every object
+						 * @warning Everything in the global signature will be really global,
+						 * that means that if one component changes it, all components will
+						 * affect all components, so its REALLY global. */
+						object::signature commonsig;
 					public:
 						/**
 						 * @brief Creates a new object factory
@@ -86,6 +93,7 @@ namespace gear2d {
 						 
 						 /* This is the mapping between objects and its components and parameters */
 						 map<object::type, object::signature> signatures;
+						 parameterbase::table inittable;
 				};
 				
 		public:

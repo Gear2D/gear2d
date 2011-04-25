@@ -21,7 +21,7 @@ namespace gear2d {
 		for (parameterbase::table::iterator i = parameters.begin(); i != parameters.end(); i++) {
 			parameterbase * p = i->second;
 			parameters.erase(i);
-			delete p;
+			if (p->dodestroy) delete p;
 		}
 	}
 	
@@ -55,7 +55,7 @@ namespace gear2d {
 	
 	/* -- factory methods */
 	object::factory::factory(component::factory & cfactory) : cfactory(cfactory) {
-		;
+
 	}
 	
 	void object::factory::load(object::type objtype, std::string filename) {
@@ -69,6 +69,14 @@ namespace gear2d {
 		
 		signature & sig = signatures[objtype];
 		while (parser.GetNextDocument(node)) node >> sig;
+		
+		/* check if initial table wasn't loaded */
+		if (inittable.size() == 0 && commonsig.size() != 0) {
+			/* create a initial param table based on given signature */
+			for (object::signature::iterator sigit = commonsig.begin(); sigit != commonsig.end(); sigit++) {
+				inittable[sigit->first] = new parameter<std::string>(sigit->second);
+			}
+		}
 	}
 	
 	void object::factory::set(object::type objtype, object::signature sig) {
@@ -90,10 +98,15 @@ namespace gear2d {
 		/* creates a new object */
 		object * obj = new object();
 		
+		/* list of components to be attached when parameter loading is done */
+		std::list<component::base *> toattach;
+		
 		/* search for a list of components */
 		if ((it = sig.find("attach")) != sig.end()) {
 			/* check its not empty */
 			if (it->second != "") {
+				
+				/* obtain a vector of attachables */
 				std::vector<std::string> attachables = split(it->second);
 				
 				/* now instantiate each component */
@@ -109,10 +122,10 @@ namespace gear2d {
 						c = cfactory.build(comtype);
 					}
 					
-					/* if c continues to be 0 */
+					/* if c continues to be 0, ignore it. */
 					if (c == 0) continue;
 					
-					/* access its table of default parameters */
+					/* access its table of default template parameters */
 					const parameterbase::table & deftable = c->parameters();
 					
 					/* clone each parameter */
@@ -121,28 +134,47 @@ namespace gear2d {
 						
 						/* we should only set the parameter if not already set by another component */
 						if (v == 0) {
+							/* clone from the default table */
 							v = deftit->second->clone();
 							/* also, set the desired pid */
 							v->pid = deftit->first;
 						}
 					}
 					
-					/* now that its needed parameters are there, attach it */
-					obj->attach(c);
-				}
+					/* Mark it to be attached; */
+					toattach.push_back(c);
+					
+				} /* end of component loading and parametering */
+			
+				/* component-needed parameters are loaded. Load the ones not specified, as strings */
+				for (it = sig.begin(); it != sig.end(); it++) {
+					/* obtain the pointer */
+					parameterbase::value & v = obj->access(it->first);
+					
+					/* if its not defined then we will define it as string */
+					if (v == 0)
+						v = new parameter<std::string>;
+					
+					/* set it with the signature */
+					v->set(it->second);
+					v->pid = it->first;
+				}				
+				
+				/* at last, set global parameters */
+				for (parameterbase::table::iterator initit = inittable.begin(); initit != inittable.end(); initit++) {
+					obj->access(initit->first) = initit->second;
+					obj->access(initit->first)->pid = initit->first;
+				} /* end of global parameters */
 			}
-		} /* end of component attaching loop */
+		} /* end of attachables processing */
 		
-		/* now that parameters are in its correct type, setup with object-defined ones from sig */
-		for (it = sig.begin(); it != sig.end(); it++) {
-			parameterbase::value & v = obj->access(it->first);
+		/* now attach each of them */
+		while (!toattach.empty()) {
+			component::base * c = toattach.front();
+			toattach.pop_front();
 			
-			/* if its not defined then we will define it as string */
-			if (v == 0)
-				v = new parameter<std::string>;
-			
-			/* set it with the signature */
-			v->set(it->second);
+			/* attach should take care of c->init() */
+			obj->attach(c);
 		}
 		
 		/* finally, object is built */

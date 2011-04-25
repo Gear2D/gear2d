@@ -48,13 +48,14 @@ namespace gear2d {
 				public:
 					listener() { };
 					virtual ~listener() { };
-					virtual void handle(id pid, const datatype & oldvalue, const datatype & newvalue) = 0;
+					virtual void handle(id pid, const datatype & oldvalue, const datatype & newvalue) = 0;				
 			};
 		public:
 			parameterbase::id pid;
+			bool dodestroy;
 			
 		public:
-			parameterbase() { }
+			parameterbase() { dodestroy = true; }
 			
 			/** @brief Clone this parameter and its value */
 			virtual parameterbase::value clone() = 0;
@@ -104,7 +105,7 @@ namespace gear2d {
 				raw = rhs;
 			}*/
 			
-			virtual operator datatype() {
+			virtual operator datatype&() {
 				return raw;
 			}
 			
@@ -118,6 +119,7 @@ namespace gear2d {
 				cloned->raw = this->raw;
 				cloned->pid = this->pid;
 				cloned->hooked = this->hooked;
+				cloned->dodestroy = true; // clones components must always be destroyed.
 				return cloned;
 			}
 			

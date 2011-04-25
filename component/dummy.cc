@@ -17,7 +17,6 @@ using namespace gear2d;
 gear2d::pbase::table paramtemplate;
 
 class dummy : public component::base
-		, public pbase::listener<string>
 		, public pbase::listener<float> {
 	public:
 		dummy() {
@@ -27,32 +26,20 @@ class dummy : public component::base
 		virtual component::type type() { return "dummy"; }
 		
 		virtual void init() {
-			access<float>("xibiu").hook(*this);
-			access<string>("test").hook(*this);
+			access<float>("dummyval").hook(*this);
 		}
 		
-		virtual void handle(pbase::id pid, const float & o, const float & n) {
-			std::cout << pid << ": change from " << o << " to " << n << std::endl;
-		}
-		
-		virtual void handle(pbase::id pid, const string & o, const string & n) {
-			std::cout << pid << ": change from " << o << " to " << n << std::endl;
-		}
-
+		virtual void handle(pbase::id, const float & oldv, const float & newv) { return; }
 		
 		virtual const pbase::table & parameters() { return paramtemplate; }
-		virtual void update(timediff dt) {
-// 			access<float>("xibiu") = dt;
-		}
+		virtual void update(timediff dt) { }
 };
 
 extern "C" {
 	int initialized = 0;
 	component::base * build() {
 		if (!initialized) {
-			paramtemplate["test"] = new parameter<string>("fuuuka fuka mucha spaci");
-			paramtemplate["xibiu"] = new parameter<float>;
-			paramtemplate["xibiu"]->set("1234.5");
+			paramtemplate["dummyval"] = new parameter<float>(0);
 			initialized = 1;
 		}
 		return new dummy;

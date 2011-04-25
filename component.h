@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <list>
 
 #include "definitions.h"
 #include "parameter.h"
@@ -57,6 +58,10 @@ namespace gear2d {
 				
 				/** @brief Returns the type of this component */
 				virtual component::type type() = 0;
+				
+				/** @brief Retiurn a list of components that conflict with this */
+				/* TODO: add conflict management */
+				virtual std::list<component::type> conflict() { return std::list<component::type>(); }
 				
 				/**
 				 * @brief Where you should put initialization routines
