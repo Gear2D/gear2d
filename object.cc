@@ -4,53 +4,130 @@
 #include "engine.h"
 #include "yaml-cpp/yaml.h"
 
+#include <exception>
+#include <algorithm>
+
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
+using boost::algorithm::split;
+using boost::algorithm::is_any_of;
+
 namespace gear2d {
-	object::object() { 
-		destroyed = false;
+	object::object(object::signature & sig)
+	 : destroyed(false)
+	 , sig(sig) {
 	}
 	
 	object::~object() {
 		// delete all components
 		for (componentcontainer::iterator i = components.begin(); i != components.end(); i++) {
 			component::base * c = i->second;
-			components.erase(i);
-			delete c;
+			c->owner == 0;
+			engine::remove(c);
+			// lets the engine delete c;
 		}
 		
 		// delete all properties
 		for (parameterbase::table::iterator i = parameters.begin(); i != parameters.end(); i++) {
 			parameterbase * p = i->second;
-			parameters.erase(i);
-			if (p->dodestroy) delete p;
+			if (p != 0) {
+				parameters[p->pid] = 0;
+				if (p->dodestroy)  {
+					delete p;
+				}
+			}
 		}
 	}
 	
 	object::id object::oid() { return this; }
+	std::string object::name() { return sig["name"]; }
 	
 	void object::attach(component::base * newc) {
 		if (newc == 0) return;
-		component::base * oldc = deattach(newc->type());
+		
+		/* sees that dependencies are met */
+		std::string depends = newc->depends();
+		bool passed = true;
+		std::string d;
+		if (depends != "") {
+			std::list<std::string> dependencies;
+			split(dependencies, depends, is_any_of(" "));
+			while (!dependencies.empty()) {
+				component::selector dependency = dependencies.front();
+				
+				/* se if family is here */
+				component::base * requiredcom = components[dependency.family];
+				if (requiredcom == 0) { 
+					passed = false;
+					d = dependency;
+					break;
+				}
+				
+				/* check if dependency has a type. if not, passed. if yes, check */
+				if (dependency.type != "") {
+					if (requiredcom->type() != dependency.type) {
+						passed = false;
+						d = dependency;
+						break;
+					}
+				}
+				dependencies.pop_front();
+			}
+		}
+		
+		if (passed == false) {
+			std::string s;
+			s = s + "Component " + newc->family() + "/" + newc->type() + " have unmet dependencies: " + d;
+			throw (evil(s));
+		}
+		
+		/* ok... dependency check has passed! */
+		component::base * oldc = deattach(newc->family());
 		if (oldc != 0) { delete oldc; }
 		newc->owner = this;
-		components[newc->type()] = newc;
-		newc->init();
+		components[newc->family()] = newc;
+		newc->setup(sig);
 		engine::add(newc);
 	}
 	
-	component::base * object::deattach(component::type type) {
-		component::base * oldc = components[type];
+	component::base * object::deattach(component::family family) {
+		component::base * oldc = components[family];
 		if (oldc == 0) return 0;
-		components.erase(type);
+		components.erase(family);
 		engine::remove(oldc);
 		return oldc;
 	}
 
-	parameterbase::value & object::access(parameterbase::id pid) {
+	parameterbase::value object::get(parameterbase::id pid) {
 		return parameters[pid];
+	}
+	
+	void object::set(parameterbase::id pid, parameterbase::value v) {
+		parameters[pid] = v;
+		if (v != 0) {
+			v->owner = this;
+			v->pid = pid;
+		}
+	}
+	
+	component::base * object::component(gear2d::component::family f) {
+		return components[f];
+	}
+	
+	void object::copy(object::id other) {
+		if (other == 0) return;
+		for (parameterbase::table::iterator it = parameters.begin(); it != parameters.end(); it++) {
+			parameterbase::id pid = it->first;
+			parameterbase::value pval = it->second;
+			
+			parameterbase::value otherval = other->get(pid);
+			pval->set(otherval);
+		}
 	}
 	
 	void object::destroy() {
 		destroyed = true;
+		engine::destroy(this);
 	}
 	
 	/* -- factory methods */
@@ -60,7 +137,8 @@ namespace gear2d {
 	
 	void object::factory::load(object::type objtype, std::string filename) {
 		/* open the file */
-		if (filename == "") filename = objtype + ".yaml";
+		if (filename == "") filename = commonsig["objpath"] + objtype + ".yaml";
+		cout << "debug: Loading " << filename << endl;
 		std::ifstream fin(filename.c_str());
 		
 		/* initialize yaml parser */
@@ -69,14 +147,10 @@ namespace gear2d {
 		
 		signature & sig = signatures[objtype];
 		while (parser.GetNextDocument(node)) node >> sig;
+		sig["name"] = objtype;
 		
-		/* check if initial table wasn't loaded */
-		if (inittable.size() == 0 && commonsig.size() != 0) {
-			/* create a initial param table based on given signature */
-			for (object::signature::iterator sigit = commonsig.begin(); sigit != commonsig.end(); sigit++) {
-				inittable[sigit->first] = new parameter<std::string>(sigit->second);
-			}
-		}
+		// add the global signature
+		sig.insert(commonsig.begin(), commonsig.end());
 	}
 	
 	void object::factory::set(object::type objtype, object::signature sig) {
@@ -84,100 +158,79 @@ namespace gear2d {
 		return;
 	}
 
-	object * object::factory::build(object::type objtype) {
-		map<object::type, object::signature>::iterator sigit;
-		
-		/* this type has no sig at all */
-		if ((sigit = signatures.find(objtype)) == signatures.end()) return new object();
-		/* from this point we assume sigit is valid */
-		
-		/* get the signature */
-		object::signature & sig = sigit->second;
-		object::signature::iterator it;
-		
-		/* creates a new object */
-		object * obj = new object();
-		
-		/* list of components to be attached when parameter loading is done */
-		std::list<component::base *> toattach;
-		
-		/* search for a list of components */
-		if ((it = sig.find("attach")) != sig.end()) {
-			/* check its not empty */
-			if (it->second != "") {
-				
-				/* obtain a vector of attachables */
-				std::vector<std::string> attachables = split(it->second);
-				
-				/* now instantiate each component */
-				for (unsigned int i = 0; i < attachables.size(); i++) {
-					
-					/* get the factory to build this component */
-					component::type comtype(attachables[i]);
-					component::base * c = cfactory.build(comtype);
-					
-					/* maybe we need to load it... */
-					if (c == 0) {
-						cfactory.load(comtype);
-						c = cfactory.build(comtype);
-					}
-					
-					/* if c continues to be 0, ignore it. */
-					if (c == 0) continue;
-					
-					/* access its table of default template parameters */
-					const parameterbase::table & deftable = c->parameters();
-					
-					/* clone each parameter */
-					for (parameterbase::table::const_iterator deftit = deftable.begin(); deftit != deftable.end(); deftit++) {
-						parameterbase::value & v = obj->access(deftit->first);
-						
-						/* we should only set the parameter if not already set by another component */
-						if (v == 0) {
-							/* clone from the default table */
-							v = deftit->second->clone();
-							/* also, set the desired pid */
-							v->pid = deftit->first;
-						}
-					}
-					
-					/* Mark it to be attached; */
-					toattach.push_back(c);
-					
-				} /* end of component loading and parametering */
+	void object::factory::innerbuild(object * o, std::string depends) {
+		std::set<std::string> comlist;
+		split(comlist, depends, is_any_of(" "));
+		while(comlist.begin() != comlist.end()) {
+			component::selector s = *(comlist.begin());
 			
-				/* component-needed parameters are loaded. Load the ones not specified, as strings */
-				for (it = sig.begin(); it != sig.end(); it++) {
-					/* obtain the pointer */
-					parameterbase::value & v = obj->access(it->first);
-					
-					/* if its not defined then we will define it as string */
-					if (v == 0)
-						v = new parameter<std::string>;
-					
-					/* set it with the signature */
-					v->set(it->second);
-					v->pid = it->first;
-				}				
-				
-				/* at last, set global parameters */
-				for (parameterbase::table::iterator initit = inittable.begin(); initit != inittable.end(); initit++) {
-					obj->access(initit->first) = initit->second;
-					obj->access(initit->first)->pid = initit->first;
-				} /* end of global parameters */
+			/* maybe the object already has these loaded */
+			component::base * samecom = o->components[s.family];
+			if (samecom != 0) {
+				if ((s.type == "")) {
+				  comlist.erase(comlist.begin());
+				  continue;
+				}
+				else if ((samecom->type() == s.type)) {
+					comlist.erase(comlist.begin());
+					continue;
+				}
 			}
-		} /* end of attachables processing */
-		
-		/* now attach each of them */
-		while (!toattach.empty()) {
-			component::base * c = toattach.front();
-			toattach.pop_front();
 			
-			/* attach should take care of c->init() */
-			obj->attach(c);
+			/* samecom not found, continue normal attach proccess */
+			component::base * c = cfactory.build(s);
+			if (c == 0) {
+				cfactory.load(s);
+				c = cfactory.build(s);
+			}
+			
+			if (c == 0) continue;
+			
+			/* first try to attach the component.
+			 * if something went wrong, try to load
+			 * its dependencies. if still going wrong, give up
+			 * and let it fail */
+			try {
+				o->attach(c);
+			} catch (evil & e) {
+				cout << "debug: handling dependencies for " << c->type() << endl;
+				/* build dependencies... */
+				innerbuild(o, c->depends());
+			
+				/* if that build did'nt fixed, fuck it. */
+				o->attach(c);
+			}
+			
+			comlist.erase(comlist.begin());
+		 }
+	}
+	
+	object * object::factory::build(object::type objtype) {
+		cout << "debug: building " << objtype << endl;
+		/* first determine if this object type is loaded... */
+		if (signatures.find(objtype) == signatures.end()) {
+			std::cerr << "(Object factory) Object type " << objtype << " not found." << std::endl;
+			return 0;
 		}
 		
-		/* finally, object is built */
+		
+		/* now get the signature of this type */
+		object::signature & signature = signatures[objtype];
+		
+		/* instantiate the object */
+		object * obj = new object(signature);
+		
+		
+		/* now get the attach string */
+		std::string attachstring = signature["attach"];
+		
+		/* if nothing to attach, return the object */
+		if (attachstring == "") return obj;
+		
+		
+		/* recursive build method that takes care of dependency loading */
+		innerbuild(obj, attachstring);
+		obj->ofactory = this;
 		return obj;
 	}
 }

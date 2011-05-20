@@ -2,34 +2,149 @@
 #include "engine.h"
 #include "SDL.h"
 
+#include <iostream>
+
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
+using boost::algorithm::split;
+using boost::algorithm::is_any_of;
+
 namespace gear2d {
 	namespace component {
-		base::base() {
+		base::base() : cfactory(0) {
 		}
 		
 		base::~base() {
 		}
 		
-		void factory::set(component::type t, factory::builder b) {
-			if (b == 0) return;
-			builders[t] = b;
+		parameterbase * base::exists(parameterbase::id pid) {
+			return owner->get(pid);
 		}
 		
-		void factory::load(component::type t, std::string file) {
-			/* TODO: check if we're in windows or linux */
-			if (file == "") file = "component/lib" + t + ".so";
-			
-			/* get the object handler */
-			factory::handler comhandler = SDL_LoadObject(file.c_str());
-			if (comhandler == 0) {
-				file = compath + "/" + file;
-				comhandler = SDL_LoadObject(file.c_str());
-				if (comhandler == 0) {
-					std::cerr << "(Component factory) Error loading component " << t << ": " << SDL_GetError() << std::endl;
-					return;
+		component::base * base::build(component::selector s) {
+			component::base * com = cfactory->build(s);
+			if (com == 0) {
+				cfactory->load(s);
+				com = cfactory->build(s);
+			}
+			return com;
+		}
+		
+		object::id base::spawn(object::type t) {
+			object::id obj = 0;
+			if (owner->ofactory != 0) {
+				obj = owner->ofactory->build(t);
+				if (obj == 0) {
+					owner->ofactory->load(t);
+					obj = owner->ofactory->build(t);
 				}
 			}
-
+			
+			return obj;
+		}
+		
+		component::base * base::clone() {
+			object::id other = spawn(owner->name());
+			std::cout << "debug: other spawned: " << other->name() << endl;
+			other->copy(owner);
+			std::cout << "debug: other copied: " << other->ofactory << " " << other->name() << endl;
+			return other->component(this->family());
+		}
+		
+		void base::destroy() {
+			owner->destroy();
+		}
+		
+		
+		/* selector stuff */
+		selector::selector() { }
+		
+		selector::selector(component::family f, component::type t)
+		: family(f)
+		, type(t) {
+			if (t == "") { this->type = f; }
+		}
+		
+		selector::selector(std::string selstring) {
+			*this = selstring;
+		}
+		
+		selector & selector::operator=(std::string rhs) {
+			if (rhs == "") {
+				family = type = "";
+				return *this;
+			}
+			
+			std::vector<std::string> splitsel;
+			split(splitsel, rhs, is_any_of("/"));
+			
+			if (splitsel.size() < 1) {
+				family = type = "";
+				return *this;
+			}
+			
+			family = splitsel[0];
+			if (splitsel.size() >= 2) {
+				type = splitsel[1];
+			} else type = "";
+			return *this;
+		}
+		
+		selector & selector::operator=(const selector & rhs) {
+			family = rhs.family;
+			type = rhs.type;
+		}
+		
+		bool selector::operator==(const selector & rhs) {
+			return ((family == rhs.family) && (type == rhs.type));
+		}
+		
+		bool selector::operator==(std::string rhs) {
+			return (((std::string)*this) == rhs);
+		}
+		
+		selector::operator std::string() {
+			if (family == "") return "";
+			if (type == "") return family;
+			return family + "/" + type;
+		}
+		
+		/* factory stuff */
+		void factory::set(component::selector s, factory::builder b) {
+			component::family f; component::type t;
+			f = s.family;
+			t = s.type;
+			if (t == "") t = f;
+			if (b == 0) return;
+			builders[f][t] = b;
+		}
+		
+		void factory::load(selector s, std::string file) {
+			component::family f; component::type t;
+			f = s.family;
+			t = s.type;
+			if (t == "") t = f;
+			
+			factory::handler comhandler = 0;
+			/* TODO: check if we're in windows or linux */
+			if (file == "") {
+				std::vector<std::string> paths;
+				split(paths, compath, is_any_of(" "));
+				for (int i = 0; i < paths.size(); i++) {
+					file = paths[i] + '/' + f + "/lib" + t + ".so";
+					std::cout << "trying " << file << std::endl;
+					comhandler = SDL_LoadObject(file.c_str());
+					if (comhandler != 0) break;
+				}
+			} else {
+				comhandler = SDL_LoadObject(file.c_str());
+			}
+			
+			if (comhandler == 0) {
+				std::cerr << "(Component factory) Error loading component " << t << ": " << SDL_GetError() << std::endl;
+				return;
+			}
+			
 			/* get the builder function */
 			factory::builder combuilder = (factory::builder)SDL_LoadFunction(comhandler, "build");
 			if (combuilder == 0) {
@@ -40,24 +155,43 @@ namespace gear2d {
 			
 			/* register the handler and the builder */
 			handlers[t] = comhandler;
-			builders[t] = combuilder;
+			builders[f][t] = combuilder;
 			
 			std::cerr << "(Component factory) Component type " << t << " loaded" << std::endl;
 			
 			return;
 		}
 		
-		base * factory::build(component::type t) {
+		base * factory::build(component::selector s) {
+			component::family f; component::type t;
+			f = s.family;
+			t = s.type;
+			if (t == "") t = f;
+			
+			factory::builder b;
+			
 			/* try to locate component based on type */
-			buildertable::iterator tit = builders.find(t);
-			if (tit == builders.end()) {
-				std::cerr << "(Component factory) Component " << t << " not found!" << std::endl;
+			buildertable::iterator famit = builders.find(f);
+			
+			
+			if (famit == builders.end()) {
+				std::cerr << "(Component factory) Component family " << f << " not found!" << std::endl;
+				return 0;
+			}
+			
+			std::map<component::type, factory::builder>::iterator typit = famit->second.end();
+			if (f != t) { typit = famit->second.find(t); }
+			else if (famit->second.size() > 0) { typit = famit->second.begin(); }
+			
+			if (typit == famit->second.end()) {
+				std::cerr << "(Component factory) Component type " << t << " of family " << f << " not found!" << std::endl;
 				return 0;
 			}
 			
 			/* build it with the given function */
-			factory::builder b = tit->second;
+			b = typit->second;
 			base * component = b();
+			component->cfactory = this;
 			return component;
 		}
 	}

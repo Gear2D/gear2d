@@ -16,8 +16,7 @@ using std::map;
  * (thats ok, but avoid doing so). */
 
 namespace gear2d {
-	namespace component { class base; class factory; typedef std::string type; }
-	
+	namespace component { class base; class factory; typedef std::string type; typedef std::string family; }
 	/**
 	 * @brief Gear2D game object component-container
 	 * This is the owner of components in Gear2D
@@ -86,6 +85,11 @@ namespace gear2d {
 						 * create a new object with the registered components */
 						object * build(object::type objtype);
 						
+					private:
+						
+						/* recursive build method. catches attaching evil, loading
+						 * and attaching needed dependencies */
+						void innerbuild(object * o, std::string depends);
 					
 					private:
 						 /* This is the used component factory */
@@ -93,12 +97,24 @@ namespace gear2d {
 						 
 						 /* This is the mapping between objects and its components and parameters */
 						 map<object::type, object::signature> signatures;
-						 parameterbase::table inittable;
 				};
-				
+
 		public:
-			object();
+			/**
+			 * @brief Object factory that built this object
+			 * This is set whenever the object is built using
+			 * a factory. */
+			object::factory * ofactory;
+		
+		private:
+			object(object::signature & sig);
+
+		public:
 			~object();
+			
+			/** 
+			 * @brief Return the name of this object */
+			std::string name();
 			
 			/**
 			 * @brief Return the object id for this object */
@@ -109,6 +125,11 @@ namespace gear2d {
 			 ** Attach a component to this object using its
 			 ** pointer.
 			 **
+			 ** @warning If your component happen to depend
+			 ** on another, they must be loaded prior to the
+			 ** attachment of \ref c, or the attachment will
+			 ** fail if they're not found
+			 **
 			 ** @warning If another component of the same
 			 ** type is already attached, it WILL BE REPLACED
 			 ** WITH NO MERCY.
@@ -117,7 +138,6 @@ namespace gear2d {
 			 ** and WILL BE DELETED BY THE OBJECT in its
 			 ** destruction. Never use heap-allocated components.
 			 ** Never. Never Never. Pretty Never with sugar.
-			 **
 			 ** Hopefully you will need not to worry about it... */
 			void attach(component::base * c);
 			
@@ -139,7 +159,31 @@ namespace gear2d {
 			 * @p pid Parameter id inside the object
 			 * @return a @a parameterbase::value reference
 			 * Use this to access a parameter inside the component */
-			parameterbase::value & access(parameterbase::id pid);
+			parameterbase::value get(parameterbase::id pid);
+			
+			/**
+			 * @brief Set a named parameter for the given value
+			 * @p pid Parameter id inside the object
+			 * @p v Parameter value reference
+			 * Use this to give the parameter a new generic value.
+			 * @warning The value @a v will NOT be cloned. That means
+			 * even if another object holds it, it will be holded here to.
+			 * If thats not what you mean, just call set() with v->clone().
+			 * If thats really what you meant, remember to set v->dodestroy to false
+			 * or you may have multiple delete's or missing references and thats an very ugly crash. Really. */
+			void set(parameterbase::id pid, parameterbase::value v);
+			
+			/**
+			 * @brief Copy the parameters from other to this
+			 * @p other Object to be copied from */
+			void copy(object::id other);
+			
+			/**
+			 * @brief Access a component by its family
+			 * @p f Family of the component
+			 * @return A pointer to the component or NULL if it does not exists
+			 */
+			gear2d::component::base * component(gear2d::component::family f);
 			
 			/**
 			 * @brief Marks this object to be deleted
@@ -149,7 +193,7 @@ namespace gear2d {
 			
 		private:
 			/* container of its components */
-			typedef map<component::type, component::base *> componentcontainer;
+			typedef map<component::family, component::base *> componentcontainer;
 			componentcontainer components;
 			
 			/* parameters for this game object */
@@ -157,6 +201,9 @@ namespace gear2d {
 			
 			/* marks its deletion */
 			bool destroyed;
+			
+			/* own signature */
+			object::signature sig;
 			
 			friend class gear2d::object::factory;
 	};

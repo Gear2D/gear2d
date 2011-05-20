@@ -48,10 +48,13 @@ namespace gear2d {
 			/**
 			 * @brief Remove a component off the update pipeline
 			 * @p c Component pointer to be deleted
-			 * This removes the component of the rendering line.
-			 * @warning This does not delete the component. Its
-			 * still your responsibility doing that */
-			static void remove(component::base * c);
+			 * @p rightnow Remove this component right now. This might break if the component is being updated.
+			 * This removes the component of the update pipeline. */
+			static void remove(component::base * c, bool righnow = false);
+			
+			/**
+			 * @brief Destroy/delete an game object and its components */
+			static void destroy(object::id oid);
 			 
 			 /**
 			  * @brief Run the engine
@@ -67,7 +70,7 @@ namespace gear2d {
 			static std::map<std::string, std::string> * config;
 			
 			/* running component-type map */
-			static std::map<component::type, std::list<component::base *> > * components;
+			static std::map<component::family, std::list<component::base *> > * components;
 			
 			/* component factory */
 			static component::factory * cfactory;
@@ -82,7 +85,11 @@ namespace gear2d {
 			static bool started;
 			
 			/* components to be removed */
-			static std::list<component::base *> * removed;
+			static std::list<component::base *> * removedcom;
+			
+			/* objects to be destroyed */
+			static std::list<object::id> * destroyedobj;
+			
 	};
 
 }
