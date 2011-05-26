@@ -3,6 +3,7 @@
  * @b type space2d
  * @b family spatial
  * @author Leonardo Guilherme de Freitas
+ * @addtogroup spatial
  * Spatial component that handles and process positioning,
  * size and scale of objects
  * 

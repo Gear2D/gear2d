@@ -2,10 +2,11 @@
  * @file collider2d.cc
  * @b family collider
  * @b type collider
+ * @author Leonardo Guilherme de Freitas
+ * @addtogroup collider
  * 
  * Calculates collision between all colliders, informing side.
  * <b>provides/acts upon</b>
- * @li @c collider.type Type of this collider: circle or aabb. Defaults to circle @b string
  * @li @c collider.usez Use z in collision calculations (objects with different z's won't collide). Defaults to 0 @b bool (0 or 1)
  * @li @c collider.bind Moves along with spatial's x and y. Defaults to 1 @b bool
  * @li @c collider.tag Tag of this collider @b string
@@ -28,13 +29,6 @@ using namespace std;
 
 class collider : public component::base {
 	private:
-		struct colcircle {
-			float cx;
-			float cy;
-			float r;
-			colcircle(float cx = 0, float cy = 0, float r = 0) : cx(cx), cy(cy), r(r) { }
-		};
-		
 		struct colaabb {
 			float x;
 			float y;
@@ -43,7 +37,6 @@ class collider : public component::base {
 			colaabb(float x = 0, float y = 0, float w = 0, float h = 0) : x(x), y(y), w(w), h(h) { }
 		};
 		
-		colcircle circle;
 		colaabb aabb;
 		
 		string tag;
@@ -56,8 +49,7 @@ class collider : public component::base {
 		virtual string depends() { return "spatial"; }
 		
 		virtual void setup(object::signature & sig) { 
-			if (sig["collider.type"] == "") write<string>("collider.type", "aabb");
-			else write<string>("collider.type", sig["collider.type"]);
+			init<string>("collider.type", sig["collider.type"], "aabb");
 			init("collider.usez", sig["collider.usez"], false);
 			
 			bool binded = eval(sig["colliderd.bind"], true);
@@ -65,12 +57,6 @@ class collider : public component::base {
 			
 			float x, y, w, h;
 			read("x", x); read("y", y), read("w", w), read("h", h);
-			circle.r = eval<float>(sig["collider.circle.radius"], fabs((w-x)+(h-y))/4);
-			circle.cx = eval<float>(sig["collider.circle.cx"], x+(w/2));
-			circle.cy = eval<float>(sig["collider.circle.cy"], y+(h/2));
-			bind("collider.circle.radius", circle.r);
-			bind("collider.circle.cx", circle.cx);
-			bind("collider.circle.cy", circle.cy);
 
 			aabb.x = eval(sig["collider.aabb.x"], 0);
 			bind("collider.aabb.x", aabb.x);
@@ -102,7 +88,6 @@ class collider : public component::base {
 			if (tag == "") tag = sig["name"];
 			
 			colliders.insert(this);
-			cout << "Collider Hello: " << this << endl;
 		}
 		
 		virtual void update(float dt) {
@@ -170,12 +155,6 @@ class collider : public component::base {
 						first->write<float>("collider.collision.speed.x", second->read<float>("x.speed"));
 						first->write<float>("collider.collision.speed.y", second->read<float>("y.speed"));
 						
-// 						cout << "fignore/stag: " << first->ignore << " " << second->tag << endl;
-						if (first->ignore.find(second->tag) == string::npos) {
-							first->write<component::base *>("collider.collision", second);
-						}
-							
-						
 						second->write<float>("collider.collision.x", inter.x);
 						second->write<float>("collider.collision.y", inter.y);
 						second->write<float>("collider.collision.w", inter.w);
@@ -184,6 +163,11 @@ class collider : public component::base {
 						second->write<float>("collider.collision.speed.x", first->read<float>("x.speed"));
 						second->write<float>("collider.collision.speed.y", first->read<float>("y.speed"));
 						
+// 						cout << "fignore/stag: " << first->ignore << " " << second->tag << endl;
+						if (first->ignore.find(second->tag) == string::npos) {
+							first->write<component::base *>("collider.collision", second);
+						}
+							
 // 						cout << "signore/ftag: " << second->ignore << " " << first->tag << endl;
 						if (second->ignore.find(first->tag) == string::npos) {
 							second->write<component::base *>("collider.collision", first);

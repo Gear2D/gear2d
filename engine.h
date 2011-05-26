@@ -88,7 +88,7 @@ namespace gear2d {
 			static std::list<component::base *> * removedcom;
 			
 			/* objects to be destroyed */
-			static std::list<object::id> * destroyedobj;
+			static std::set<object::id> * destroyedobj;
 			
 	};
 

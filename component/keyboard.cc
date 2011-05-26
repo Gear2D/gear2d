@@ -2,6 +2,8 @@
  * @file keyboard.cc
  * @b family keyboard
  * @b type keyboard
+ * @author Leonardo Guilherme de Freitas
+ * @addtogroup keyboard
  * 
  * Default keyboard component. It provides the state of the key
  * as an integer with 4 possible values:
@@ -95,8 +97,8 @@ class keyboard : public component::base {
 		}
 		virtual component::type type() { return component::type("keyboard"); }
 		virtual component::family family() { return component::family("keyboard"); }
-		void handle(parameterbase::id pid, component::base * lastwrite) {
-			interest(read<string>(pid));
+		virtual void handle(parameterbase::id pid, component::base * lastwrite, object::id owner) {
+			if (pid == "keyboard.interested") interest(read<string>(pid));
 		}
 		
 		virtual void setup(object::signature & sig) {
@@ -107,7 +109,7 @@ class keyboard : public component::base {
 			string interested = sig["keyboard.interested"];
 			init<string>("keyboard.interested", interested, "");
 			hook("keyboard.interested");
-			interest(interested);
+			if (interested != "") interest(interested);
 			updaters++;
 		}
 		
@@ -121,8 +123,8 @@ class keyboard : public component::base {
 		
 	private:
 		void interest(string interested) {
-			cout << "debug: " << "they are interested in " << interested << "!" << endl;
 			std::set<string> keys;
+			cout << "debug: keyboard seems interested: " << interested << endl;
 			split(keys, interested, is_any_of(" "));
 			for (std::set<string>::iterator it = keys.begin(); it != keys.end(); it++) {
 				// build keyname

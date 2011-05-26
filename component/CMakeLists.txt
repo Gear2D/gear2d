@@ -1,5 +1,7 @@
 find_package(SDL REQUIRED)
 find_package(SDL_image REQUIRED)
+find_package(SDL_mixer REQUIRED)
+find_package(SDL_ttf REQUIRED)
 find_package(Boost REQUIRED)
 
 add_library(space2d MODULE space2d.cc)
@@ -9,6 +11,7 @@ add_library(keyboard MODULE keyboard.cc)
 add_library(charactercontroller MODULE charactercontroller.cc)
 add_library(collider2d MODULE collider2d.cc)
 add_library(rigidbody2d MODULE rigidbody2d.cc)
+add_library(audiosource MODULE audiosource.cc)
 
 set (COMPONENT_INSTALL_DIR lib/gear2d/component)
 
@@ -34,5 +37,9 @@ install(TARGETS collider2d
 install(TARGETS rigidbody2d
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/dynamics)
 
+install(TARGETS audiosource
+		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/audiosource)
+
 target_link_libraries(keyboard SDL)
-target_link_libraries(renderer SDL SDL_image)
+target_link_libraries(renderer SDL SDL_image SDL_gfx SDL_ttf)
+target_link_libraries(audiosource SDL SDL_mixer)

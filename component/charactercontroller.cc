@@ -2,7 +2,8 @@
  * @file character-controller.cc
  * @b family controller
  * @b type character
- * @b requires spatial kinetics
+ * @author Leonardo Guilherme de Freitas
+ * @addtogroup controller
  * 
  * Controls x and y triggered by up, down, left and right.
  * 
@@ -85,27 +86,31 @@ class charactercontroller : public component::base {
 			else if (read<int>(key + read<string>("controller.vertical+")) == 2) { write("y.accel", vaccel); }
 			
 			// vertical not pressed at all.
-			else {
-				// if speed positive, deaccel
-				if (read<float>("y.speed") > 0.01) { write("y.accel", -vdaccel); }
+			else { 
+				const float & yspeed = raw<float>("y.speed");
+				if (yspeed > 0.0f) {
+					if (yspeed + -vdaccel*dt < 0.0f){ write("y.speed", 0.0f); write("y.accel", 0.0f); }
+					else write("y.accel", -vdaccel);
+				} else if (yspeed < -0.01f) {
+					if (yspeed + vdaccel*dt > 0.0f) { write("y.speed", 0.0f); write("y.accel", 0.0f);  }
+					else write("y.accel", vdaccel);
+				}
 				
-				// if negative, accel
-				else if (read<float>("y.speed") < 0.01) { write("y.accel", vdaccel); }
-				
-				// if zero, zero then.
-				else write("y.accel", 0.0f);
 			}
-			
 			// horizontal pressed
 			if (read<int>(key + read<string>("controller.horizontal-")) == 2) { write("x.accel", -haccel); }
 			else if (read<int>(key + read<string>("controller.horizontal+")) == 2) { write("x.accel", haccel); }
 			
 			// horizontal not pressed at all.
-			else {
-				// if speed positive, deaccel
-				if (read<float>("x.speed") > 0.001) { write("x.accel", -hdaccel); }
-				else if (read<float>("x.speed") < -0.001) { write("x.accel", hdaccel); }
-				else write("x.accel", 0.0f);
+			else { 
+				const float & xspeed = raw<float>("x.speed");
+				if (xspeed > 0.0f) {
+					if (xspeed + -hdaccel*dt < 0.0f) { write("x.speed", 0.0f); write("x.accel", -xspeed); }
+					else write("x.accel", -hdaccel);
+				} else if (xspeed < 0.0f) {
+					if (xspeed + hdaccel*dt > 0.0f) { write("x.speed", 0.0f); write("x.accel", xspeed); }
+					else write("x.accel", hdaccel);
+				}
 			}
 		}
 };

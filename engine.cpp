@@ -22,7 +22,7 @@ namespace gear2d {
 	object::factory * engine::ofactory;
 	std::map<component::type, std::list<component::base *> > * engine::components;
 	std::list<component::base *> * engine::removedcom;
-	std::list<object::id> * engine::destroyedobj;
+	std::set<object::id> * engine::destroyedobj;
 	bool engine::initialized;
 	bool engine::started;
 	
@@ -45,7 +45,7 @@ namespace gear2d {
 	}
 	
 	void engine::destroy(object::id oid) {
-		destroyedobj->push_back(oid);
+		destroyedobj->insert(oid);
 	}
 	
 	void engine::init(bool force) {
@@ -62,7 +62,7 @@ namespace gear2d {
 		removedcom = new std::list<component::base *>;
 		
 		if (destroyedobj != 0) delete destroyedobj;
-		destroyedobj = new std::list<object::id>;
+		destroyedobj = new std::set<object::id>;
 
 		if (ofactory != 0) delete ofactory;
 		if (cfactory != 0) delete cfactory;
@@ -129,7 +129,7 @@ namespace gear2d {
 			begin = SDL_GetTicks();
 			timediff delta = dt/1000.0f;
 			
-			for (std::list<object::id>::iterator i = destroyedobj->begin(); i != destroyedobj->end(); i++) {
+			for (std::set<object::id>::iterator i = destroyedobj->begin(); i != destroyedobj->end(); i++) {
 				// this will push object's components to removedcom, hopefully.
 				delete (*i);
 			}

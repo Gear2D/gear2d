@@ -219,6 +219,7 @@ namespace gear2d {
 		
 		/* instantiate the object */
 		object * obj = new object(signature);
+		obj->ofactory = this;
 		
 		
 		/* now get the attach string */
@@ -230,7 +231,6 @@ namespace gear2d {
 		
 		/* recursive build method that takes care of dependency loading */
 		innerbuild(obj, attachstring);
-		obj->ofactory = this;
 		return obj;
 	}
 }

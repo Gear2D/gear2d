@@ -10,7 +10,9 @@ using std::endl;
 
 #include <boost/lexical_cast.hpp>
 using boost::lexical_cast;
+
 #include <iostream>
+
 #include "definitions.h"
 #include "parameter.h"
 #include "object.h"
@@ -123,8 +125,17 @@ namespace gear2d {
 			friend class gear2d::object;
 			friend class gear2d::engine;
 			friend class gear2d::component::factory;
+			
 			protected:
 				base();
+				
+				/**
+				 * @brief Prepare the logging stream
+				 * Use this when you want to log anything */
+				std::ostream & log() {
+					std::clog << this->family() << "/" << this->type() << ": ";
+					return std::clog;
+				}
 				
 			public:
 				virtual ~base();
@@ -147,9 +158,10 @@ namespace gear2d {
 				 * @brief Method that will be called to handle value changes
 				 * @p id Parameter ID of the changed parameter
 				 * @p lastwrite The last component to write in this parameter (likely the one who triggered it)
+				 * @p owner The owner of the parameter (where it comes from)
 				 * You should implement this in your component if you ever
 				 * happen to listen to a parameter. */
-				virtual void handle(parameterbase::id pid, component::base * lastwrite) { ; }
+				virtual void handle(parameterbase::id pid, component::base * lastwrite, object::id owner) { ; }
 				
 				/**
 				 * @brief Where you should put initialization routines
@@ -331,14 +343,24 @@ namespace gear2d {
 				 * want to know if/when it fails. If you know where that
 				 * parameter is coming from, its better to add it to the dependency
 				 * list, no?
-				 * 
-				 * @warning Please note that your component should implement
-				 * a listener for the datatype you are hooking to or else
-				 * it won't compile. */
+				 */
 				void hook(parameterbase::id pid) {
 					parameterbase::value v = owner->get(pid);
 					if (v == 0) return;
-					cout << "debug: " << this->family()+"/"+this->type() << " (" << this << ") is hooking to " << pid << endl;
+					v->hook(this);
+				}
+				
+				/**
+				 * @brief Hook this component to a parameter on another component
+				 * @p c Component to hook in
+				 * @p pid Parameter id
+				 * Add this component as a listener to the parameter in another
+				 * component. Owner will be passed in handle() as a way of
+				 * knowing if it is a parameter on your object or on another */
+				void hook(component::base * c, parameterbase::id pid) {
+					if (c == 0) return;
+					parameterbase::value v = c->owner->get(pid);
+					if (v == 0) return;
 					v->hook(this);
 				}
 				
@@ -362,6 +384,7 @@ namespace gear2d {
 				/**
 				 * @brief Spawns another object
 				 * @p t Type of the object to load
+				 * @return ID of the spawned object instance
 				 * This uses object factory to spawn another object
 				 * loaded.
 				 */
@@ -392,7 +415,8 @@ namespace gear2d {
 					return (parameter<datatype>*)v;
 				}
 				
-			protected:
+				
+			public:
 				object::id owner;
 				
 			private:

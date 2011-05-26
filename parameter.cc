@@ -8,7 +8,7 @@ namespace gear2d {
 	void parameterbase::pull() {
 		for (std::set<component::base *>::iterator i = hooked.begin(); i != hooked.end(); i++) {
 			component::base * c = *i;
-			c->handle(pid, lastwrite);
+			c->handle(pid, lastwrite, owner);
 		}
 	}
 }
