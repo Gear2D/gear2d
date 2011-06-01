@@ -134,7 +134,7 @@ namespace gear2d {
 			/* TODO: check if we're in windows or linux */
 			if (file == "") {
 				std::vector<std::string> paths;
-				split(paths, compath, is_any_of(" "));
+				split(paths, compath, is_any_of(","));
 				for (int i = 0; i < paths.size(); i++) {
 					file = paths[i] + '/' + f + "/lib" + t + ".so";
 					std::cout << "trying " << file << std::endl;
