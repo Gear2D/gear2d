@@ -12,6 +12,7 @@ add_library(charactercontroller MODULE charactercontroller.cc)
 add_library(collider2d MODULE collider2d.cc)
 add_library(rigidbody2d MODULE rigidbody2d.cc)
 add_library(audiosource MODULE audiosource.cc)
+add_library(singleselect MODULE singleselect.cc)
 
 set (COMPONENT_INSTALL_DIR lib/gear2d/component)
 
@@ -39,6 +40,9 @@ install(TARGETS rigidbody2d
 
 install(TARGETS audiosource
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/audiosource)
+
+install(TARGETS singleselect
+		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/menu)
 
 target_link_libraries(keyboard SDL)
 target_link_libraries(renderer SDL SDL_image SDL_gfx SDL_ttf)

@@ -346,8 +346,10 @@ namespace gear2d {
 				 */
 				void hook(parameterbase::id pid) {
 					parameterbase::value v = owner->get(pid);
+					//cout << this->family() << "/" << this->type() << " trying to hooking to " << pid << endl;
 					if (v == 0) return;
 					v->hook(this);
+					
 				}
 				
 				/**
@@ -403,6 +405,12 @@ namespace gear2d {
 				 * Please notice that this component will be put in the
 				 * destruction list too. */
 				void destroy();
+				
+				/**
+				 * @brief Loads a new scene configuration
+				 * @p scene Scene name
+				 */
+				void load(std::string scene);
 				
 			private:
 				template<typename datatype>

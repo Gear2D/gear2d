@@ -193,7 +193,7 @@ namespace gear2d {
 			try {
 				o->attach(c);
 			} catch (evil & e) {
-				cout << "debug: handling dependencies for " << c->type() << endl;
+// 				cout << "debug: handling dependencies for " << c->type() << endl;
 				/* build dependencies... */
 				innerbuild(o, c->depends());
 			

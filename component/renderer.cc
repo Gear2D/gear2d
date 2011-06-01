@@ -62,6 +62,7 @@ class surface {
 		float x;
 		float y;
 		float z;
+		float oldz;
 		float alpha;
 		bool bind;
 		bool absolute;
@@ -93,6 +94,7 @@ class surface {
 		, x(0.0f)
 		, y(0.0f)
 		, z(0.0f)
+		, oldz(z)
 		, alpha(1.0f)
 		, bind(true)
 		, absolute(false)
@@ -218,7 +220,8 @@ class renderer : public component::base {
 				surface * s = surfacebyid[surfid];
 				if (s == 0) return;
 				// right, the very same parameter we're interested
-				zordered.erase(zorder(s->z, s));
+				zordered.erase(zorder(s->oldz, s));
+				s->oldz = s->z;
 				zordered.insert(zorder(s->z, s));
 			}
 			

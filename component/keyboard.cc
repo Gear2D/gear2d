@@ -74,7 +74,7 @@ class keyboard : public component::base {
 		static map<string, int> keynames;
 		
 		// all status for each key
-		static vector<unsigned char> keystatus;
+		static vector< pair<int, bool> > keystatus;
 		
 		// set of all keys we have to check
 		static std::set<int> usedkeys;
@@ -88,6 +88,10 @@ class keyboard : public component::base {
 		// initialized?
 		static bool initialized;
 		
+	private:
+		string interested;
+		set<string> mykeys;
+		
 	public:
 		keyboard() {
 		};
@@ -98,7 +102,7 @@ class keyboard : public component::base {
 		virtual component::type type() { return component::type("keyboard"); }
 		virtual component::family family() { return component::family("keyboard"); }
 		virtual void handle(parameterbase::id pid, component::base * lastwrite, object::id owner) {
-			if (pid == "keyboard.interested") interest(read<string>(pid));
+			if (pid == "keyboard.interested") interest(interested);
 		}
 		
 		virtual void setup(object::signature & sig) {
@@ -107,9 +111,9 @@ class keyboard : public component::base {
 			
 			// check the interested keys
 			string interested = sig["keyboard.interested"];
-			init<string>("keyboard.interested", interested, "");
+			bind("keyboard.interested", this->interested);
 			hook("keyboard.interested");
-			if (interested != "") interest(interested);
+			write<string>("keyboard.interested", sig["keyboard.interested"]);
 			updaters++;
 		}
 		
@@ -117,6 +121,13 @@ class keyboard : public component::base {
 			updated++;
 			if (updated >= updaters) {
 				doupdate();
+				for (std::set<string>::iterator it = mykeys.begin(); it != mykeys.end(); it++) {
+					int key = keynames[*it];
+					// values has changed, indeed. notify
+					if (keystatus[key].second == true) {
+						write(string("key.") + *it, keystatus[key].first);
+					}
+				}
 				updated = 0;
 			}
 		}
@@ -124,7 +135,6 @@ class keyboard : public component::base {
 	private:
 		void interest(string interested) {
 			std::set<string> keys;
-			cout << "debug: keyboard seems interested: " << interested << endl;
 			split(keys, interested, is_any_of(" "));
 			for (std::set<string>::iterator it = keys.begin(); it != keys.end(); it++) {
 				// build keyname
@@ -134,13 +144,19 @@ class keyboard : public component::base {
 					continue;
 				}
 				int k = keynames[keyname];
+				
+				// tell ourselves we have this key
+				mykeys.insert(keyname);
+				
+				// add the key. prefix
 				keyname.insert(0, "key.");
 
 				// bitch.
-				bind(keyname, keystatus[k]);
+				bind<int>(keyname, keystatus[k].first);
 				
 				// tell to use these keys
 				usedkeys.insert(k);
+				
 			}
 		}
 	private:
@@ -151,30 +167,35 @@ class keyboard : public component::base {
 			for (std::set<int>::iterator it = usedkeys.begin(); it != usedkeys.end(); it++) {
 				int key = *it;
 				int kstate = kbstate[key]; // pressed or not-pressed
-				int status = keystatus[key]; // unpressed, clicked, pressed, released
-					
+				int status = keystatus[key].first; // unpressed, clicked, pressed, released
+				
+				keystatus[key].second = false;
 				// unpressed
 				if (kstate == 0) {
-					
 					// status is clicked or pressed, next: released
 					if (status == CLICKED || status == PRESSED) {
-						keystatus[key] = (unsigned char)RELEASED;
+						keystatus[key].first = (int)RELEASED;
+						keystatus[key].second = true;
 					}
 			
 					// status is relesed, next: unpressed
 					else if (status == RELEASED) {
-						keystatus[key] = (unsigned char)UNPRESSED;
+						keystatus[key].first = (int)UNPRESSED;
+						keystatus[key].second = true;
 					}
 				}
+				// pressed
 				else if (kstate == 1) {
 					// if its on a non-pressing state, set as clicked
 					if (status == UNPRESSED || status == RELEASED) {
-						keystatus[key] = (unsigned char)CLICKED;
+						keystatus[key].first = (int)CLICKED;
+						keystatus[key].second = true;
 					}
 					
 					// status is clicked, next: pressed
 					else if (status == CLICKED) {
-						keystatus[key] = (unsigned char)PRESSED;
+						keystatus[key].first = (int)PRESSED;
+						keystatus[key].second = true;
 					}
 				}
 			}
@@ -187,7 +208,7 @@ class keyboard : public component::base {
 				}
 			}
 			
-			keystatus.resize(SDLK_LAST, 0);
+			keystatus.resize(SDLK_LAST, pair<int, bool>(0, false));
 			kbstate = SDL_GetKeyState(NULL);
 			
 			// initialize keynames...
@@ -205,7 +226,7 @@ int keyboard::updaters = 0;
 bool keyboard::initialized = false;
 Uint8 * keyboard::kbstate = 0;
 std::set<int> keyboard::usedkeys;
-vector<unsigned char> keyboard::keystatus;
+vector< pair<int, bool> > keyboard::keystatus;
 map<string, int> keyboard::keynames;
 
 extern "C" {

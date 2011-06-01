@@ -55,6 +55,11 @@ namespace gear2d {
 			owner->destroy();
 		}
 		
+		void base::load(std::string scene) {
+			if (scene.find(".yaml") == std::string::npos) scene += ".yaml";
+			engine::next(scene);
+		}
+		
 		
 		/* selector stuff */
 		selector::selector() { }

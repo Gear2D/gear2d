@@ -20,11 +20,12 @@ namespace gear2d {
 	std::map<std::string, std::string> * engine::config;
 	component::factory * engine::cfactory;
 	object::factory * engine::ofactory;
-	std::map<component::type, std::list<component::base *> > * engine::components;
-	std::list<component::base *> * engine::removedcom;
+	std::map<component::type, std::set<component::base *> > * engine::components;
+	std::set<component::base *> * engine::removedcom;
 	std::set<object::id> * engine::destroyedobj;
 	bool engine::initialized;
 	bool engine::started;
+	std::string * engine::nextscene;
 	
 	
 	void engine::add(component::base * c) {
@@ -32,14 +33,13 @@ namespace gear2d {
 			std::cerr << "(Gear2D Engine) Initialize the engine before attaching a component to an object" << std::endl;
 		}
 		if (c == 0) return;
-		(*components)[c->family()].push_back(c); 
+		(*components)[c->family()].insert(c); 
 	}
 
 	void engine::remove(component::base * c, bool rightnow) {
-		if (rightnow == false) removedcom->push_back(c);
+		if (rightnow == false) removedcom->insert(c);
 		else {
-			(*components)[c->family()].remove(c);
-			c->owner = 0;
+			(*components)[c->family()].erase(c);
 			delete c;
 		}
 	}
@@ -55,11 +55,25 @@ namespace gear2d {
 		
 		config = new std::map<std::string, std::string>;
 		
-		if (components != 0) delete components;
-		components = new std::map<component::family, std::list<component::base *> >;
+		// erase all the components
+		if (components != 0) {
+			for (map<component::family, std::set<component::base *> >::iterator i = components->begin();
+				 i != components->end();
+				 i++)
+			{
+				std::set<component::base *> & com = i->second;
+				while (!com.empty()) {
+					component::base * c = *(com.begin());
+					if (c != 0) delete c;
+					com.erase(c);
+				}
+			}
+		}
+		delete components;
+		components = new std::map<component::family, std::set<component::base *> >;
 		
 		if (removedcom != 0) delete removedcom;
-		removedcom = new std::list<component::base *>;
+		removedcom = new std::set<component::base *>;
 		
 		if (destroyedobj != 0) delete destroyedobj;
 		destroyedobj = new std::set<object::id>;
@@ -71,9 +85,13 @@ namespace gear2d {
 		initialized = true;
 		started = false;
 	}
+	
+	void engine::next(std::string configfile) {
+		*nextscene = configfile;
+	}
 
 	void engine::load(std::string configfile) {
-		init();
+		init(true);
 		
 		std::ifstream fin(configfile.c_str());
 		
@@ -116,6 +134,8 @@ namespace gear2d {
 			ofactory->load(objectlist[i]);
 			ofactory->build(objectlist[i]);
 		}
+		if (nextscene) delete nextscene;
+		nextscene = new std::string("");
 	}
 	
 	bool engine::run() {
@@ -137,12 +157,11 @@ namespace gear2d {
 			destroyedobj->clear();
 			
 			/* first remove components from the running pipeline */
-			for (std::list<component::base *>::iterator i = removedcom->begin(); i != removedcom->end(); i++) {
+			for (std::set<component::base *>::iterator i = removedcom->begin(); i != removedcom->end(); i++) {
 				component::type f = (*i)->family();
-				(*components)[f].remove((*i));
-				
-// 				(*i)->owner = 0;
-				delete (*i);
+				(*components)[f].erase((*i));
+
+				if (*i != 0) delete (*i);
 				
 				// do not manage empty lists
 				if ((*components)[f].size() == 0)
@@ -156,12 +175,12 @@ namespace gear2d {
 			static std::string wm;
 			wm = "";
 			/* now update pipeline accordingly */
-			std::map<component::family, std::list<component::base *> >::iterator comtpit;
+			std::map<component::family, std::set<component::base *> >::iterator comtpit;
 			for (comtpit = components->begin(); comtpit != components->end(); comtpit++) {
 				component::family f = comtpit->first;
-				std::list<component::base *> & list = comtpit->second;
+				std::set<component::base *> & list = comtpit->second;
 				int b = SDL_GetTicks();
-				for (std::list<component::base*>::iterator comit = list.begin(); comit != list.end(); comit++) {
+				for (std::set<component::base*>::iterator comit = list.begin(); comit != list.end(); comit++) {
 					(*comit)->update(delta);
 				}
 				sprintf(omg, "%s:%.4d ", comtpit->first.c_str(), SDL_GetTicks() - b);
@@ -171,6 +190,13 @@ namespace gear2d {
 			wm += omg;
 			/* no components, quit the engine */
 			if (components->empty()) started = false;
+			
+			/* shall load next scene */
+			if (*nextscene != "") {
+				load(nextscene->c_str());
+				started = true;
+			}
+			
 			SDL_Delay(2);
  			SDL_WM_SetCaption(wm.c_str(), 0);
 			end = SDL_GetTicks();

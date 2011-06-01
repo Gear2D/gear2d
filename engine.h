@@ -38,6 +38,14 @@ namespace gear2d {
 			 * When you instantiate a engine it will load all of its
 			 * configurations from the file and be ready for running */
 			static void load(std::string configfile = "gear2d.yaml");
+
+			/**
+			 * @brief Select a new scene config to load
+			 * @p configfile The name of the file to load config from
+			 * At the end of the running frame, the engine will
+			 * load the file and re-run everything. All loaded
+			 * objects and components will be destroyed */
+			static void next(std::string configfile);
 			
 			/**
 			 * @brief Add a new component to the update pipeline
@@ -70,7 +78,7 @@ namespace gear2d {
 			static std::map<std::string, std::string> * config;
 			
 			/* running component-type map */
-			static std::map<component::family, std::list<component::base *> > * components;
+			static std::map<component::family, std::set<component::base *> > * components;
 			
 			/* component factory */
 			static component::factory * cfactory;
@@ -85,10 +93,13 @@ namespace gear2d {
 			static bool started;
 			
 			/* components to be removed */
-			static std::list<component::base *> * removedcom;
+			static std::set<component::base *> * removedcom;
 			
 			/* objects to be destroyed */
 			static std::set<object::id> * destroyedobj;
+			
+			/* scene file to switch */
+			static std::string * nextscene;
 			
 	};
 
