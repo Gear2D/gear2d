@@ -20,7 +20,7 @@
  * @li @c <id>.focused Changed to true when it got focus, false when not. The option with lowest order defaults to 1, others to 0. @b boolean
  */
 
-#include <gear2d/gear2d.h>
+#include "gear2d.h"
 using namespace gear2d;
 using namespace std;
 
