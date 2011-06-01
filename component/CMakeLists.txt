@@ -44,6 +44,13 @@ install(TARGETS audiosource
 install(TARGETS singleselect
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/menu)
 
-target_link_libraries(keyboard SDL)
-target_link_libraries(renderer SDL SDL_image SDL_gfx SDL_ttf)
-target_link_libraries(audiosource SDL SDL_mixer)
+target_link_libraries(keyboard SDL gear2d)
+target_link_libraries(renderer SDL SDL_image SDL_ttf gear2d)
+target_link_libraries(audiosource SDL SDL_mixer gear2d)
+target_link_libraries(space2d gear2d)
+target_link_libraries(kinetic2d gear2d)
+target_link_libraries(charactercontroller gear2d)
+target_link_libraries(collider2d gear2d)
+target_link_libraries(rigidbody2d gear2d)
+target_link_libraries(singleselect gear2d)
+
