@@ -122,7 +122,8 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 		set(CMAKE_BUILD_TYPE Release)
 	endif()
 	#
-	set(CMAKE_CXX_FLAGS_RELEASE "-O2")
+	# WARNING Leonardo: Optimization is breaking release code under mingw
+	set(CMAKE_CXX_FLAGS_RELEASE "")
 	set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
 	set(CMAKE_CXX_FLAGS_DEBUG "-g")
 	set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os")
@@ -275,6 +276,6 @@ endif()
 ### Extras
 ###
 if(YAML_CPP_BUILD_TOOLS)
-	add_subdirectory(test)
-	add_subdirectory(util)
+# 	add_subdirectory(test)
+# 	add_subdirectory(util)
 endif()
