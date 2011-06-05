@@ -34,8 +34,8 @@ namespace gear2d {
 	class parameterbase {
 		public:
 			/** @brief ID type for identying parameters */
-			typedef std::string id;
-			
+ 			typedef std::string id;
+
 			/** @brief Parameter value type. */
 			typedef parameterbase * value;
 

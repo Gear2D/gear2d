@@ -100,6 +100,7 @@ class audiosource : public gear2d::component::base {
 		
 		virtual void handle(parameterbase::id pid, component::base * last, object::id owner) {
 			if (pid == "audiosource.music") {
+				cout << musictoplay << " beach  " << playingmusic << endl;
 				if (musictoplay != playingmusic) {
 					if (musicisplaying) playmusic(musictoplay, -1);
 				}
@@ -127,12 +128,16 @@ class audiosource : public gear2d::component::base {
 
 		virtual void setup(object::signature & sig) {
 			initialize(sig["audiosource.music"], sig["sndpath"], sig["muspath"], eval(sig["audiosource.music.playing"], true));
-
+			
 			bind("audiosource.music", musictoplay);
 			bind("audiosource.music.playing", musicisplaying);
 			
+			
 			hook("audiosource.music");
 			hook("audiosource.music.playing");
+			write("audiosource.music", sig["audiosource.music"]);
+			write("audiosource.music.playing", eval(sig["audiosource.music.playing"], true));
+			
 			
 			write<string>("audiosource.sounds", sig["audiosource.sounds"]);
 			hook("audiosource.sounds");
@@ -225,6 +230,7 @@ class audiosource : public gear2d::component::base {
 			if (m == 0) return;
 			if (Mix_PlayingMusic() == 1) {
 			}
+			cout << "Toastyyyyyyyyyyyyyyyyyyyyy" << endl;
 			Mix_PlayMusic(m, loops);
 			musicisplaying = true;
 		}
