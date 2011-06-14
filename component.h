@@ -465,6 +465,8 @@ namespace gear2d {
 				 * @p filepath An optional argument specifying the plugin file */
 				void load(component::selector s, std::string filepath = "");
 				
+				~factory();
+				
 			private:
 				typedef std::map<component::family, std::map<component::type, factory::builder> > buildertable;
 				buildertable builders;

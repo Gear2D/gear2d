@@ -18,6 +18,7 @@
  * @li @c <id>.position.bind Tells if the position of this image shall follow position info (x, y). @b bool. Defaults to 1 (true)
  * @li @c <id>.position.absolute Tells if camera should be taken in account when rendering this. @b bool. 1 (true)
  * @li @c <id>.position.{x|y|z} Specifics about the position of the image. If position.bind is specified, it will become an offset. @b float
+ * @li @c <id>.position.{w|h} Width and height of the image @b int
  * @li @c <id>.clip.{x|y|w|h} Clipping frame for the image. Defaults to whole image. @b float
  * @li @c <id>.alpha Alpha value for the surface. 0 is transparent, 1 is opaque. @b float
  * @li @c renderer.texts list of ids to be treated like text
@@ -62,10 +63,13 @@ class surface {
 		float x;
 		float y;
 		float z;
+		int w;
+		int h;
 		float oldz;
 		float alpha;
 		bool bind;
 		bool absolute;
+		SDL_Rect clip;
 		
 		// raw surface
 		SDL_Surface * raw;
@@ -94,6 +98,8 @@ class surface {
 		, x(0.0f)
 		, y(0.0f)
 		, z(0.0f)
+		, w(0)
+		, h(0)
 		, oldz(z)
 		, alpha(1.0f)
 		, bind(true)
@@ -240,14 +246,12 @@ class renderer : public component::base {
 			}
 		}
 		virtual void setup(object::signature & sig) {
-			if (!initialized) {
-				int w = eval(sig["renderer.w"], 800);
-				int h = eval(sig["renderer.h"], 600);
-				initialize(w, h);
-				write("renderer.w", w);
-				write("renderer.h", h);
-				write("imgpath", sig["imgpath"]);
-			}
+			int w = eval(sig["renderer.w"], 800);
+			int h = eval(sig["renderer.h"], 600);
+			if (!initialized) initialize(w, h);
+			write("renderer.w", w);
+			write("renderer.h", h);
+			write("imgpath", sig["imgpath"]);
 			
 			// initial text rendering
 			string textlist = sig["renderer.texts"];
@@ -335,6 +339,12 @@ class renderer : public component::base {
 				write(id + ".position.x", eval(sig[id + ".position.x"], 0.0f));
 				write(id + ".position.y", eval(sig[id + ".position.y"], 0.0f));
 				write(id + ".position.z", eval(sig[id + ".position.z"], 0.0f));
+				write(id + ".position.w", s->raw->w);
+				write(id + ".position.h", s->raw->h);
+				write(id + ".clip.x", eval<int>(sig[id + ".clip.x"], 0));
+				write(id + ".clip.y", eval<int>(sig[id + ".clip.y"], 0));
+				write(id + ".clip.w", eval<int>(sig[id + ".clip.w"], s->raw->w));
+				write(id + ".clip.h", eval<int>(sig[id + ".clip.h"], s->raw->h));
 				write(id + ".bind", eval(sig[id + ".bind"], true));
 				write(id + ".absolute", eval(sig[id + ".absolute"], true));
 				write(id + ".alpha", eval<float>(sig[id + ".alpha"], 1.0f));
@@ -428,6 +438,12 @@ class renderer : public component::base {
 			bind(id + ".position.x", s->x);
 			bind(id + ".position.y", s->y);
 			bind(id + ".position.z", s->z);
+			bind(id + ".position.w", s->w);
+			bind(id + ".position.h", s->h);
+			bind(id + ".clip.x", s->clip.x);
+			bind(id + ".clip.y", s->clip.y);
+			bind(id + ".clip.w", s->clip.w);
+			bind(id + ".clip.h", s->clip.h);
 			bind(id + ".bind", s->bind);
 			bind(id + ".absolute", s->absolute);
 			bind(id + ".alpha", s->alpha);
@@ -458,6 +474,7 @@ class renderer : public component::base {
 		static void render() {
 			if (zordered.size() == 0) return;
 			SDL_Rect dstrect;
+			SDL_Rect srcrect;
 			for (set<zorder>::iterator i = zordered.begin(); i != zordered.end(); i++) {
 				surface * s = i->second;
 				dstrect.x = dstrect.y = 0;
@@ -469,8 +486,9 @@ class renderer : public component::base {
 				}
 				dstrect.x += s->x;
 				dstrect.y += s->y;
+				srcrect = s->clip;
 				SDL_SetAlpha(s->raw, SDL_SRCALPHA | SDL_RLEACCEL, s->alpha * 255);
-				SDL_BlitSurface(s->raw, 0, screen, &dstrect);
+				SDL_BlitSurface(s->raw, &srcrect, screen, &dstrect);
 			}
 			SDL_Flip(screen);
 			SDL_Delay(1);
@@ -478,6 +496,7 @@ class renderer : public component::base {
 		static void initialize(int w, int h) {
 			if (initialized == true) return;
 			if (!SDL_WasInit(SDL_INIT_VIDEO)) {
+				cout << "Video wasn't initialized...." << endl;
 				if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0) {
 					throw evil(string("(Rendering component) Failed initializing SDL: ") + SDL_GetError());
 				}
@@ -493,6 +512,7 @@ class renderer : public component::base {
 					throw evil(string("(Rendering component) Failed initializing font renderer: ") + TTF_GetError());
 				}
 			}
+			initialized = true;
 		}
 };
 

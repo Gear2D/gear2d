@@ -197,7 +197,16 @@ namespace gear2d {
 			b = typit->second;
 			base * component = b();
 			component->cfactory = this;
+			cout << "(Component factory) Component type " << t << " built" << endl;
 			return component;
+		}
+		
+		factory::~factory() {
+			while (!handlers.empty()) {
+				factory::handler handler = handlers.begin()->second;
+// 				SDL_UnloadObject(handler); TODO this crashes. why?
+				handlers.erase(handlers.begin());
+			}
 		}
 	}
 }

@@ -9,10 +9,12 @@ add_library(kinetic2d MODULE kinetic2d.cc)
 add_library(renderer MODULE renderer.cc)
 add_library(keyboard MODULE keyboard.cc)
 add_library(charactercontroller MODULE charactercontroller.cc)
+add_library(moveto MODULE moveto.cc)
 add_library(collider2d MODULE collider2d.cc)
 add_library(rigidbody2d MODULE rigidbody2d.cc)
 add_library(audiosource MODULE audiosource.cc)
 add_library(singleselect MODULE singleselect.cc)
+add_library(spritesheet MODULE spritesheet.cc)
 
 set (COMPONENT_INSTALL_DIR lib/gear2d/component)
 
@@ -32,6 +34,9 @@ install(TARGETS keyboard
 install(TARGETS charactercontroller
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/controller)
 
+install(TARGETS moveto
+		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/controller)
+
 install(TARGETS collider2d
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/collider)
 
@@ -44,6 +49,9 @@ install(TARGETS audiosource
 install(TARGETS singleselect
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/menu)
 
+install(TARGETS spritesheet
+		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/animation)
+
 target_link_libraries(keyboard SDL gear2d)
 target_link_libraries(renderer SDL SDL_image SDL_ttf gear2d)
 target_link_libraries(audiosource SDL SDL_mixer gear2d)
@@ -53,4 +61,6 @@ target_link_libraries(charactercontroller gear2d)
 target_link_libraries(collider2d gear2d)
 target_link_libraries(rigidbody2d gear2d)
 target_link_libraries(singleselect gear2d)
+target_link_libraries(spritesheet gear2d)
+target_link_libraries(moveto gear2d)
 

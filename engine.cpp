@@ -201,5 +201,8 @@ namespace gear2d {
  			SDL_WM_SetCaption(wm.c_str(), 0);
 			end = SDL_GetTicks();
 		}
+		
+		delete ofactory;
+		delete cfactory;
 	}
 }
