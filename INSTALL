@@ -1,0 +1,90 @@
+ This page describes installation process from the source code.
+ 
+ Beforing proceeding, there is a list of things you'll going 
+ to need already installed:
+ 
+ Libraries
+ 
+ 	Boost C++ libraries: http://www.boost.org/
+ 	SDL libraries development version: http://www.libsdl.org/
+ 	SDL_ttf development libraries: http://www.libsdl.org/projects/SDL_ttf/
+ 	SDL_image development libraries: http://www.libsdl.org/projects/SDL_image/
+ 	SDL_mixer development libraries: http://www.libsdl.org/projects/SDL_mixer/
+ Tools
+ 
+ 	CMake: http://www.cmake.org/
+ 	The GNU Compiler collection (MinGW on windows): http://gcc.gnu.org/ or http://www.mingw.org/ for windows
+ 	GNU Make (mingw32-make on windows): http://www.mingw.org/ or http://www.mingw.org/ for windows
+ 
+ 
+ COMPILING IN MICROSOFT WINDOWS
+ ------------------------------
+ 
+ Prepare for your worst nightmare. Gear2D must be compiled using MinGW
+ compiler because third party components (those that don't provide source code)
+ are linked against the runtime compiled with MinGW. If you compile it with another
+ compiler it might (will for sure!) generate different function names and you will
+ not be able to load components at all. Thats why you cannot use Visual C++ or
+ Borland or anything else. Besides, people at the GNU team does a very good job.
+ 
+ The good news is that many C++ IDEs under windows already uses MinGW's gcc, so it
+ is already installed somewhere if you have such IDE. I will not cover here how to 
+ install those libraries mentioned above, I know you are smart enough to google it.
+ 
+ Alright, the compressed sourcecode can be found at the download page, or you can
+ checkout it using SVN. You should enter in the source code folder and create a
+ directory named "build". Before actually calling cmake, make sure that the bin/
+ folder of MinGW and include/ are on the PATH variable. Also, BOOST_ROOT shall
+ be set to the place where you installed Boost libaries. SDL libraries shall be
+ placed within MinGW's bin, include, and lib folders.
+
+ Create the build folder
+
+       mkdir build
+ 
+ So, inside build/, you should call
+ 
+       cmake ../ -G "MinGW Makefiles"
+     
+ That will generate your MinGW Makefile. Then you should call
+
+       mingw32-make install
+     
+ To build it and install. Note that it will be installed, usually, under
+ C:\Program Files (x86)\gear2d\bin for the binaries, \lib for its libraries
+ and \lib\gear2d\component\ for its components.
+ Thats it, hopefully you've built it. If you failed, please complain in the forum
+ or on #gear2d@freenode.net.
+
+ COMPILING IN LINUX(-like)
+ -------------------------
+
+ Download the sourcecode release or check it out from SVN repository.
+ Next, create a "build" directory under the cource code directory (usually its
+ trunk/). Inside that, call cmake:
+
+ Build the build folder:
+
+       mkdir build
+ 
+ Call cmake inside it:
+
+       cmake ../
+     
+ That will give you an Makefile. Call
+
+      make install
+
+ as root (or with sudo, thats your call)
+     
+ And that will compile and install Gear2D, usually under /usr/local/bin for its
+ binaries and /usr/local/lib for its libraries. Components will be under
+ /usr/local/lib/gear2d/component/
+
+ You can change that by using -DCMAKE_INSTALL_PREFIX on the cmake phase,
+ that is:
+
+     cmake ../ -DCMAKE_INSTALL_PREFIX=/usr/
+
+ Be sure that the application can reach the path to where libraries are
+ installed (PREFIX/lib).

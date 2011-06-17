@@ -1,0 +1,20 @@
+ Gear2D Readme
+
+ - Installation
+
+ Gear2D might be installed using INSTALL document provided or http://gear2d.sourceforge.net/
+
+
+ - Running Gear2D
+
+ Gear2D is meant to be runned inside a game root directory, that is, where lives a file 
+ called gear2d.yaml.
+
+   . Windows
+
+   You'll need to make a shortcut for the gear2d executable inside your game folder
+   and double click on it.
+
+   . Linux-like
+   
+   Navigate through the game folder using a terminal and type gear2d
