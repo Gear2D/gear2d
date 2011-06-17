@@ -13,14 +13,21 @@ if (WIN32)
 	add_subdirectory(thirdparty/win32)
 	set(CPACK_SOURCE_GENERATOR ZIP)
 	set(CPACK_GENERATOR NSIS;ZIP)
-elseif(LINUX)
+elseif(UNIX)
 	set(CPACK_SOURCE_GENERATOR TGZ)
 	set(CPACK_GENERATOR TGZ)
-endif(WIN32)
+endif()
 
-set(CPACK_SOURCE_IGNORE_FILES /CVS/;/\\.svn/;\\.swp$;\\.*)
+set(CPACK_PACKAGE_NAME "Gear2D")
+set(CPACK_PACKAGE_VENDOR "Gear2D")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Gear2D - Component-based game engine")
+set(CPACK_PACKAGE_VERSION_MAJOR "0")
+set(CPACK_PACKAGE_VERSION_MINOR "1")
+set(CPACK_PACKAGE_VERSION_PATCH "i")
+set(CPACK_SOURCE_IGNORE_FILES "${CMAKE_BINARY_DIR}/*";.*~)
+# set(CPACK_PACKAGE_FILE_NAME "Gear2D")
 
-include (CPack)
+
 
 # component dependecy
 add_subdirectory(component)
@@ -35,7 +42,7 @@ file(GLOB public_headers "*.h")
 # gear2d executable
 add_executable(main main.cc)
 target_link_libraries(main gear2d)
-set_target_properties(main PROPERTIES OUTPUT_NAME gear2d BUILD_WITH_INSTALL_RPATH true PUBLIC_HEADER "${public_headers}")
+set_target_properties(main PROPERTIES OUTPUT_NAME gear2d BUILD_WITH_INSTALL_RPATH true)
 
 # include dirs so we can #include properly
 include_directories(thirdparty/yaml-cpp/include/ ${SDL_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR})
@@ -44,9 +51,26 @@ include_directories(thirdparty/yaml-cpp/include/ ${SDL_INCLUDE_DIR} ${Boost_INCL
 install(TARGETS gear2d main
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION lib
-		PUBLIC_HEADER DESTINATION include/gear2d
+		COMPONENT engine
 )
 
+install(FILES ${public_headers}
+		DESTINATION include/gear2d
+		COMPONENT headers
+)
+
+set(CPACK_COMPONENT_ENGINE_DISPLAY_NAME "Gear2D Runtime")
+set(CPACK_COMPONENT_ENGINE_DESCRIPTION "Main runtime application and libraries for Gear2D")
+set(CPACK_COMPONENT_ENGINE_REQUIRED true)
+
+set(CPACK_COMPONENT_HEADERS_DEPENDS engine)
+set(CPACK_COMPONENT_HEADERS_DISPLAY_NAME "Development headers")
+set(CPACK_COMPONENT_HEADERS_DESCRIPTION "Install these if you plan on creating new components or build components on this machine")
+
+
+
+
 # control of what we need from yaml-cpp
-option(YAML_CPP_BUILD_TOOLS OFF)
-option(YAML_CPP_BUILD_CONTRIB OFF)
+set(YAML_CPP_BUILD_TOOLS OFF)
+# set(YAML_CPP_BUILD_CONTRIB OFF)
+include (CPack)
