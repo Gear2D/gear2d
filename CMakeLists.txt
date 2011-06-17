@@ -1,11 +1,18 @@
 cmake_minimum_required(VERSION 2.6)
-project(gear2d)
+project(Gear2D)
+include (CPack)
 
 find_package(SDL REQUIRED)
 find_package(Boost REQUIRED)
 
 # yaml-cpp dependency
 add_subdirectory(thirdparty/yaml-cpp)
+
+# win32 shared libraries for install dependencies
+if (WIN32)
+	add_subdirectory(thirdparty/win32)
+endif(WIN32)
+
 
 # component dependecy
 add_subdirectory(component)

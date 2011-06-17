@@ -23,7 +23,7 @@
  Prepare for your worst nightmare. Gear2D must be compiled using MinGW
  compiler because third party components (those that don't provide source code)
  are linked against the runtime compiled with MinGW. If you compile it with another
- compiler it might (will for sure!) generate different function names and you will
+ compiler it might (will for sure!) generate different symbol names and you will
  not be able to load components at all. Thats why you cannot use Visual C++ or
  Borland or anything else. Besides, people at the GNU team does a very good job.
  
