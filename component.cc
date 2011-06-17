@@ -9,6 +9,14 @@
 using boost::algorithm::split;
 using boost::algorithm::is_any_of;
 
+#ifdef _WIN32
+#define SOSUFFIX ".dll"
+#elif __MACOS__ 
+#define SOSUFFIX ".dylib"
+#else
+#define SOSUFFIX ".so"
+#endif
+
 namespace gear2d {
 	namespace component {
 		base::base() : cfactory(0) {
@@ -136,7 +144,7 @@ namespace gear2d {
 				std::vector<std::string> paths;
 				split(paths, compath, is_any_of(","));
 				for (int i = 0; i < paths.size(); i++) {
-					file = paths[i] + '/' + f + "/lib" + t + ".so";
+					file = paths[i] + '/' + f + "/lib" + t + SOSUFFIX;
 					std::cout << "trying " << file << std::endl;
 					comhandler = SDL_LoadObject(file.c_str());
 					if (comhandler != 0) break;
