@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 project(Gear2D)
-include (CPack)
+
 
 find_package(SDL REQUIRED)
 find_package(Boost REQUIRED)
@@ -11,8 +11,16 @@ add_subdirectory(thirdparty/yaml-cpp)
 # win32 shared libraries for install dependencies
 if (WIN32)
 	add_subdirectory(thirdparty/win32)
+	set(CPACK_SOURCE_GENERATOR ZIP)
+	set(CPACK_GENERATOR NSIS;ZIP)
+elseif(LINUX)
+	set(CPACK_SOURCE_GENERATOR TGZ)
+	set(CPACK_GENERATOR TGZ)
 endif(WIN32)
 
+set(CPACK_SOURCE_IGNORE_FILES /CVS/;/\\.svn/;\\.swp$;\\.*)
+
+include (CPack)
 
 # component dependecy
 add_subdirectory(component)
