@@ -140,6 +140,10 @@ namespace gear2d {
 		if (filename == "") filename = commonsig["objpath"] + objtype + ".yaml";
 		cout << "debug: Loading " << filename << endl;
 		std::ifstream fin(filename.c_str());
+		if (!fin.is_open()) {
+			cout << "debug: Could not find " << filename << " to load!" << endl;
+			return;
+		}
 		
 		/* initialize yaml parser */
 		YAML::Parser parser(fin);
@@ -151,6 +155,7 @@ namespace gear2d {
 		
 		// add the global signature
 		sig.insert(commonsig.begin(), commonsig.end());
+		fin.close();
 	}
 	
 	void object::factory::set(object::type objtype, object::signature sig) {

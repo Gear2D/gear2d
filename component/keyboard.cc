@@ -79,6 +79,9 @@ class keyboard : public component::base {
 		// set of all keys we have to check
 		static std::set<int> usedkeys;
 		
+		// all kb components
+		static set<keyboard *> kbcomponents;
+		
 		// how many components asked the update
 		static int updated;
 		
@@ -89,7 +92,6 @@ class keyboard : public component::base {
 		static bool initialized;
 		
 	private:
-		string interested;
 		set<string> mykeys;
 		
 	public:
@@ -98,11 +100,15 @@ class keyboard : public component::base {
 		
 		virtual ~keyboard() { 
 			updaters--;
+			kbcomponents.erase(this);
 		}
 		virtual component::type type() { return component::type("keyboard"); }
 		virtual component::family family() { return component::family("keyboard"); }
 		virtual void handle(parameterbase::id pid, component::base * lastwrite, object::id owner) {
-			if (pid == "keyboard.interested") interest(interested);
+			if (pid == "keyboard.interested") {
+				interest(read<string>("keyboard.interested"));
+				cout << "keyboard.interested " << read<string>("keyboard.interested") << endl;
+			}
 		}
 		
 		virtual void setup(object::signature & sig) {
@@ -111,28 +117,34 @@ class keyboard : public component::base {
 			
 			// check the interested keys
 			string interested = sig["keyboard.interested"];
-			bind("keyboard.interested", this->interested);
+			write("keyboard.interested", std::string(""));
 			hook("keyboard.interested");
 			write<string>("keyboard.interested", sig["keyboard.interested"]);
 			updaters++;
+			kbcomponents.insert(this);
 		}
 		
 		virtual void update(timediff dt) {
 			updated++;
 			if (updated >= updaters) {
 				doupdate();
-				for (std::set<string>::iterator it = mykeys.begin(); it != mykeys.end(); it++) {
-					int key = keynames[*it];
-					// values has changed, indeed. notify
-					if (keystatus[key].second == true) {
-						write(string("key.") + *it, keystatus[key].first);
-					}
-				}
 				updated = 0;
 			}
 		}
 		
 	private:
+		// this is called so each kb components gets a chance to warn
+		// their friends of kb changes.
+		void kbupdate() {
+			for (std::set<string>::iterator it = mykeys.begin(); it != mykeys.end(); it++) {
+				int key = keynames[*it];
+				// values has changed, indeed. notify
+				if (keystatus[key].second == true) {
+					write(string("key.") + *it, keystatus[key].first);
+				}
+			}
+		}
+		
 		void interest(string interested) {
 			std::set<string> keys;
 			split(keys, interested, is_any_of(" "));
@@ -199,6 +211,9 @@ class keyboard : public component::base {
 					}
 				}
 			}
+			for (set<keyboard *>::iterator i = kbcomponents.begin(); i != kbcomponents.end(); i++) {
+				(*i)->kbupdate();
+			}
 		}
 
 		static void initialize() {
@@ -228,6 +243,7 @@ Uint8 * keyboard::kbstate = 0;
 std::set<int> keyboard::usedkeys;
 vector< pair<int, bool> > keyboard::keystatus;
 map<string, int> keyboard::keynames;
+set<keyboard *> keyboard::kbcomponents;
 
 extern "C" {
 	component::base * build() {

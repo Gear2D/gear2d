@@ -15,7 +15,7 @@
  * @li @c renderer.surfaces list of surfaces to load and work with, in the form of id=file separated by spaces. Loaded at setup and whenever changed.  @b string
  * 		@warning double warning on this one. If you want to load a new surface, change renderer.surfaces BEFORE setting its other attributes or the
  *		binding will fail so bad you won't be able to hide. Be prepared for evil if you do.
- * @li @c <id>.position.bind Tells if the position of this image shall follow position info (x, y). @b bool. Defaults to 1 (true)
+ * @li @c <id>.position.bind Tells if the position of this image shall follow spatial info (x, y). @b bool. Defaults to 1 (true)
  * @li @c <id>.position.absolute Tells if camera should be taken in account when rendering this. @b bool. 1 (true)
  * @li @c <id>.position.{x|y|z} Specifics about the position of the image. If position.bind is specified, it will become an offset. @b float
  * @li @c <id>.position.{w|h} Width and height of the image @b int

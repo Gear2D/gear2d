@@ -92,6 +92,7 @@ class singleselect: public component::base {
 					if (circular) itr = optionbyorder.begin();
 					else itr--;
 				}
+				write("menu.last", focused->id);
 				write("menu.focus", itr->second->id);
 			}
 			else if (pid == "menu.prev") {
@@ -101,6 +102,7 @@ class singleselect: public component::base {
 					else itr++;
 				}
 				itr--;
+				write("menu.last", focused->id);
 				write("menu.focus", itr->second->id);
 			}
 			else
