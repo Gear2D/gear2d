@@ -2,7 +2,10 @@
 #define gear2d_object_h
 
 #include <map>
+#include <list>
 using std::map;
+using std::list;
+
 
 #include "definitions.h"
 #include "parameter.h"
@@ -71,6 +74,13 @@ namespace gear2d {
 						void load(object::type objtype, std::string filename = "");
 						
 						/**
+						 * @brief Locate an object that has been loaded by this engine
+						 * @p objtype Type of the object
+						 * @return ID-handler of the first found object
+						 */
+						object::id locate(object::type objtype);
+						
+						/**
 						 * @brief Set the parameters for loading the object
 						 * @p objtype Type of the object to be registered
 						 * @p sig Signature of a object
@@ -83,7 +93,7 @@ namespace gear2d {
 						 * @p objtype Type of the already-registered object to be built
 						 * This uses information from set() and component factory to
 						 * create a new object with the registered components */
-						object * build(object::type objtype);
+						object::id build(object::type objtype);
 						
 					private:
 						
@@ -97,6 +107,10 @@ namespace gear2d {
 						 
 						 /* This is the mapping between objects and its components and parameters */
 						 map<object::type, object::signature> signatures;
+						 
+						 map<object::type, std::list<object::id> > loadedobjs;
+						 
+						 friend class object;
 				};
 
 		public:

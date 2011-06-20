@@ -393,6 +393,15 @@ namespace gear2d {
 				object::id spawn(object::type t);
 				
 				/**
+				 * @brief Locate a living object in the game engine
+				 * @p t type of the object to locate
+				 * @return ID-handler of the located object. 0 means not-found.
+				 * @warning You may want to use this on update() because
+				 * your parent object can be loaded AFTER the object you're loading.
+				 */
+				object::id locate(object::type t);
+				
+				/**
 				 * @brief Clone the parent game object
 				 * @return A pointer to a compononent of the same type that called clone()
 				 * This will creates a new game object and

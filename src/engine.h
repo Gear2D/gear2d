@@ -38,6 +38,12 @@ namespace gear2d {
 			 * When you instantiate a engine it will load all of its
 			 * configurations from the file and be ready for running */
 			static void load(std::string configfile = "gear2d.yaml");
+			
+			/**
+			 * @brief Load configurations from a config mapping
+			 * @p config map of configurations
+			 */
+			static void load(map<std::string, std::string> & config);
 
 			/**
 			 * @brief Select a new scene config to load

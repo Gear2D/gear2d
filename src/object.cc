@@ -128,6 +128,7 @@ namespace gear2d {
 	void object::destroy() {
 		destroyed = true;
 		engine::destroy(this);
+		ofactory->loadedobjs[sig["name"]].remove(this);
 	}
 	
 	/* -- factory methods */
@@ -156,6 +157,11 @@ namespace gear2d {
 		// add the global signature
 		sig.insert(commonsig.begin(), commonsig.end());
 		fin.close();
+	}
+	
+	object::id object::factory::locate(object::type objtype) {
+		if (loadedobjs[objtype].size() == 0) return 0;
+		else return loadedobjs[objtype].front();
 	}
 	
 	void object::factory::set(object::type objtype, object::signature sig) {
@@ -210,7 +216,7 @@ namespace gear2d {
 		 }
 	}
 	
-	object * object::factory::build(object::type objtype) {
+	object::id object::factory::build(gear2d::object::type objtype) {
 		cout << "debug: building " << objtype << endl;
 		/* first determine if this object type is loaded... */
 		if (signatures.find(objtype) == signatures.end()) {
@@ -236,6 +242,7 @@ namespace gear2d {
 		
 		/* recursive build method that takes care of dependency loading */
 		innerbuild(obj, attachstring);
+		loadedobjs[objtype].push_back(obj);
 		return obj;
 	}
 }

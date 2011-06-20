@@ -89,18 +89,24 @@ namespace gear2d {
 	void engine::next(std::string configfile) {
 		*nextscene = configfile;
 	}
-
+	
 	void engine::load(std::string configfile) {
-		init(true);
-		
 		std::ifstream fin(configfile.c_str());
 		
 		/* initialize yaml parser */
 		YAML::Parser parser(fin);
 		YAML::Node node;
+		map<std::string, std::string> cfg;
 		
 		/* TODO: add other yaml features */
-		while (parser.GetNextDocument(node)) node >> *config;
+		while (parser.GetNextDocument(node)) node >> cfg;
+		load(cfg);
+		fin.close();
+	}
+
+	void engine::load(std::map<std::string, std::string> & cfg) {
+		init(true);
+		*config = cfg;
 		
 		/* get component-search path */
 		std::string compath = (*config)["compath"];

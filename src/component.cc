@@ -38,6 +38,10 @@ namespace gear2d {
 			return com;
 		}
 		
+		object::id base::locate(object::type t) {
+			return owner->ofactory->locate(t);
+		}
+		
 		object::id base::spawn(object::type t) {
 			object::id obj = 0;
 			if (owner->ofactory != 0) {
@@ -67,6 +71,7 @@ namespace gear2d {
 			if (scene.find(".yaml") == std::string::npos) scene += ".yaml";
 			engine::next(scene);
 		}
+		
 		
 		
 		/* selector stuff */
