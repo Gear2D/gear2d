@@ -37,6 +37,9 @@ install(FILES ${public_headers}
 
 )
 
+install(FILES ${CMAKE_SOURCE_DIR}/LICENSE ${CMAKE_SOURCE_DIR}/README
+	DESTINATION .)
+
 add_subdirectory(component)
 
 # win32 shared libraries for install dependencies
