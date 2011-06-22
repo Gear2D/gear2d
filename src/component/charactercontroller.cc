@@ -11,6 +11,8 @@
  * dynamically.
  * 
  * @b parameters
+ * @li @c controller.vertical write 1 to make vertical+ and write -1 to make vertical-
+ * @li @c controller.horizontal write 1 to make horizontal+ and write -1 to make horizontal-
  * @li @c controller.vertical+ key name that will trigger vertical plus movement @b string
  * @li @c controller.vertical- key name that will trigger vertical minus movement @b string
  * @li @c controller.horizontal+ key name that will trigger horizontal plus movement @b string
@@ -59,6 +61,8 @@ class charactercontroller : public component::base {
 			write("controller.horizontal-", key);
 			interesting += key;
 			
+			write<int>("controller.horizontal", 0);
+			write<int>("controller.vertical", 0);
 			write("keyboard.interested", (string) interesting);
 		
 			haccel = eval(sig["controller.horizontal.accel"], 2.0f);
@@ -82,8 +86,8 @@ class charactercontroller : public component::base {
 			string key("key.");
 // 			cout << key + read<string>("controller.vertical-") << ": " << read<int>(key + read<string>("controller.vertical-")) << endl;
 			// vertical- pressed
-			if (read<int>(key + read<string>("controller.vertical-")) == 2) { write("y.accel", -vaccel); }
-			else if (read<int>(key + read<string>("controller.vertical+")) == 2) { write("y.accel", vaccel); }
+			if (read<int>(key + read<string>("controller.vertical-")) == 2 || read<int>("controller.vertical") < 0) { write("y.accel", -vaccel); }
+			else if (read<int>(key + read<string>("controller.vertical+")) == 2 || read<int>("controller.vertical") > 0) { write("y.accel", vaccel); }
 			
 			// vertical not pressed at all.
 			else { 
@@ -98,8 +102,8 @@ class charactercontroller : public component::base {
 				
 			}
 			// horizontal pressed
-			if (read<int>(key + read<string>("controller.horizontal-")) == 2) { write("x.accel", -haccel); }
-			else if (read<int>(key + read<string>("controller.horizontal+")) == 2) { write("x.accel", haccel); }
+			if (read<int>(key + read<string>("controller.horizontal-")) == 2 || read<int>("controller.horizontal") < 0) { write("x.accel", -haccel); }
+			else if (read<int>(key + read<string>("controller.horizontal+")) == 2|| read<int>("controller.horizontal") > 0) { write("x.accel", haccel); }
 			
 			// horizontal not pressed at all.
 			else { 
@@ -112,6 +116,9 @@ class charactercontroller : public component::base {
 					else write("x.accel", hdaccel);
 				}
 			}
+			write<int>("controller.horizontal", 0);
+			write<int>("controller.vertical", 0);
+			
 		}
 };
 
