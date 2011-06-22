@@ -13,7 +13,11 @@ target_link_libraries(gear2d yaml-cpp SDL )
 file(GLOB public_headers "*.h")
 
 # gear2d executable
-add_executable(main main.cc)
+if ((NOT (${CMAKE_BUILD_TYPE} STREQUAL Debug)) AND WIN32)
+	add_executable(main WIN32 main.cc)
+else ()
+	add_executable(main main.cc)
+endif((NOT (${CMAKE_BUILD_TYPE} STREQUAL Debug)) AND WIN32)
 target_link_libraries(main gear2d)
 set_target_properties(main PROPERTIES OUTPUT_NAME gear2d BUILD_WITH_INSTALL_RPATH true)
 
@@ -46,15 +50,17 @@ elseif(UNIX)
 	set(CPACK_GENERATOR TGZ)
 endif()
 
-set(CPACK_PACKAGE_NAME "Gear2D")
+set(CPACK_PACKAGE_NAME "Gear2D ${CMAKE_BUILD_TYPE}")
 set(CPACK_PACKAGE_VENDOR "Gear2D")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "Gear2D")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Gear2D - Component-based game engine")
 set(CPACK_PACKAGE_VERSION_MAJOR "0")
 set(CPACK_PACKAGE_VERSION_MINOR "1")
-set(CPACK_PACKAGE_VERSION_PATCH "i")
-set(CPACK_SOURCE_IGNORE_FILES "\\\\.svn/*;${CMAKE_BINARY_DIR}/*")
+set(CPACK_PACKAGE_VERSION_PATCH "a")
+set(CPACK_SOURCE_IGNORE_FILES "\\\\.svn/*;${CMAKE_BINARY_DIR}/*;*~")
 set(PACK_PACKAGE_EXECUTABLES gear2d;Gear2D Game Engine)
+set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
+set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README)
 
 # control of what we need from yaml-cpp
 set(YAML_CPP_BUILD_TOOLS OFF)
