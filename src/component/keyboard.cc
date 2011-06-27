@@ -173,7 +173,7 @@ class keyboard : public component::base {
 		}
 	private:
 		static void doupdate() {
-			SDL_PumpEvents();
+// 			SDL_PumpEvents(); // this is done by the engine now.
 			if (usedkeys.size() == 0) return;
 			if (kbstate[SDLK_q]) exit(0);
 			for (std::set<int>::iterator it = usedkeys.begin(); it != usedkeys.end(); it++) {

@@ -120,13 +120,14 @@ namespace gear2d {
 		/* pre-load some of the components */
 		/* TODO: travel the compath looking for family/component */
 		std::vector<std::string> comlist;
-		split(comlist, (*config)["compreload"], is_any_of(" "));
-		for (int i = 0; i < comlist.size(); i++) {
-			std::cerr << "(Gear2D Engine) Pre-loading " << comlist[i] << std::endl;
-			cfactory->load(comlist[i]);
+		if ((*config)["compreload"].size() != 0) {
+			split(comlist, (*config)["compreload"], is_any_of(" "));
+			for (int i = 0; i < comlist.size(); i++) {
+				std::cerr << "(Gear2D Engine) Pre-loading " << comlist[i] << std::endl;
+				cfactory->load(comlist[i]);
+			}
+			config->erase("compreload");
 		}
-		config->erase("compreload");
-		
 		/* load the indicated objects */
 		std::vector<object::type> objectlist;
 		split(objectlist, (*config)["objects"], is_any_of(" "));
@@ -154,6 +155,9 @@ namespace gear2d {
 			dt = end - begin;
 			begin = SDL_GetTicks();
 			timediff delta = dt/1000.0f;
+			
+			SDL_PumpEvents();
+			if (SDL_PeepEvents(NULL, 1, SDL_PEEKEVENT, SDL_QUITMASK)) { started = false; }
 			
 			for (std::set<object::id>::iterator i = destroyedobj->begin(); i != destroyedobj->end(); i++) {
 				// this will push object's components to removedcom, hopefully.
