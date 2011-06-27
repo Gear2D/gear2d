@@ -137,6 +137,11 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 	endif()
 	#
 	set(CMAKE_CXX_FLAGS "-Wall ${GCC_EXTRA_OPTIONS} -pedantic -Wno-long-long ${CMAKE_CXX_FLAGS}")
+
+	# Leonardo: Static libs under amd64 mus be -fPICed
+	if(CMAKE_SYSTEM_PROCESSOR MATCHES "[xX]64" OR CMAKE_SYSTEM_PROCESSOR MATCHES "[xX]86_64" OR CMAKE_SYSTEM_PROCESSOR MATCHES "[aA][mM][dD]64")
+		set(CMAKE_CXX_FLAGS "-fPIC ${CMAKE_CXX_FLAGS}")
+	endif()
 	#
 	add_custom_target(debuggable $(MAKE) clean
 		COMMAND ${CMAKE_COMMAND} -DCMAKE_BUILD_TYPE=Debug ${CMAKE_SOURCE_DIR}
@@ -265,11 +270,11 @@ endif()
 # 	DESTINATION ${INCLUDE_INSTALL_DIR}
 # )
 
-if(UNIX)
-	set(PC_FILE ${CMAKE_BINARY_DIR}/yaml-cpp.pc)
-	configure_file("yaml-cpp.pc.cmake" ${PC_FILE} @ONLY)
-	install(FILES ${PC_FILE} DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
-endif()
+# if(UNIX)
+# 	set(PC_FILE ${CMAKE_BINARY_DIR}/yaml-cpp.pc)
+# 	configure_file("yaml-cpp.pc.cmake" ${PC_FILE} @ONLY)
+# 	install(FILES ${PC_FILE} DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
+# endif()
 
 
 ###
