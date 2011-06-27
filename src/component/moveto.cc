@@ -27,7 +27,7 @@ class moveto : public component::base {
 	public:
 		virtual component::family family() { return "controller"; }
 		virtual component::type type() { return "moveto"; }
-		virtual std::string depends() { return "spatial kinetics"; }
+		virtual std::string depends() { return "spatial/space2d kinetics/kinetic2d"; }
 		virtual void setup(object::signature & sig) {
 			init("controller.target.x", sig["controller.target.x"], read<float>("x"));
 			init("controller.target.y", sig["controller.target.y"], read<float>("y"));

@@ -24,7 +24,7 @@ class spatial
 		
 		virtual ~spatial() { }
 		virtual component::type type() { return "space2d"; }
-		virtual component::family family() { return "spatial"; }
+		virtual component::family family() { return "spatial/space2d"; }
 		virtual void setup(object::signature & sig) {
 			init("x", sig["x"], 0.0f);
 			init("y", sig["y"], 0.0f);

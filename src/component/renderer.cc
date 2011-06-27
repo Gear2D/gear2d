@@ -208,7 +208,7 @@ class renderer : public component::base {
 		
 		virtual component::type type() { return "renderer"; }
 		virtual component::family family() { return "renderer"; }
-		virtual string depends() { return "spatial"; }
+		virtual string depends() { return "spatial/space2d"; }
 		
 		virtual void handle(parameterbase::id pid, component::base * lastwrite, object::id owner) {
 			int p;

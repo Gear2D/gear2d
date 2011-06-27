@@ -39,7 +39,7 @@ class charactercontroller : public component::base {
 	public:
 		virtual component::family family() { return "controller"; }
 		virtual component::type type() { return "charactercontroller"; }
-		virtual string depends() { return "kinetics keyboard"; }
+		virtual string depends() { return "kinetics/kinetic2d keyboard/keyboard"; }
 		virtual void setup(object::signature & sig) {
 			// 0,0 -> top-left -> Y BEGINS FROM UP, GODDAMIT. 
 			string interesting = "";

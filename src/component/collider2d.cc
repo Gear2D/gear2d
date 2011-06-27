@@ -46,7 +46,7 @@ class collider : public component::base {
 		virtual ~collider() { colliders.erase(this); }
 		virtual component::type type() { return "collider2d"; }
 		virtual component::family family() { return "collider"; }
-		virtual string depends() { return "spatial"; }
+		virtual string depends() { return "spatial/space2d"; }
 		
 		virtual void setup(object::signature & sig) { 
 			init<string>("collider.type", sig["collider.type"], "aabb");

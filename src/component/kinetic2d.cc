@@ -50,7 +50,7 @@ class kinetic2d
 		virtual ~kinetic2d() { }
 		virtual component::type type() { return "kinetic2d"; }
 		virtual component::family family() { return "kinetics"; }
-		virtual std::string depends() { return "spatial"; }
+		virtual std::string depends() { return "spatial/space2d"; }
 		
 		virtual void setup(object::signature & sig) {
 			init<float>("x.speed", sig["x.speed"], 0);
