@@ -137,7 +137,7 @@ namespace gear2d {
 			builders[f][t] = b;
 		}
 		
-		void factory::load(selector s, std::string file) {
+		void factory::load(selector s, std::string file) throw (evil) {
 			component::family f; component::type t;
 			f = s.family;
 			t = s.type;
@@ -160,6 +160,7 @@ namespace gear2d {
 			
 			if (comhandler == 0) {
 				std::cerr << "(Component factory) Error loading component " << t << ": " << SDL_GetError() << std::endl;
+				throw evil(std::string("It was not possible to load ") + file + ". Make sure it is under one of these folders: " + compath);
 				return;
 			}
 			

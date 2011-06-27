@@ -471,8 +471,9 @@ namespace gear2d {
 				/**
 				 * @brief Load a componend from a shared plugin
 				 * @p s A selector in the form family/type
-				 * @p filepath An optional argument specifying the plugin file */
-				void load(component::selector s, std::string filepath = "");
+				 * @p filepath An optional argument specifying the plugin file
+				 * @throw evil */
+				void load(component::selector s, std::string filepath = "") throw (evil);
 				
 				~factory();
 				
