@@ -54,7 +54,7 @@ class bounce : public component::base {
 		bounce() : dt(0) { }
 		virtual component::family family() { return "dynamics"; }
 		virtual component::type type() { return "rigidbody2d"; }
-		virtual std::string depends() { return "spatial/space2d collider/colliner2d kinetics/kinetic2d"; }
+		virtual std::string depends() { return "spatial/space2d collider/collider2d kinetics/kinetic2d"; }
 		virtual void handle(parameterbase::id pid, component::base * lastwrite, object::id pidowner) {
 			if (pid == "collider.collision") {
 				component::base * c = read<component::base *>("collider.collision");
