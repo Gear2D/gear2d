@@ -157,7 +157,7 @@ namespace gear2d {
 			timediff delta = dt/1000.0f;
 			
 			SDL_PumpEvents();
-			if (SDL_PeepEvents(NULL, 1, SDL_PEEKEVENT, SDL_QUITMASK)) { started = false; }
+			if (SDL_PeepEvents(NULL, 100, SDL_PEEKEVENT, SDL_QUITMASK)) { started = false; }
 			
 			for (std::set<object::id>::iterator i = destroyedobj->begin(); i != destroyedobj->end(); i++) {
 				// this will push object's components to removedcom, hopefully.
