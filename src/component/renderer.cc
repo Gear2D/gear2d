@@ -158,7 +158,7 @@ class renderer : public component::base {
 						if (style == "bold") styleflag |= TTF_STYLE_BOLD;
 						if (style == "italic") styleflag |= TTF_STYLE_ITALIC;
 						if (style == "underline") styleflag |= TTF_STYLE_UNDERLINE;
-						if (style == "strikethru") styleflag |= TTF_STYLE_STRIKETHROUGH;
+						//if (style == "strikethru") styleflag |= TTF_STYLE_STRIKETHROUGH;
 						styleset.erase(style);
 					}
 					
