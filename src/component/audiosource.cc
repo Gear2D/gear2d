@@ -164,10 +164,10 @@ class audiosource : public gear2d::component::base {
 					return;
 				}
 				
-				if (Mix_Init(MIX_INIT_FLAC | MIX_INIT_MOD | MIX_INIT_MP3 | MIX_INIT_OGG) == 0) {
+				/*if (Mix_Init(MIX_INIT_FLAC | MIX_INIT_MOD | MIX_INIT_MP3 | MIX_INIT_OGG) == 0) {
 					std::cerr << "(audiosource component): Unable to initialize any music format. You will not be able to play anything." << endl;
 					return;
-				}
+				}*/
 				
 				if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) != 0) {
 					std::cerr << "(audiosource component): Unable to open the audio subsystem" << endl;
@@ -230,7 +230,6 @@ class audiosource : public gear2d::component::base {
 			if (m == 0) return;
 			if (Mix_PlayingMusic() == 1) {
 			}
-			cout << "Toastyyyyyyyyyyyyyyyyyyyyy" << endl;
 			Mix_PlayMusic(m, loops);
 			musicisplaying = true;
 		}
