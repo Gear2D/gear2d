@@ -10,7 +10,7 @@
  * as if the object was bouncing.
  *
  * @b depends
- * @li collider, kinetics, spatial
+ * @li collider, kinematics, spatial
  * 
  * @b using
  * @li @c collider.collision Hooking point to know when we collided (from: collider)
@@ -54,7 +54,7 @@ class bounce : public component::base {
 		bounce() : dt(0) { }
 		virtual component::family family() { return "dynamics"; }
 		virtual component::type type() { return "rigidbody2d"; }
-		virtual std::string depends() { return "spatial/space2d collider/collider2d kinetics/kinetic2d"; }
+		virtual std::string depends() { return "spatial/space2d collider/collider2d kinematics/kinematic2d"; }
 		virtual void handle(parameterbase::id pid, component::base * lastwrite, object::id pidowner) {
 			if (pid == "collider.collision") {
 				component::base * c = read<component::base *>("collider.collision");

@@ -5,7 +5,7 @@ find_package(SDL_ttf REQUIRED)
 find_package(Boost REQUIRED)
 
 add_library(space2d MODULE space2d.cc)
-add_library(kinetic2d MODULE kinetic2d.cc)
+add_library(kinematic2d MODULE kinematic2d.cc)
 add_library(renderer MODULE renderer.cc)
 add_library(keyboard MODULE keyboard.cc)
 add_library(charactercontroller MODULE charactercontroller.cc)
@@ -25,8 +25,8 @@ install(TARGETS space2d
 
 
 
-install(TARGETS kinetic2d
-		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/kinetics
+install(TARGETS kinematic2d
+		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/kinematics
 )
 
 
@@ -87,7 +87,7 @@ target_link_libraries(keyboard SDL gear2d)
 target_link_libraries(renderer SDL SDL_image SDL_ttf gear2d)
 target_link_libraries(audiosource SDL SDL_mixer gear2d)
 target_link_libraries(space2d gear2d)
-target_link_libraries(kinetic2d gear2d)
+target_link_libraries(kinematic2d gear2d)
 target_link_libraries(charactercontroller gear2d)
 target_link_libraries(collider2d gear2d)
 target_link_libraries(rigidbody2d gear2d)
@@ -97,5 +97,5 @@ target_link_libraries(spritesheet gear2d)
 
 # WARNING Remember to add those components here too
 
-#	keyboard render kinetic2d space2d)
+#	keyboard render kinematic2d space2d)
 
