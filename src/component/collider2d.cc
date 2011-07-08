@@ -98,7 +98,14 @@ class collider : public component::base {
 		}
 	
 	private:
-
+		
+		
+	private:
+		
+		// This set ups bullet world and context
+		static void initialize() {
+			
+		}
 		
 		static void calculate() {
 			if (colliders.size() <= 1) return;
@@ -177,7 +184,6 @@ class collider : public component::base {
 			}
 		
 		}
-		
 		static bool testaabb(colaabb & a, colaabb & b) {
 			return (
 				(b.x < a.x + a.w) &&

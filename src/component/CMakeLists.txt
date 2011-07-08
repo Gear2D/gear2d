@@ -18,7 +18,10 @@ add_library(spritesheet MODULE spritesheet.cc)
 
 set (COMPONENT_INSTALL_DIR lib/gear2d/component)
 
-include_directories(../ ${SDL_INCLUDE_DIR} ${Boost_INCLUDE_DIRS})
+include_directories(../ bullet-2.78/src ${SDL_INCLUDE_DIR} ${Boost_INCLUDE_DIRS})
+
+add_subdirectory(bullet-2.78)
+
 install(TARGETS space2d
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/spatial
 )
@@ -89,8 +92,8 @@ target_link_libraries(audiosource SDL SDL_mixer gear2d)
 target_link_libraries(space2d gear2d)
 target_link_libraries(kinematic2d gear2d)
 target_link_libraries(charactercontroller gear2d)
-target_link_libraries(collider2d gear2d)
-target_link_libraries(rigidbody2d gear2d)
+target_link_libraries(collider2d gear2d BulletCollision BulletDynamics)
+target_link_libraries(rigidbody2d gear2d BulletCollision BulletDynamics)
 target_link_libraries(singleselect gear2d)
 target_link_libraries(spritesheet gear2d)
 #target_link_libraries(moveto gear2d)
