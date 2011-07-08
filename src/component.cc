@@ -9,6 +9,10 @@
 using boost::algorithm::split;
 using boost::algorithm::is_any_of;
 
+/* this is here so we can pick the first available component */
+#include <boost/filesystem.hpp>
+using namespace boost::filesystem;
+
 #ifdef _WIN32
 #define SOSUFFIX ".dll"
 #elif __MACOS__ 
@@ -153,6 +157,22 @@ namespace gear2d {
 					std::cout << "trying " << file << std::endl;
 					comhandler = SDL_LoadObject(file.c_str());
 					if (comhandler != 0) break;
+					else if (t == f) {
+						/* might be the case where a component like t doesn't exists
+						 * but there's another */
+						path p(paths[i] + '/' + f + "/");
+						std::set<path> founds;
+						copy(directory_iterator(p), directory_iterator(), std::insert_iterator<std::set<path> >(founds, founds.begin()));
+						// set makes sure the founds path is sorted
+						
+						if (founds.size() == 0) continue; // try the next... who know
+						p = *founds.begin();
+						file = p.string();
+						// so load it again :D
+						std::cout << "trying " << file << " (default search)" << std::endl;
+						comhandler = SDL_LoadObject(p.string().c_str());
+						if (comhandler != 0) break;
+					}
 				}
 			} else {
 				comhandler = SDL_LoadObject(file.c_str());

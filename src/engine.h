@@ -80,6 +80,13 @@ namespace gear2d {
 			engine() { };
 			
 		private:
+			
+			/* so we can filter the quit event and quit properly */
+// 			typedef union SDL_Event SDL_Event;
+			static int quitfilter(const void * ev);
+			
+		private:
+			
 			/* config map */
 			static std::map<std::string, std::string> * config;
 			

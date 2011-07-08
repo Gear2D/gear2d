@@ -17,6 +17,7 @@ using boost::algorithm::is_any_of;
 
 
 namespace gear2d {
+	
 	std::map<std::string, std::string> * engine::config;
 	component::factory * engine::cfactory;
 	object::factory * engine::ofactory;
@@ -27,7 +28,12 @@ namespace gear2d {
 	bool engine::started;
 	std::string * engine::nextscene;
 	
-	
+	int engine::quitfilter(const void * _ev) {
+		const SDL_Event * ev = (const SDL_Event*)_ev;
+		started = !(ev->type == SDL_QUIT);
+		return 1;
+	}
+
 	void engine::add(component::base * c) {
 		if (components == 0) {
 			std::cerr << "(Gear2D Engine) Initialize the engine before attaching a component to an object" << std::endl;
@@ -52,7 +58,8 @@ namespace gear2d {
 		if (initialized == true && force == false) return;
 		if (config != 0) delete config;
 		srand(std::time(0));
-		
+		SDL_InitSubSystem(SDL_INIT_EVENTTHREAD | SDL_INIT_VIDEO);
+		SDL_SetEventFilter((SDL_EventFilter)quitfilter);
 		config = new std::map<std::string, std::string>;
 		
 		// erase all the components
@@ -157,7 +164,6 @@ namespace gear2d {
 			timediff delta = dt/1000.0f;
 			
 			SDL_PumpEvents();
-			if (SDL_PeepEvents(NULL, 100, SDL_PEEKEVENT, SDL_QUITMASK)) { started = false; }
 			
 			for (std::set<object::id>::iterator i = destroyedobj->begin(); i != destroyedobj->end(); i++) {
 				// this will push object's components to removedcom, hopefully.
