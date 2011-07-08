@@ -162,7 +162,11 @@ namespace gear2d {
 						 * but there's another */
 						path p(paths[i] + '/' + f + "/");
 						std::set<path> founds;
-						copy(directory_iterator(p), directory_iterator(), std::insert_iterator<std::set<path> >(founds, founds.begin()));
+						try {
+							copy(directory_iterator(p), directory_iterator(), std::insert_iterator<std::set<path> >(founds, founds.begin()));
+						} catch (...) {
+							// do nothing actually, probably the path doesn't exists
+						}
 						// set makes sure the founds path is sorted
 						
 						if (founds.size() == 0) continue; // try the next... who know
