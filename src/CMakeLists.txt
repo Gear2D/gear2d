@@ -75,3 +75,5 @@ set(YAML_CPP_BUILD_TOOLS OFF)
 set(YAML_CPP_BUILD_CONTRIB OFF)
 
 include(CPack)
+
+add_subdirectory(sideshow)
