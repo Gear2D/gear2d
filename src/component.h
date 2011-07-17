@@ -205,8 +205,9 @@ namespace gear2d {
 					return v->get();
 				}
 				
+			public:
 				/**
-				 * @brief Writes in a shared parameter
+				 * @brief Writes in a shared parameter pertaining to parent object
 				 * @p pid Parameter id to be write to
 				 * @p source Source from it shall be copied
 				 * @warning Be careful about type promotion. Be explicit if necessary.
@@ -214,6 +215,22 @@ namespace gear2d {
 				template<typename datatype>
 				void write(parameterbase::id pid, const datatype & source) {
 					parameter<datatype> * v = access<datatype>(pid);
+// 					cout << "debug: " << this->family()+"/"+this->type() << " writing to " << pid << endl;
+					v->set(source);
+					v->lastwrite = this;
+				}
+				
+			public:
+								/**
+				 * @brief Writes in a shared parameter in another object
+				 * @p pid Parameter id to be write to
+				 * @p source Source from it shall be copied
+				 * @warning Be careful about type promotion. Be explicit if necessary.
+				 * @warning The parameter will @b*NOT* be created if it does not exists */
+				template<typename datatype>
+				void write(object::id oid, parameterbase::id pid, const datatype & source) {
+					parameter<datatype> * v = (parameter<datatype> *) oid->get(pid);
+					if (v == 0) return;
 // 					cout << "debug: " << this->family()+"/"+this->type() << " writing to " << pid << endl;
 					v->set(source);
 					v->lastwrite = this;

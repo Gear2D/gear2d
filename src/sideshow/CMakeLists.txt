@@ -1,4 +1,1 @@
-
-add_library(simulation MODULE simulation.cc)
-
-add_subdirectory(bullet-2.78)
+add_subdirectory(../thirdparty/bullet-2.78)
