@@ -19,9 +19,9 @@
  * 
  * @b provides
  * @li @c dynamics.nogravity Should this component ignore gravity acceleration? defaults to @c false @b bool (0 or 1)
- * @li @c dynamics.cinetic Should this component not move in reacting to collision (like a wall) or to gravity. (0 or 1) defaults to @c false @b bool 
+ * @li @c dynamics.kinematic Should this component not move in reacting to collision (like a wall) or to gravity. (0 or 1) defaults to @c false @b bool 
  * @li @c dynamics.mass Mass of this object in kilograms. Defaults to @c 0.1 @b float 
- * 	Please note that even if cinetic, its mass still makes diference in reaction calculations
+ * 	Please note that even if kinematic, its mass still makes diference in reaction calculations
  * 
  * @b global
  *  Objects cannot override these, shall be set at gear2d.yaml
@@ -60,7 +60,7 @@ class bounce : public component::base {
 				component::base * c = read<component::base *>("collider.collision");
 				// we do nothing with an object without mass
 				if (!c->exists("dynamics.mass")) return;
-				if (read<bool>("dynamics.cinematic")) return;
+				if (read<bool>("dynamics.kinematic")) return;
 				const float & m1 = raw<float>("dynamics.mass");
 				const float & m2 = c->raw<float>("dynamics.mass");
 				
@@ -72,18 +72,31 @@ class bounce : public component::base {
 				const float & colyspeed =  raw<float>("collider.collision.speed.y");
 
 				// restore x and y based on speed
-				add<float>("x", -xspeed * dt);
-				add<float>("y", -yspeed * dt);
+				/*add<float>("x", -xspeed * dt);
+				add<float>("y", -yspeed * dt);*/
+				
 				
 				// adjust x and y to non-colliding positions
 				float resxspeed, resyspeed;
 				if (side == 0 || side == 2) {
 					resxspeed = ((m1-m2)/(m1+m2))*xspeed + ((2*m2)/(m1+m2))*colxspeed;
 					write<float>("x.speed", resxspeed);
+					add<float>("x", resxspeed * dt);
+					if (side == 0) {
+						add<float>("x", + (read<float>("collider.collision.w") / 2.0 + 1));
+					} else {
+						add<float>("x", - (read<float>("collider.collision.w") / 2.0 + 1));
+					}
 				}
 				if (side == 1 || side == 3) {
 					resyspeed = ((m1-m2)/(m1+m2))*yspeed + ((2*m2)/(m1+m2))*colyspeed;
 					write<float>("y.speed", resyspeed);
+					add<float>("y", resyspeed * dt);
+					if (side == 1) {
+						add<float>("y", + (read<float>("collider.collision.h") / 2.0 + 1));
+					} else {
+						add<float>("y", - (read<float>("collider.collision.h") / 2.0 + 1));
+					}
 				}
 			}
 		}
@@ -100,7 +113,7 @@ class bounce : public component::base {
 			} else {
 				init<float>("dynamics.mass", sig["dynamics.mass"], 1.0f);
 			}
-			init<bool>("dynamics.cinematic", sig["dynamics.cinematic"], false);
+			init<bool>("dynamics.kinematic", sig["dynamics.kinematic"], false);
 			init<bool>("dynamics.nogravity", sig["dynamics.nogravity"], false);
 			hook("collider.collision");
 		}
@@ -108,7 +121,7 @@ class bounce : public component::base {
 		
 		virtual void update(float dt) { 
 			this->dt=dt; 
-			if (read<bool>("dynamics.cinematic") == true || read<bool>("dynamics.nogravity") == true) return;
+			if (read<bool>("dynamics.kinematic") == true || read<bool>("dynamics.nogravity") == true) return;
 			else {
 				add("x.speed", gx*dt);
 				add("y.speed", gy*dt);
