@@ -15,7 +15,6 @@
 using boost::algorithm::split;
 using boost::algorithm::is_any_of;
 
-
 namespace gear2d {
 	
 	std::map<std::string, std::string> * engine::config;
@@ -163,6 +162,7 @@ namespace gear2d {
 			begin = SDL_GetTicks();
 			timediff delta = dt/1000.0f;
 			
+			if (dt < 60/1000.0f) SDL_Delay(60/1000.0f - dt);
 			SDL_PumpEvents();
 			
 			for (std::set<object::id>::iterator i = destroyedobj->begin(); i != destroyedobj->end(); i++) {
@@ -199,10 +199,10 @@ namespace gear2d {
 				for (std::set<component::base*>::iterator comit = list.begin(); comit != list.end(); comit++) {
 					(*comit)->update(delta);
 				}
-				sprintf(omg, "%s:%.4d ", comtpit->first.c_str(), SDL_GetTicks() - b);
+// 				sprintf(omg, "%s:%.4d ", comtpit->first.c_str(), SDL_GetTicks() - b);
 				wm += omg;
 			}
-			sprintf(omg, "total (last): %.3d", dt);
+// 			sprintf(omg, "total (last): %.3d", dt);
 			wm += omg;
 			/* no components, quit the engine */
 			if (components->empty()) started = false;
@@ -214,7 +214,7 @@ namespace gear2d {
 			}
 			
 			SDL_Delay(2);
- 			SDL_WM_SetCaption(wm.c_str(), 0);
+//  			SDL_WM_SetCaption(wm.c_str(), 0);
 			end = SDL_GetTicks();
 		}
 		
