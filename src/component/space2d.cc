@@ -31,6 +31,7 @@ class spatial
 			init("z", sig["z"], 0.0f);
 			init("w", sig["w"], 0.0f);
 			init("h", sig["h"], 0.0f);
+			init("d", sig["d"], 0.0f);
 		}
 		
 		virtual void update(timediff dt) {

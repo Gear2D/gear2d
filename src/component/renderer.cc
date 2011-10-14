@@ -21,6 +21,7 @@
  * @li @c <id>.position.{w|h} Width and height of the image @b int
  * @li @c <id>.clip.{x|y|w|h} Clipping frame for the image. Defaults to whole image. @b float
  * @li @c <id>.alpha Alpha value for the surface. 0 is transparent, 1 is opaque. @b float
+ * @li @c <id>.render Sets if this surface shall be rendered. 0 is false (don't render) and 1 is true (render). Defaults to true.
  * @li @c renderer.texts list of ids to be treated like text
  * @li @c <id>.text Text to be rendered. This only works if @c <id> was declared at renderer.texts
  * @li @c <id>.blended Shall the text be rendered in blend mode (alpha blending)? Defaults to 0 @b bool. Do not use for text that changes much. 
@@ -28,6 +29,7 @@
  * @li @c <id>.font.size Size to be rendered, in pixels
  * @li @c <id>.font.{r|g|b} Red/green/blue color to be displayed, ranging from 0 to 1. @b float Defaults to 0
  * @li @c <id>.font.style List of styles to be displayed, separated by white-space (bold italic underline strikethru) @b string
+ * 
  * 
  * @b globals:
  * @li @c imgpath Path where to look for image files. Shall be set at the main config file
@@ -63,12 +65,14 @@ class surface {
 		float x;
 		float y;
 		float z;
+		float rotation;
 		int w;
 		int h;
 		float oldz;
 		float alpha;
 		bool bind;
 		bool absolute;
+		bool render;
 		SDL_Rect clip;
 		
 		// raw surface
@@ -98,6 +102,7 @@ class surface {
 		, x(0.0f)
 		, y(0.0f)
 		, z(0.0f)
+		, rotation(0.0f)
 		, w(0)
 		, h(0)
 		, oldz(z)
@@ -339,8 +344,9 @@ class renderer : public component::base {
 				write(id + ".position.x", eval(sig[id + ".position.x"], 0.0f));
 				write(id + ".position.y", eval(sig[id + ".position.y"], 0.0f));
 				write(id + ".position.z", eval(sig[id + ".position.z"], 0.0f));
-				write(id + ".position.w", s->raw->w);
-				write(id + ".position.h", s->raw->h);
+				write(id + ".position.w", eval(sig[id + ".position.w"], s->raw->w));
+				write(id + ".position.h", eval(sig[id + ".position.h"], s->raw->h));
+				write(id + ".position.rotation", eval(sig[id + ".position.rotation"], 0.0f));
 				write(id + ".clip.x", eval<int>(sig[id + ".clip.x"], 0));
 				write(id + ".clip.y", eval<int>(sig[id + ".clip.y"], 0));
 				write(id + ".clip.w", eval<int>(sig[id + ".clip.w"], s->raw->w));
@@ -348,6 +354,8 @@ class renderer : public component::base {
 				write(id + ".bind", eval(sig[id + ".bind"], true));
 				write(id + ".absolute", eval(sig[id + ".absolute"], true));
 				write(id + ".alpha", eval<float>(sig[id + ".alpha"], 1.0f));
+				write(id + ".render", eval<bool>(sig[id + ".render"], true));
+			
 				hook(id + ".position.z");
 				zordered.insert(zorder(s->z, s));
 			}
@@ -440,11 +448,13 @@ class renderer : public component::base {
 			bind(id + ".position.z", s->z);
 			bind(id + ".position.w", s->w);
 			bind(id + ".position.h", s->h);
+			bind(id + ".position.rotation", s->rotation);
 			bind(id + ".clip.x", s->clip.x);
 			bind(id + ".clip.y", s->clip.y);
 			bind(id + ".clip.w", s->clip.w);
 			bind(id + ".clip.h", s->clip.h);
 			bind(id + ".bind", s->bind);
+			bind(id + ".render", s->render);
 			bind(id + ".absolute", s->absolute);
 			bind(id + ".alpha", s->alpha);
 			hook(id + ".position.z");
@@ -475,9 +485,12 @@ class renderer : public component::base {
 			if (zordered.size() == 0) return;
 			SDL_Rect dstrect;
 			SDL_Rect srcrect;
+			SDL_Surface * target;
+			SDL_Surface * rotated = NULL;
 			for (set<zorder>::iterator i = zordered.begin(); i != zordered.end(); i++) {
 				surface * s = i->second;
 				dstrect.x = dstrect.y = 0;
+				if (s->render == false) continue;
 				if (s->bind) {
 					const float & x = s->parent->raw<float>("x");
 					const float & y = s->parent->raw<float>("y");
@@ -487,8 +500,21 @@ class renderer : public component::base {
 				dstrect.x += s->x;
 				dstrect.y += s->y;
 				srcrect = s->clip;
-				SDL_SetAlpha(s->raw, SDL_SRCALPHA | SDL_RLEACCEL, s->alpha * 255);
-				SDL_BlitSurface(s->raw, &srcrect, screen, &dstrect);
+				target = s->raw;
+				SDL_SetAlpha(target, SDL_SRCALPHA | SDL_RLEACCEL, s->alpha * 255);
+				if (s->rotation != 0.0f) {
+					rotated = rotozoomSurface(s->raw, s->rotation, 1.0f, 1);
+					dstrect.x = (s->w/2 - rotated->w/2) - s->w/2 + dstrect.x;
+					dstrect.y = (s->h/2 - rotated->h/2) - s->h/2 + dstrect.y;
+					srcrect.w += (rotated->w - srcrect.w);
+					srcrect.h += (rotated->h - srcrect.h);
+					target = rotated;
+				}
+				SDL_BlitSurface(target, &srcrect, screen, &dstrect);
+				if (rotated != NULL) {
+					SDL_FreeSurface(rotated);
+					rotated = NULL;
+				}
 			}
 			SDL_Flip(screen);
 			SDL_Delay(1);

@@ -29,6 +29,9 @@ class mouse : public component::base {
 			write<int>("mouse.1", 0);
 			write<int>("mouse.2", 0);
 			write<int>("mouse.3", 0);
+			
+			/* ----------------- */
+			
 		}
 		
 		virtual void update(timediff dt) {

@@ -47,6 +47,8 @@ class collider : public component::base {
 		virtual component::type type() { return "collider2d"; }
 		virtual component::family family() { return "collider"; }
 		virtual string depends() { return "spatial/space2d"; }
+		virtual void handle(parameterbase::id pid, base* lastwrite, object::id owner) {
+		}
 		
 		virtual void setup(object::signature & sig) { 
 			init<string>("collider.type", sig["collider.type"], "aabb");
@@ -57,6 +59,7 @@ class collider : public component::base {
 			
 			float x, y, w, h;
 			read("x", x); read("y", y), read("w", w), read("h", h);
+			hook("w"); hook("h");
 
 			aabb.x = eval(sig["collider.aabb.x"], 0);
 			bind("collider.aabb.x", aabb.x);

@@ -30,6 +30,7 @@ include_directories(thirdparty/yaml-cpp/include/ ${SDL_INCLUDE_DIR} ${Boost_INCL
 link_directories(${SDL_LINK_DIR} ${Boost_LINK_DIRS})
 
 add_subdirectory(thirdparty/yaml-cpp)
+add_subdirectory(thirdparty/bullet-2.78)
 
 # install rules for the executable
 install(TARGETS gear2d main
@@ -46,6 +47,7 @@ install(FILES ${CMAKE_SOURCE_DIR}/LICENSE ${CMAKE_SOURCE_DIR}/README
 	DESTINATION .)
 
 add_subdirectory(component)
+
 
 # win32 shared libraries for install dependencies
 if (WIN32)

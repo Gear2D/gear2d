@@ -14,7 +14,7 @@ using namespace std;
 
 class bullet : public gear2d::component::base {
 	public:
-		bullet() : trigger(false) { }
+		bullet() : trigger(false), fx(0.0f), fy(0.0f) { }
 		virtual ~bullet() { voters--; }
 		
 		virtual component::family family() { return "simulation"; }
@@ -38,6 +38,15 @@ class bullet : public gear2d::component::base {
 			
 			if (pid == "simulation.shape") {
 				
+			}
+			
+			if (pid == "simulation.force.x") {
+				fx += read<float>("simulation.force.x");
+ 				cout << "got x " << pid << " " << read<float>("simulation.force.x") << endl;
+			}
+			if(pid == "simulation.force.y") {
+				fy += read<float>("simulation.force.y");
+// 				cout << "got y" << endl;
 			}
 			
 			if (pid == "mass") {
@@ -72,6 +81,10 @@ class bullet : public gear2d::component::base {
 			trigger = eval<bool>(sig["simulation.trigger"], false);
 			write<bool>("simulation.trigger", trigger);
 			write<string>("simulation.shape", "box");
+			write<float>("simulation.force.x", 0.0f);
+			write<float>("simulation.force.y", 0.0f);
+			hook("simulation.force.x");
+			hook("simulation.force.y");
 			hook("simulation.trigger");
 			hook("x"); hook("y"); hook("z"); hook("w"); hook("h"); hook("d");
 			
@@ -89,31 +102,41 @@ class bullet : public gear2d::component::base {
 		virtual void update(timediff dt) {
 			voting++;
 			if (voting >= voters) { globalupdate(dt); voting = 0; }
+			body->applyCentralForce(btVector3(fx, fy, 0.0f));
+			cout << "fx " << fx << " fy " << fy << endl;
+ 			fx = 0;
+ 			fy = 0;
 			motionstate->getWorldTransform(transform);
 			btVector3 & position = transform.getOrigin();
 			
 			// update position
 			btBoxShape * bs = (btBoxShape *)body->getCollisionShape();
-			btVector3 he = bs->getHalfExtentsWithMargin();
+			btVector3 he = bs->getHalfExtentsWithoutMargin();
 // 			cout << position.x() << " " << position.y() << " " << position.z() << " " << he.x() << " " << he.y() << " " << he.z() << endl;
-			write<float>("x", (float) position.x());
-			write<float>("y", (float) position.y());
-			write<float>("z", (float) position.z());
+			write<float>("x", (float) position.x() - he.x());
+			write<float>("y", (float) position.y() - he.y());
+			write<float>("z", (float) position.z() - he.z());
+// 			write("simulation.force.x", 0.0f);
+// 			write("simulation.force.y", 0.0f);
+			
 		}
 		
 	private:
 		// set up default rigid body properties.
 		void setupbody(const float & x, const float & y, const float &z, const float & w, const float & h, const float & d, float mass, int flags) {
 			btCollisionShape * shape = new btBoxShape(btVector3(w/2, h/2, d/2));
+			btVector3 he = ((btBoxShape*)shape)->getHalfExtentsWithoutMargin();
 			btVector3 inertia;
 			shape->calculateLocalInertia(mass, inertia);
 			
 			btTransform transform;
 			transform.setIdentity();
 			transform.setOrigin(btVector3(x, y, z));
+// 			transform.setOrigin(btVector3(x + he.x(), y + he.y(), z + he.z()));
 			motionstate = new btDefaultMotionState(transform);		
 			
 			body = new btRigidBody(mass, motionstate, shape, inertia);
+			body->setRestitution(.9f);
 			
 			// our linkback from rigid body to the sim component
 			body->setUserPointer(this);
@@ -133,6 +156,10 @@ class bullet : public gear2d::component::base {
 		
 		// way of exchanging transform things.
 		btTransform transform;
+		
+		// amount of applied force
+		float fx;
+		float fy;
 		
 		bool trigger;
 		
