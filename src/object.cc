@@ -179,8 +179,8 @@ namespace gear2d {
 			component::base * samecom = o->components[s.family];
 			if (samecom != 0) {
 				if ((s.type == "")) {
-				  comlist.erase(comlist.begin());
-				  continue;
+					comlist.erase(comlist.begin());
+					continue;
 				}
 				else if ((samecom->type() == s.type)) {
 					comlist.erase(comlist.begin());

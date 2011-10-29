@@ -9,8 +9,8 @@
  *
  * @b provides
  * @li @c audiosource.sounds List of sounds to be loaded in the form id=file @b string
- * @li @c <id>.playing Sets the play/pause state of this particular sound. Each time you set it true, it will play. Defaults to false @b bool 
- * @li @c <id>.loops How many loops the next play should do
+ * @li <tt>\<id\>.playing</tt> Sets the play/pause state of this particular sound. Each time you set it true, it will play. Defaults to false @b bool 
+ * @li <tt>\<id\>.loops</tt> How many loops the next play should do
  * 
  * @b globals
  * @li @c audiosource.music File for the background music @b string
