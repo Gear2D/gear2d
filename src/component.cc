@@ -33,6 +33,13 @@ namespace gear2d {
 			return owner->get(pid);
 		}
 		
+		void base::setup(object::signature& sig, 
+						  parameterbase::table::const_iterator pbegin,
+						  parameterbase::table::const_iterator pend) {
+			setup(sig);
+		}
+
+		
 		component::base * base::build(component::selector s) {
 			component::base * com = cfactory->build(s);
 			if (com == 0) {

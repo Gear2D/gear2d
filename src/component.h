@@ -164,18 +164,41 @@ namespace gear2d {
 				virtual void handle(parameterbase::id pid, component::base * lastwrite, object::id owner) { ; }
 				
 				/**
-				 * @brief Where you should put initialization routines
+				 * @brief Where you should put initialization routines.
 				 * @p sig Object original signature
 				 * This is set to give your component an opportunity
 				 * to initialize (since its not done in the construction).
 				 * Using sig you can parse all the initial parameters
-				 * passed to the object 
+				 * passed to the object via signature (loaded from the object
+				 * file).
 				 *
 				 * This is garanteed to be called after the object was attached, so
 				 * read, eval, and write operations will be garanteed to work.
 				 */
 				virtual void setup(object::signature & sig) = 0;
 				
+				/**
+				 * @brief  Where you should put initialization routines.
+				 * @p sig Object original signature
+				 * @p pbegin Iterator to the beginning of current parameter table
+				 * @p pend Iterator to the end of current parameter table
+
+				 * This is set to give your component an opportunity
+				 * to initialize (since its not done in the construction).
+				 * Using sig you can parse all the initial parameters
+				 * passed to the object via signature (loaded from the object
+				 * file) and use pbegin and pend iterators to iterate over
+				 * the names of the existing parameter prior to the attach of
+				 * your component
+				 *
+				 * This is garanteed to be called after the object was attached, so
+				 * read, eval, and write operations will be garanteed to work.
+				 * 
+				 * @warning You do not need to implement this method. If it is
+				 * not implemented it will call @ref setup(sig) by default.
+				 */
+				virtual void setup(object::signature & sig, parameterbase::table::const_iterator pbegin, parameterbase::table::const_iterator pend);
+			
 				/**
 				 * @brief Updates the state of this component
 				 * @param dt Delta time relative to last frame */
