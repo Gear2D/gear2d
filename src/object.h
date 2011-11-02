@@ -119,6 +119,7 @@ namespace gear2d {
 			 * This is set whenever the object is built using
 			 * a factory. */
 			object::factory * ofactory;
+			map< parameterbase::id, parameterbase::value >::const_iterator it;
 		
 		private:
 			object(object::signature & sig);

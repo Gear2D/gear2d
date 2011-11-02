@@ -86,7 +86,14 @@ namespace gear2d {
 		if (oldc != 0) { delete oldc; }
 		newc->owner = this;
 		components[newc->family()] = newc;
-		newc->setup(sig, parameters.begin(), parameters.end());
+		
+		/* TODO: make me better */
+		std::vector<std::string> names(parameters.size());
+		int i = 0;
+		for (parameterbase::table::iterator it = parameters.begin(); it != parameters.end(); it++, i++) {
+			names[i] = it->first;
+		}
+		newc->setup(sig, names);
 		engine::add(newc);
 	}
 	

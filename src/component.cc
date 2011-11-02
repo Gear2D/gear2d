@@ -33,9 +33,7 @@ namespace gear2d {
 			return owner->get(pid);
 		}
 		
-		void base::setup(object::signature& sig, 
-						  parameterbase::table::const_iterator pbegin,
-						  parameterbase::table::const_iterator pend) {
+		void base::setup(object::signature& sig, const std::vector<std::string> & names) {
 			setup(sig);
 		}
 

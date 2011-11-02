@@ -180,14 +180,13 @@ namespace gear2d {
 				/**
 				 * @brief  Where you should put initialization routines.
 				 * @p sig Object original signature
-				 * @p pbegin Iterator to the beginning of current parameter table
-				 * @p pend Iterator to the end of current parameter table
+				 * @p names Iterator to the beginning of current parameter table
 
 				 * This is set to give your component an opportunity
 				 * to initialize (since its not done in the construction).
 				 * Using sig you can parse all the initial parameters
 				 * passed to the object via signature (loaded from the object
-				 * file) and use pbegin and pend iterators to iterate over
+				 * file) and use propertykeys to iterate over
 				 * the names of the existing parameter prior to the attach of
 				 * your component
 				 *
@@ -197,7 +196,7 @@ namespace gear2d {
 				 * @warning You do not need to implement this method. If it is
 				 * not implemented it will call @ref setup(sig) by default.
 				 */
-				virtual void setup(object::signature & sig, parameterbase::table::const_iterator pbegin, parameterbase::table::const_iterator pend);
+				virtual void setup(object::signature & sig, const std::vector<std::string> & propertykeys);
 			
 				/**
 				 * @brief Updates the state of this component
