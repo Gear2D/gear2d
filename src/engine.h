@@ -83,7 +83,7 @@ namespace gear2d {
 			
 			/* so we can filter the quit event and quit properly */
 // 			typedef union SDL_Event SDL_Event;
-			static int quitfilter(const void * ev);
+			static int eventfilter(const void * ev);
 			
 		private:
 			

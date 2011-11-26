@@ -129,14 +129,6 @@ namespace gear2d {
 			protected:
 				base();
 				
-				/**
-				 * @brief Prepare the logging stream
-				 * Use this when you want to log anything */
-				std::ostream & log() {
-					std::clog << this->family() << "/" << this->type() << ": ";
-					return std::clog;
-				}
-				
 			public:
 				virtual ~base();
 				
@@ -148,14 +140,14 @@ namespace gear2d {
 				virtual component::family family() { return type(); }
 				
 				/**
-				 * @brief Components that must exists before its attachment
+				 * @brief Components that must exists before its attachment.
 				 * The object will call this function in the attachment process,
 				 * and check dependencies one by one. If any of the specified
 				 * components is not found attached, attaching will simply fail */
 				virtual std::string depends() { return ""; }
 				
 				/**
-				 * @brief Method that will be called to handle value changes
+				 * @brief Method that will be called to handle value changes.
 				 * @p id Parameter ID of the changed parameter
 				 * @p lastwrite The last component to write in this parameter (likely the one who triggered it)
 				 * @p owner The owner of the parameter (where it comes from)
@@ -177,27 +169,6 @@ namespace gear2d {
 				 */
 				virtual void setup(object::signature & sig) = 0;
 				
-				/**
-				 * @brief  Where you should put initialization routines.
-				 * @p sig Object original signature
-				 * @p names Iterator to the beginning of current parameter table
-
-				 * This is set to give your component an opportunity
-				 * to initialize (since its not done in the construction).
-				 * Using sig you can parse all the initial parameters
-				 * passed to the object via signature (loaded from the object
-				 * file) and use propertykeys to iterate over
-				 * the names of the existing parameter prior to the attach of
-				 * your component
-				 *
-				 * This is garanteed to be called after the object was attached, so
-				 * read, eval, and write operations will be garanteed to work.
-				 * 
-				 * @warning You do not need to implement this method. If it is
-				 * not implemented it will call @ref setup(sig) by default.
-				 */
-				virtual void setup(object::signature & sig, const std::vector<std::string> & propertykeys);
-			
 				/**
 				 * @brief Updates the state of this component
 				 * @param dt Delta time relative to last frame */
@@ -406,14 +377,14 @@ namespace gear2d {
 				}
 				
 				/**
-				 * @brief Query if the given parameter exists
+				 * @brief Query if the given parameter exists.
 				 * @p pid Parameter id
 				 * @return parameter address if it does exists, (null) 0 if not.
-				 * This is queries if the parameter exists. */
+				 * This queries if the parameter exists. */
 				parameterbase * exists(parameterbase::id pid);
 
 				/**
-				 * @brief Build another component based on selector
+				 * @brief Build another component based on selector.
 				 * @p s Component selector (family/type)
 				 * Use the component factory to build another component.
 				 * 
@@ -423,7 +394,19 @@ namespace gear2d {
 				component::base * build(component::selector s);
 				
 				/**
-				 * @brief Spawns another object
+				 * @brief Attach a component into the current owner object.
+				 * @param com Component to attach
+				 * @warning Please notice that there will be some dependency
+				 * checking. If it fails, an exception will be raised and it will
+				 * not be attached.
+				 * 
+				 * @throws evil Error when there's any dependency mismatch
+				 */
+				void attach(component::base * com) throw (gear2d::evil);
+				
+				
+				/**
+				 * @brief Spawns another object.
 				 * @p t Type of the object to load
 				 * @return ID of the spawned object instance
 				 * This uses object factory to spawn another object
@@ -432,7 +415,7 @@ namespace gear2d {
 				object::id spawn(object::type t);
 				
 				/**
-				 * @brief Locate a living object in the game engine
+				 * @brief Locate a living object in the game engine.
 				 * @p t type of the object to locate
 				 * @return ID-handler of the located object. 0 means not-found.
 				 * @warning You may want to use this on update() because
@@ -441,21 +424,21 @@ namespace gear2d {
 				object::id locate(object::type t);
 				
 				/**
-				 * @brief Clone the parent game object
+				 * @brief Clone the parent game object.
 				 * @return A pointer to a compononent of the same type that called clone()
 				 * This will creates a new game object and
 				 * then set its parameter table with this one. */
 				component::base * clone();
 				
 				/**
-				 * @brief Marks the owner for destruction
+				 * @brief Marks the owner for destruction.
 				 * Marks the owner object for destruction at the next frame.
 				 * Please notice that this component will be put in the
 				 * destruction list too. */
 				void destroy();
 				
 				/**
-				 * @brief Loads a new scene configuration
+				 * @brief Loads a new scene configuration.
 				 * @p scene Scene name
 				 */
 				void load(std::string scene);

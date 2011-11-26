@@ -27,9 +27,17 @@ namespace gear2d {
 	bool engine::started;
 	std::string * engine::nextscene;
 	
-	int engine::quitfilter(const void * _ev) {
+	int engine::eventfilter(const void * _ev) {
 		const SDL_Event * ev = (const SDL_Event*)_ev;
-		started = !(ev->type == SDL_QUIT);
+		switch(ev->type) {
+			case SDL_QUIT:
+				started = !(ev->type == SDL_QUIT);
+				return 1;
+				break;
+			default:
+				break;
+				
+		}
 		return 1;
 	}
 
@@ -58,7 +66,7 @@ namespace gear2d {
 		if (config != 0) delete config;
 		srand(std::time(0));
 		SDL_InitSubSystem(SDL_INIT_EVENTTHREAD | SDL_INIT_VIDEO);
-		SDL_SetEventFilter((SDL_EventFilter)quitfilter);
+		SDL_SetEventFilter((SDL_EventFilter)eventfilter);
 		config = new std::map<std::string, std::string>;
 		
 		// erase all the components
@@ -155,7 +163,7 @@ namespace gear2d {
 		// make sure we init
 		init();
 		int begin = 0, end = 0, dt = 0;
-		
+		SDL_Event ev;
 		started = true;
 		while (started) {
 			dt = end - begin;
@@ -212,6 +220,9 @@ namespace gear2d {
 				load(nextscene->c_str());
 				started = true;
 			}
+			
+			/* consumes all remaining events. next frame it must return empty. */
+// 			while (SDL_PollEvent(&ev));
 			
 			SDL_Delay(2);
 //  			SDL_WM_SetCaption(wm.c_str(), 0);

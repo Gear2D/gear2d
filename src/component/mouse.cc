@@ -30,6 +30,7 @@ class mouse : public component::base {
 			write<int>("mouse.2", 0);
 			write<int>("mouse.3", 0);
 			
+			
 			/* ----------------- */
 			
 		}
@@ -40,7 +41,7 @@ class mouse : public component::base {
 				globalupdate(dt);
 				voting = 0;
 			}
-			
+
 			if (read<int>("mouse.x") != x) write("mouse.x", x);
 			if (read<int>("mouse.y") != y) write("mouse.y", y);
 			if (read<int>("mouse.1") != bt1) write<int>("mouse.1", bt1 != 0);

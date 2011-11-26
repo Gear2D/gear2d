@@ -38,9 +38,10 @@
  * (space char) - space
  * return - return key
  * 
- * @b Parameters
- * @c keyboard.interested keys that you are interested in knowing its state. They will be provided as "key.{key}" in parameters (like key.c for c key). @b string
- * @c key.{key} State of the key in that frame. You need to have that key in keyboard.interested if you want to know about it. @b integer
+ * @b Parameters:
+ * @c keyboard.interested: keys that you are interested in knowing its state. They will be provided as "key.{key}" in parameters (like key.c for c key). @b string
+ * @c key.{key}: State of the key in that frame. You need to have that key in keyboard.interested if you want to know about it. @b integer
+ * @c keyboard.text: Unicode characters read in this frame @b wstring
  */
 
 #include "gear2d.h"
@@ -114,12 +115,12 @@ class keyboard : public component::base {
 		virtual void setup(object::signature & sig) {
 			cout << "keyboard hello" << endl;
 			if (!initialized) initialize();
-			
 			// check the interested keys
 			string interested = sig["keyboard.interested"];
 			write("keyboard.interested", std::string(""));
 			hook("keyboard.interested");
 			write<string>("keyboard.interested", sig["keyboard.interested"]);
+			write<std::wstring>("keyboard.text", std::wstring());
 			updaters++;
 			kbcomponents.insert(this);
 		}
@@ -175,6 +176,7 @@ class keyboard : public component::base {
 		static void doupdate() {
 // 			SDL_PumpEvents(); // this is done by the engine now.
 			if (usedkeys.size() == 0) return;
+			
 			if (kbstate[SDLK_q]) exit(0);
 			for (std::set<int>::iterator it = usedkeys.begin(); it != usedkeys.end(); it++) {
 				int key = *it;
@@ -213,6 +215,8 @@ class keyboard : public component::base {
 			}
 			for (set<keyboard *>::iterator i = kbcomponents.begin(); i != kbcomponents.end(); i++) {
 				(*i)->kbupdate();
+				if (!unicodestr.empty()) { (*i)->write("keyboard.text", unicodestr); }
+				
 			}
 		}
 
@@ -221,8 +225,9 @@ class keyboard : public component::base {
 				if (SDL_InitSubSystem(SDL_INIT_EVENTTHREAD | SDL_INIT_VIDEO) != 0) {
 					throw (evil(string("(Keyboard Component) Event threat init fail! ") + SDL_GetError()));
 				}
+				
 			}
-			
+			SDL_EnableUNICODE(SDL_TRUE);
 			keystatus.resize(SDLK_LAST, pair<int, bool>(0, false));
 			kbstate = SDL_GetKeyState(NULL);
 			

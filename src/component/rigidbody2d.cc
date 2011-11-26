@@ -108,6 +108,7 @@ class bounce : public component::base {
 				eval(sig["dynamics.drag.x"], 0.0f),
 				eval(sig["dynamics.drag.y"], 0.0f)
 			);
+
 			if (sig["dynamics.mass"] == "infinity") {
 				write<float>("dynamics.mass", numeric_limits<float>::infinity());
 			} else {

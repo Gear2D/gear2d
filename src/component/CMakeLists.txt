@@ -22,18 +22,13 @@ set (COMPONENT_INSTALL_DIR lib/gear2d/component)
 
 include_directories(../ ../thirdparty/bullet-2.78/src ${SDL_INCLUDE_DIR} ${Boost_INCLUDE_DIRS})
 
-
 install(TARGETS space2d
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/spatial
 )
 
-
-
 install(TARGETS kinematic2d
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/kinematics
 )
-
-
 
 install(TARGETS renderer
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/renderer

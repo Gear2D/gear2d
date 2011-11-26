@@ -33,11 +33,6 @@ namespace gear2d {
 			return owner->get(pid);
 		}
 		
-		void base::setup(object::signature& sig, const std::vector<std::string> & names) {
-			setup(sig);
-		}
-
-		
 		component::base * base::build(component::selector s) {
 			component::base * com = cfactory->build(s);
 			if (com == 0) {
@@ -45,6 +40,11 @@ namespace gear2d {
 				com = cfactory->build(s);
 			}
 			return com;
+		}
+		
+		void base::attach(base * com) throw (gear2d::evil) {
+			if (com == 0) return;
+			owner->attach(com);
 		}
 		
 		object::id base::locate(object::type t) {
