@@ -42,7 +42,7 @@ namespace gear2d {
 	object::id object::oid() { return this; }
 	std::string object::name() { return sig["name"]; }
 	
-	void object::attach(component::base * newc) {
+	void object::attach(component::base * newc) throw (evil) {
 		if (newc == 0) return;
 		
 		/* sees that dependencies are met */

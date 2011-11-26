@@ -153,8 +153,10 @@ namespace gear2d {
 			 ** and WILL BE DELETED BY THE OBJECT in its
 			 ** destruction. Never use heap-allocated components.
 			 ** Never. Never Never. Pretty Never with sugar.
-			 ** Hopefully you will need not to worry about it... */
-			void attach(component::base * c);
+			 ** Hopefully you will need not to worry about it...
+			 ** @throws evil When there are any dependencies mismatch
+			 */
+			void attach(component::base * c) throw (evil);
 			
 			/** @brief Deattach a component, returning it
 			 ** @param type Type of component to be deattached

@@ -2,6 +2,9 @@
  * @file mouse.cc
  * @addtogroup mouse
  * @brief Provides mouse input.
+ * 
+ * @b Parameters:
+ * @ 
  * It reports the position where the mouse is and which of the three buttons are clicked.
  */
 
