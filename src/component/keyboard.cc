@@ -215,8 +215,6 @@ class keyboard : public component::base {
 			}
 			for (set<keyboard *>::iterator i = kbcomponents.begin(); i != kbcomponents.end(); i++) {
 				(*i)->kbupdate();
-				if (!unicodestr.empty()) { (*i)->write("keyboard.text", unicodestr); }
-				
 			}
 		}
 
