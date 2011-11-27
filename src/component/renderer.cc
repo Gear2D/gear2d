@@ -153,7 +153,10 @@ class renderer : public component::base {
 					if (f == 0) {
 						f = TTF_OpenFont(font.c_str(), fontsz);
 					}
-					if (f == 0) return 0;
+					if (f == 0) {
+						std::cerr << "Font not found: " << font << std::endl;
+						return 0;
+					}
 					
 					// calculate styles
 					int styleflag = 0;
