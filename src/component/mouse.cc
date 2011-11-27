@@ -4,7 +4,8 @@
  * @brief Provides mouse input.
  * 
  * @b Parameters:
- * @ 
+ * @li mouse.{x|y} x and y position for the mouse cursor
+ * @li mouse.{1|2|3} buttons one through 3 of the mouse
  * It reports the position where the mouse is and which of the three buttons are clicked.
  */
 
