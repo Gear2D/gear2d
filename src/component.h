@@ -109,7 +109,7 @@ namespace gear2d {
 		};
 		
 		/** 
-		 * @brief Base class for components
+		 * @brief Base class for components.
 		 * All classes meant to be component shall
 		 * derive on this class as it provide the
 		 * common interface for all of them
@@ -198,9 +198,19 @@ namespace gear2d {
 					return v->get();
 				}
 				
+				/**
+				 * @brief Static method for reading in a shared parameter pertaining to parent object.
+				 * @p com Target component' table
+				 * @p pid Parameter id
+				 */
+				template<typename datatype>
+				static datatype read(component::base * com, parameterbase::id pid) {
+					return com->read<datatype>(pid);
+				}
+				
 			public:
 				/**
-				 * @brief Writes in a shared parameter pertaining to parent object
+				 * @brief Writes in a shared parameter pertaining to parent object.
 				 * @p pid Parameter id to be write to
 				 * @p source Source from it shall be copied
 				 * @warning Be careful about type promotion. Be explicit if necessary.
@@ -211,6 +221,18 @@ namespace gear2d {
 // 					cout << "debug: " << this->family()+"/"+this->type() << " writing to " << pid << endl;
 					v->set(source);
 					v->lastwrite = this;
+				}
+				/**
+				 * @brief Stati method that writes in a shared parameter pertaining to parent object.
+				 * @p com Target component
+				 * @p pid Parameter id to be write to
+				 * @p source Source from it shall be copied
+				 * @warning If you use this method, be aware that the component pointed by com
+				 * will appear as the writer of the parameter.
+				 */
+				template<typename datatype>
+				void write(component::base * com, parameterbase::id pid, const datatype & source) {
+					return com->write<datatype>(com->owner, pid, source);
 				}
 				
 			public:
