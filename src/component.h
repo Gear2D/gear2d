@@ -204,7 +204,7 @@ namespace gear2d {
 				 * @p pid Parameter id
 				 */
 				template<typename datatype>
-				static datatype read(component::base * com, parameterbase::id pid) {
+				static datatype readstatic(component::base * com, parameterbase::id pid) {
 					return com->read<datatype>(pid);
 				}
 				
@@ -231,7 +231,7 @@ namespace gear2d {
 				 * will appear as the writer of the parameter.
 				 */
 				template<typename datatype>
-				void write(component::base * com, parameterbase::id pid, const datatype & source) {
+				static void writestatic(component::base * com, parameterbase::id pid, const datatype & source) {
 					return com->write<datatype>(com->owner, pid, source);
 				}
 				
