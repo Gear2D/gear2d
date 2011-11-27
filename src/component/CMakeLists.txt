@@ -9,6 +9,7 @@ add_library(kinematic2d MODULE kinematic2d.cc)
 add_library(renderer MODULE renderer.cc)
 add_library(keyboard MODULE keyboard.cc)
 add_library(mouse MODULE mouse.cc)
+add_library(mouseover MODULE mouseover.cc)
 add_library(charactercontroller MODULE charactercontroller.cc)
 #add_library(moveto MODULE moveto.cc)
 add_library(collider2d MODULE collider2d.cc)
@@ -34,28 +35,25 @@ install(TARGETS renderer
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/renderer
 )
 
-
-
 install(TARGETS keyboard
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/keyboard
 )
 
-
 install(TARGETS mouse
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/mouse
+)
+
+install(TARGETS mouseover
+		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/mouseover
 )
 
 install(TARGETS charactercontroller
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/controller
 )
 
-
-
 install(TARGETS collider2d
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/collider
 )
-
-
 
 install(TARGETS rigidbody2d
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/dynamics
@@ -65,29 +63,19 @@ install(TARGETS bullet
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/simulation
 )
 
-
 install(TARGETS audiosource
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/audiosource
 )
-
-
 
 install(TARGETS singleselect
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/menu
 )
 
-
-
 install(TARGETS spritesheet
 		LIBRARY DESTINATION ${COMPONENT_INSTALL_DIR}/animation
 )
 
-
-
-
-
-
-
+target_link_libraries(mouseover gear2d)
 target_link_libraries(keyboard SDL gear2d)
 target_link_libraries(mouse SDL gear2d)
 target_link_libraries(renderer SDL SDL_image SDL_ttf SDL_gfx gear2d)
