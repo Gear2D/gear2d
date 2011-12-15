@@ -17,7 +17,6 @@ using boost::lexical_cast;
 #include "parameter.h"
 #include "object.h"
 
-
 /** 
  * @file component.h
  * @author Leonardo Guilherme de Freitas
@@ -38,6 +37,7 @@ namespace gear2d {
 	 ** Every component should be declared within
 	 ** this namespace */
 	namespace component {
+		
 		/** @brief Component type identifier */
 		typedef std::string type;
 		
@@ -173,6 +173,20 @@ namespace gear2d {
 				 * @brief Updates the state of this component
 				 * @param dt Delta time relative to last frame */
 				virtual void update(timediff dt) = 0;
+				
+				
+				/**
+				 * @brief Returns a link to the parameter.
+				 * @p pid Parameter id
+				 * 
+				 * @warning You should call this only inside
+				 * setup() or after. Never at construction time.
+				 */
+				template<typename basetype>
+				link<basetype> fetch(parameterbase::id pid) {
+					parameter<basetype> * p = access<basetype>(pid);
+					return link<basetype>(p);
+				}
 				
 				/**
 				 * @brief Reads a shared parameter and store on target

@@ -118,6 +118,64 @@ namespace gear2d {
 	 * This is your solution. Use pbase instead
 	 * Silly... */
 	typedef parameterbase pbase;
+	template<typename basetype> class parameter;
+
+	/**
+	 * @brief Link to a parameter.
+	 * @warning Prefer creating links to read() and write(),
+	 * because links store the parameter and will never lose them.
+	 * 
+	 * It works as a wrapper so you need not to do
+	 * read() and write() */
+	template<typename basetype>
+	class link {
+		private:
+			parameter<basetype> * target;
+			
+		public:
+			/**
+			 * @brief Build a link based on another link
+			 * @p other Other link
+			 */
+			link(const link<basetype> & other)
+			: target(other.target)
+			{ }
+			
+			
+			/**
+			 * @brief Default link constructor.
+			 */
+			link(parameter<basetype> * target = 0)
+			: target(target)
+			{ }
+			
+			/**
+			 * @brief Writes into this parameter link.
+			 * @throw evil When you try to read from a unlinked link
+			 */
+			link<basetype> & operator=(const basetype & source) throw (gear2d::evil) {
+				if (target == 0) throw(gear2d::evil("Someone tried to access an unitialized link."));
+				target->set(source);
+			}
+			
+			link<basetype> & operator=(const link<basetype> & other) {
+				target = other.target;
+			}
+			
+			/**
+			 * @brief Reads from this parameter link.
+			 * @throw evil When you try to read from a unlinked link
+			 */
+			operator basetype() throw (gear2d::evil) {
+				if (target == 0) throw(gear2d::evil("Someone tried to access an unitialized link."));
+				return target->get();
+			}
+			
+			link<basetype> & operator +=(const basetype & source) {
+				target->set(target->get() + source);
+				return *this;
+			}
+	};
 	
 	template<typename datatype>
 	class parameter : public parameterbase {
@@ -125,6 +183,7 @@ namespace gear2d {
 			datatype * raw;
 			bool locked;
 			bool mine;
+			
 		public:
 			/**
 			 * @brief Create a parameter pointing to an already existing raw buffer
@@ -198,6 +257,11 @@ namespace gear2d {
 			virtual datatype get() const { return *raw; }
 			virtual operator datatype() {
 				return get();
+			}
+			
+			virtual parameter<datatype> & operator=(const datatype & raw) {
+				set(raw);
+				return *this;
 			}
 			
 			virtual ~parameter() { 
