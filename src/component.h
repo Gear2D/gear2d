@@ -38,6 +38,7 @@ namespace gear2d {
 	 ** this namespace */
 	namespace component {
 		
+		
 		/** @brief Component type identifier */
 		typedef std::string type;
 		
@@ -144,7 +145,7 @@ namespace gear2d {
 				 * The object will call this function in the attachment process,
 				 * and check dependencies one by one. If any of the specified
 				 * components is not found attached, attaching will simply fail */
-				virtual std::string depends() { return ""; }
+				virtual std::string depends() { return std::string(); }
 				
 				/**
 				 * @brief Method that will be called to handle value changes.
@@ -153,7 +154,7 @@ namespace gear2d {
 				 * @p owner The owner of the parameter (where it comes from)
 				 * You should implement this in your component if you ever
 				 * happen to listen to a parameter. */
-				virtual void handle(parameterbase::id pid, component::base * lastwrite, object::id owner) { ; }
+				virtual void handle(parameterbase::id pid, component::base * lastwrite, object::id owner);
 				
 				/**
 				 * @brief Where you should put initialization routines.
@@ -391,11 +392,14 @@ namespace gear2d {
 				 * list, no?
 				 */
 				void hook(parameterbase::id pid) {
+					hook(pid, 0);
+				}
+				
+				void hook(parameterbase::id pid, component::call handlerfp) {
 					parameterbase::value v = owner->get(pid);
-					//cout << this->family() << "/" << this->type() << " trying to hooking to " << pid << endl;
 					if (v == 0) return;
-					v->hook(this);
-					
+					v->hook(this, handlerfp);
+					cout << type() << " " << family() << " hooking " << &component::base::handle << endl;
 				}
 				
 				/**
@@ -438,7 +442,7 @@ namespace gear2d {
 				 * 
 				 * @throws evil Error when there's any dependency mismatch
 				 */
-				void attach(component::base * com) throw (gear2d::evil);
+// 				void attach(component::base * com) throw (gear2d::evil);
 				
 				
 				/**

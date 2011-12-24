@@ -20,7 +20,9 @@
  */
 
 namespace gear2d {
-	namespace component { class base; }
+	namespace component { 
+		class base;
+	}
 	class object;
 
 	/**
@@ -97,6 +99,8 @@ namespace gear2d {
 			 * value-changed notifications */
 			void hook(component::base * c);
 			
+			void hook(component::base * c, component::call h);
+			
 			virtual bool operator==(const parameterbase & other) const {
 				return (owner == owner) && (pid == other.pid);
 			}
@@ -109,7 +113,8 @@ namespace gear2d {
 			virtual ~parameterbase() { };
 			
 		protected:
-			std::set<component::base *> hooked;
+			class callback;
+			std::set<callback *> hooked;
 		
 	};
 	
@@ -174,6 +179,11 @@ namespace gear2d {
 			link<basetype> & operator +=(const basetype & source) {
 				target->set(target->get() + source);
 				return *this;
+			}
+			
+			basetype & operator*() {
+				if (target == 0) throw(gear2d::evil("Someone tried to access an unitialized link."));
+				return ((basetype) target);
 			}
 	};
 	

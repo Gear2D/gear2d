@@ -42,10 +42,10 @@ namespace gear2d {
 			return com;
 		}
 		
-		void base::attach(base * com) throw (gear2d::evil) {
-			if (com == 0) return;
-			owner->attach(com);
-		}
+// 		void base::attach(base * com) throw (gear2d::evil) {
+// 			if (com == 0) return;
+// 			owner->attach(com);
+// 		}
 		
 		object::id base::locate(object::type t) {
 			return owner->ofactory->locate(t);
@@ -75,6 +75,8 @@ namespace gear2d {
 		void base::destroy() {
 			owner->destroy();
 		}
+		
+		void base::handle(parameterbase::id pid, component::base * lastwrite, object::id owner) { ; }
 		
 		void base::load(std::string scene) {
 			if (scene.find(".yaml") == std::string::npos) scene += ".yaml";

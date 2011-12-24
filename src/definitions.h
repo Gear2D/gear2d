@@ -11,11 +11,19 @@
  * This file contains useful inline functions or templates */
 
 namespace gear2d {
+	class object;
+	namespace component { 
+		class base;
+		typedef void (component::base::*call)(std::string pid, component::base * lastwrite, gear2d::object * owner);
+	}
+	
 	/** @brief Type used to identify time difference in seconds (SECONDS!) */
 	typedef float timediff;
 	
 	/** @brief Type that defines a file name */
 	typedef std::string filename;
+	
+	
 	
 	/** @brief Clamp a value between its max and min */
 	template <typename T>
