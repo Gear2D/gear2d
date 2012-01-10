@@ -3,36 +3,37 @@
  * @b family renderer
  * @b type renderer
  * @author Leonardo Guilherme de Freitas
- * @addtogroup renderer
+ * @addtogroup components
+ * @class renderer
  * 
  * Renderer component that can work with images,
  * meshes&textures, primitives, etc...
  *
  * @b parameters
- * @li @c renderer.w Width of the render screen. Global. Shall be set at the game config file. Defaults to 800. @b int 
- * @li @c renderer.h Height of the render screen. Global. Shall be set at the game config file. Defaults to 600. @b int
- * @li @c camera.{x|y|z} Camera x, y and z position for rendering calculations. Global. Does nothing on object signature. Defaults to 0. @b float
- * @li @c renderer.surfaces list of surfaces to load and work with, in the form of id=file separated by spaces. Loaded at setup and whenever changed.  @b string
+ * @li <tt>renderer.w</tt>: Width of the render screen. Global.	Shall be set at the game config file. Defaults to 800. @b int 
+ * @li <tt>renderer.h</tt>: Height of the render screen. Global. Shall be set at the game config file. Defaults to 600. @b int
+ * @li <tt>camera.{x|y|z}</tt>: Camera x, y and z position for rendering calculations. Global. Does nothing on object signature. Defaults to 0. @b float
+ * @li <tt>renderer.surfaces</tt>: list of surfaces to load and work with, in the form of id=file separated by spaces. Loaded at setup and whenever changed.  @b string
  * 		@warning double warning on this one. If you want to load a new surface, change renderer.surfaces BEFORE setting its other attributes or the
  *		binding will fail so bad you won't be able to hide. Be prepared for evil if you do.
- * @li @c <id>.position.bind Tells if the position of this image shall follow spatial info (x, y). @b bool. Defaults to 1 (true)
- * @li @c <id>.position.absolute Tells if camera should be taken in account when rendering this. @b bool. 1 (true)
- * @li @c <id>.position.{x|y|z} Specifics about the position of the image. If position.bind is specified, it will become an offset. @b float
- * @li @c <id>.position.{w|h} Width and height of the image @b int
- * @li @c <id>.clip.{x|y|w|h} Clipping frame for the image. Defaults to whole image. @b float
- * @li @c <id>.alpha Alpha value for the surface. 0 is transparent, 1 is opaque. @b float
- * @li @c <id>.render Sets if this surface shall be rendered. 0 is false (don't render) and 1 is true (render). Defaults to true.
- * @li @c renderer.texts list of ids to be treated like text
- * @li @c <id>.text Text to be rendered. This only works if @c <id> was declared at renderer.texts
- * @li @c <id>.blended Shall the text be rendered in blend mode (alpha blending)? Defaults to 0 @b bool. Do not use for text that changes much. 
- * @li @c <id>.font Font-file to be used. @b string Defaults to arial.ttf
- * @li @c <id>.font.size Size to be rendered, in pixels
- * @li @c <id>.font.{r|g|b} Red/green/blue color to be displayed, ranging from 0 to 1. @b float Defaults to 0
- * @li @c <id>.font.style List of styles to be displayed, separated by white-space (bold italic underline strikethru) @b string
+ * @li <tt>\<id\>.position.bind</tt>: Tells if the position of this image shall follow spatial info (x, y). @b bool. Defaults to 1 (true)
+ * @li <tt>\<id\>.position.absolute</tt>: Tells if camera should be taken in account when rendering this. @b bool. 1 (true)
+ * @li <tt>\<id\>.position.{x|y|z}</tt>: Specifics about the position of the image. If position.bind is specified, it will become an offset. @b float
+ * @li <tt>\<id\>.position.{w|h}</tt>: Width and height of the image @b int
+ * @li <tt>\<id\>.clip.{x|y|w|h}</tt>: Clipping frame for the image. Defaults to whole image. @b float
+ * @li <tt>\<id\>.alpha</tt>: Alpha value for the surface. 0 is transparent, 1 is opaque. @b float
+ * @li <tt>\<id\>.render</tt>: Sets if this surface shall be rendered. 0 is false (don't render) and 1 is true (render). Defaults to true.
+ * @li <tt>renderer.texts</tt>: list of ids to be treated like text
+ * @li <tt>\<id\>.text</tt>: Text to be rendered. This only works if @c <id> was declared at renderer.texts
+ * @li <tt>\<id\>.blended</tt>: Shall the text be rendered in blend mode (alpha blending)? Defaults to 0 @b bool. Do not use for text that changes much. 
+ * @li <tt>\<id\>.font</tt>: Font-file to be used. @b string Defaults to arial.ttf
+ * @li <tt>\<id\>.font.size</tt>: Size to be rendered, in pixels
+ * @li <tt>\<id\>.font.{r|g|b}</tt>: Red/green/blue color to be displayed, ranging from 0 to 1. @b float Defaults to 0
+ * @li <tt>\<id\>.font.style</tt>: List of styles to be displayed, separated by white-space (bold italic underline strikethru) @b string
  * 
  * 
  * @b globals:
- * @li @c imgpath Path where to look for image files. Shall be set at the main config file
+ * @li <tt>imgpath</tt> Path where to look for image files. Shall be set at the main config file
  *
  */
 
