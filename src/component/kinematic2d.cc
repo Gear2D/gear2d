@@ -40,6 +40,7 @@
 using namespace gear2d;
 
 #include <iostream>
+#include <limits>
 
 class kinetic2d
 		: public component::base {

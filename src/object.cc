@@ -7,11 +7,6 @@
 #include <exception>
 #include <algorithm>
 
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
-using boost::algorithm::split;
-using boost::algorithm::is_any_of;
-
 namespace gear2d {
 	object::object(object::signature & sig)
 	 : destroyed(false)
@@ -51,7 +46,7 @@ namespace gear2d {
 		std::string d;
 		if (depends != "") {
 			std::list<std::string> dependencies;
-			split(dependencies, depends, is_any_of(" "));
+			split(dependencies, depends, ' ');
 			while (!dependencies.empty()) {
 				component::selector dependency = dependencies.front();
 				
@@ -172,7 +167,7 @@ namespace gear2d {
 
 	void object::factory::innerbuild(object * o, std::string depends) {
 		std::set<std::string> comlist;
-		split(comlist, depends, is_any_of(" "));
+		split(comlist, depends, ' ');
 		while(comlist.begin() != comlist.end()) {
 			component::selector s = *(comlist.begin());
 			

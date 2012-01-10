@@ -4,15 +4,6 @@
 
 #include <iostream>
 
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
-using boost::algorithm::split;
-using boost::algorithm::is_any_of;
-
-/* this is here so we can pick the first available component */
-// #include <boost/filesystem.hpp>
-// using namespace boost::filesystem;
-
 #ifdef _WIN32
 #define SOSUFFIX ".dll"
 #elif __MACOS__ 
@@ -41,11 +32,6 @@ namespace gear2d {
 			}
 			return com;
 		}
-		
-// 		void base::attach(base * com) throw (gear2d::evil) {
-// 			if (com == 0) return;
-// 			owner->attach(com);
-// 		}
 		
 		object::id base::locate(object::type t) {
 			return owner->ofactory->locate(t);
@@ -105,7 +91,7 @@ namespace gear2d {
 			}
 			
 			std::vector<std::string> splitsel;
-			split(splitsel, rhs, is_any_of("/"));
+			split(splitsel, rhs, '/');
 			
 			if (splitsel.size() < 1) {
 				family = type = "";
@@ -158,7 +144,7 @@ namespace gear2d {
 			/* TODO: check if we're in windows or linux */
 			if (file == "") {
 				std::vector<std::string> paths;
-				split(paths, compath, is_any_of(","));
+				split(paths, compath, ',');
 				for (int i = 0; i < paths.size(); i++) {
 					file = paths[i] + '/' + f + "/lib" + t + SOSUFFIX;
 					std::cout << "trying " << file << std::endl;

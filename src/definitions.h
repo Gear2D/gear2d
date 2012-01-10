@@ -2,8 +2,16 @@
 #define gear2d_definitions_h
 
 #include <vector>
-#include <string>
+#include <set>
+#include <list>
 #include <exception>
+
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iterator>
+
 
 /**
  * @file definitions.h
@@ -14,6 +22,30 @@ namespace gear2d {
 	class object;
 	namespace component { 
 		class base;
+		
+		/**
+		 * @brief Definition of a parameter handler.
+		 * 
+		 * This typedef specifies the signature for a component member function
+		 * pointer to be called when you hook to a parameter. Using this specification
+		 * you can create custom callbacks other than handle(). 
+		 * 
+		 * @warning Note that even complying to this signature, you still need
+		 * to cast your callback to component::base::call when hooking it.
+		 * 
+		 * @code
+		 * class test : public component::base {
+		 *   public:
+		 *      // example of callback
+		 *      virtual void xcallback(std::string pid, gear2d::component::base * lastwrite, gear2d::object * owner);
+		 *   public:
+		 *      setup() {
+		 *        // example on how to register it
+		 *        hook("x", (component::base::call)&xcallback);
+		 *      }
+		 * };
+		 * @endcode
+		 */
 		typedef void (component::base::*call)(std::string pid, component::base * lastwrite, gear2d::object * owner);
 	}
 	
@@ -46,6 +78,59 @@ namespace gear2d {
 			virtual ~evil() throw() { };
 			virtual const char* what() const throw() { return describe.c_str(); }
 	};
+	
+	template <typename container_t>
+	container_t & split(container_t & elems, const std::string & s, char delim) {
+		std::stringstream ss(s);
+		std::string item;
+		std::insert_iterator<container_t> it(elems, elems.begin());
+		while(std::getline(ss, item, delim)) {
+			*it = item;
+			it++;
+		}
+		return elems;
+	}
+	
+	template <typename container_t>
+	container_t split(const std::string & s, char delim) {
+		container_t elems;
+		return split(s, delim, elems);
+	}
+	
+	/**
+	 * @brief Evaluate a string to a type
+	 * @param raw Raw string to be evaluated
+	 * @param def Default if raw is empty
+	 * 
+	 * This tries to do a lexical cast to the raw string to the
+	 * destination (datatype) type.
+	 * 
+	 * You can (and should!) do a template specialization of this method
+	 * if you know better than this function.
+	 * @code
+	 * namespace gear2d {  namespace component {
+	 * template<> eval<your-fancy-type>(std::string raw, your-fancy-type def) {
+	 *     // do your stuff to convert raw string to your-fancy-type
+	 *     // and then return it
+	 * }
+	 * } }
+	 * @endcode
+	 * 
+	 * The default works very well for basic types.
+	 * 
+	 * @warning The lexical cast may fail if converting
+	 * from string to some of the basic types like float
+	 * or int if raw is empty. Check your arguments.
+	 */
+	template<typename datatype>
+	datatype eval(std::string raw, datatype def) {
+		std::stringstream sstr;
+		datatype t;
+		sstr << raw;
+		sstr >> t;
+		if (sstr.fail()) t = def;
+		return t;
+	}
 	
 /*	template<typename T> T & min(const T & a, const T & b) { return a < b ? a : b; }
 	template<typename T> T & max(const T & a, const T & b) { return a > b ? a : b; }*/

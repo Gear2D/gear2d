@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 2.6)
 project(Gear2D)
 
 find_package(SDL REQUIRED)
-find_package(Boost REQUIRED)
 
 # default build type should be release.
 if (NOT CMAKE_BUILD_TYPE)
@@ -26,11 +25,11 @@ target_link_libraries(main gear2d)
 set_target_properties(main PROPERTIES OUTPUT_NAME gear2d BUILD_WITH_INSTALL_RPATH true)
 
 # include dirs so we can #include properly
-include_directories(thirdparty/yaml-cpp/include/ ${SDL_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR})
-link_directories(${SDL_LINK_DIR} ${Boost_LINK_DIRS})
+include_directories(thirdparty/yaml-cpp/include/ ${SDL_INCLUDE_DIR})
+link_directories(${SDL_LINK_DIR})
 
 add_subdirectory(thirdparty/yaml-cpp)
-add_subdirectory(thirdparty/bullet-2.78)
+# add_subdirectory(thirdparty/bullet-2.78)
 
 # install rules for the executable
 install(TARGETS gear2d main

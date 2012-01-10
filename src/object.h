@@ -21,51 +21,50 @@ using std::list;
 namespace gear2d {
 	namespace component { class base; class factory; typedef std::string type; typedef std::string family; }
 	/**
-	 * @brief Gear2D game object component-container
+	 * @brief Gear2D game object component-container.
 	 * This is the owner of components in Gear2D
 	 * game engine. Components should be attached
 	 * to these.
 	 * 
-	 * @warning You are allowed to manually create game objects
-	 * and manually attach components to it, but thats yet experimental
-	 * and may be unsupported on the future. */
+	 * @warning Although this class API is well documented, you shouldn't use it
+	 manually if you are just creating a game. */
 	class object {
 		public:
-			/** @brief Type of objects identifier type */
+			/** @brief Type of objects identifier type. */
 			typedef std::string type;
 			
-			/** @brief Object ID that uniquely identifies an object */
+			/** @brief Object ID that uniquely identifies an object. */
 			typedef object * id;
 			
-			/** @brief Blueprint type of this type of objects, so others can be created */
+			/** @brief Blueprint type of this type of objects, so others can be created. */
 			typedef std::map<std::string, std::string> signature;
 			
 		public:
 				/**
-				 * @brief Object factory able to load and configure its components
+				 * @brief Object factory able to load and configure its components.
 				 * This is a object factory that, given an id, its able to load
 				 * the file with its components and configure them. An object factory
 				 * needs an component factory to work */
 				class factory {
 					public:
 						/**
-						 * @brief Signature that should be present in every object
+						 * @brief Signature that should be present in every object.
 						 * @warning Everything in the global signature will be really global,
 						 * that means that if one component changes it, all components will
 						 * affect all components, so its REALLY global. */
 						object::signature commonsig;
 					public:
 						/**
-						 * @brief Creates a new object factory
-						 * @p cfactory Component factory to be used when building objects
+						 * @brief Creates a new object factory.
+						 * @param cfactory Component factory to be used when building objects
 						 * Object factories depends on a component factory to
 						 * build its components. */
 						factory(component::factory & cfactory);
 						
 						/**
-						 * @brief Load a set of parameters stored in a file
-						 * @p objtype Type of the object
-						 * @p file File where the parameters are stored
+						 * @brief Load a set of parameters stored in a file.
+						 * @param objtype Type of the object
+						 * @param file File where the parameters are stored
 						 * Loads a file (with the yaml format) that has the
 						 * parameters for building the object.
 						 * Note that if the file is not specified, a file
@@ -74,23 +73,23 @@ namespace gear2d {
 						void load(object::type objtype, std::string filename = "");
 						
 						/**
-						 * @brief Locate an object that has been loaded by this engine
-						 * @p objtype Type of the object
+						 * @brief Locate an object that has been loaded by this engine.
+						 * @param objtype Type of the object
 						 * @return ID-handler of the first found object
 						 */
 						object::id locate(object::type objtype);
 						
 						/**
-						 * @brief Set the parameters for loading the object
-						 * @p objtype Type of the object to be registered
-						 * @p sig Signature of a object
+						 * @brief Set the parameters for loading the object.
+						 * @param objtype Type of the object to be registered
+						 * @param sig Signature of a object
 						 * This is used to define how a factory would initialize
 						 * the component to be added. */
 						void set(object::type objtype, object::signature sig);
 						
 						/**
-						 * @brief Build a component previously stored in the factory
-						 * @p objtype Type of the already-registered object to be built
+						 * @brief Build a component previously stored in the factory.
+						 * @param objtype Type of the already-registered object to be built
 						 * This uses information from set() and component factory to
 						 * create a new object with the registered components */
 						object::id build(object::type objtype);
@@ -115,7 +114,8 @@ namespace gear2d {
 
 		public:
 			/**
-			 * @brief Object factory that built this object
+			 * @brief Object factory that built this object.
+			 * 
 			 * This is set whenever the object is built using
 			 * a factory. */
 			object::factory * ofactory;
@@ -128,18 +128,15 @@ namespace gear2d {
 			~object();
 			
 			/** 
-			 * @brief Return the name of this object */
+			 * @brief Return the name of this object. */
 			std::string name();
 			
 			/**
-			 * @brief Return the object id for this object */
+			 * @brief Return the object id for this object. */
 			id oid();
 			
-			/** @brief Attach a component to this object
+			/** @brief Attach a component to this object.
 			 ** @param c Pointer to component to be added
-			 ** Attach a component to this object using its
-			 ** pointer.
-			 **
 			 ** @warning If your component happen to depend
 			 ** on another, they must be loaded prior to the
 			 ** attachment of \ref c, or the attachment will
@@ -158,9 +155,10 @@ namespace gear2d {
 			 */
 			void attach(component::base * c) throw (evil);
 			
-			/** @brief Deattach a component, returning it
+			/** @brief Deattach a component, returning it.
 			 ** @param type Type of component to be deattached
 			 ** @return The now deattached component
+			 
 			 ** Deattach a component from the object and return it.
 			 ** The user can do whatever he wants with it now.
 			 **
@@ -172,17 +170,17 @@ namespace gear2d {
 			component::base * deattach(component::type type);
 			
 			/**
-			 * @brief Access a named parameter
-			 * @p pid Parameter id inside the object
+			 * @brief Access a named parameter.
+			 * @param pid Parameter id inside the object
 			 * @return a @a parameterbase::value reference
 			 * Use this to access a parameter inside the component */
 			parameterbase::value get(parameterbase::id pid);
 			
 			/**
-			 * @brief Set a named parameter for the given value
-			 * @p pid Parameter id inside the object
-			 * @p v Parameter value reference
-			 * Use this to give the parameter a new generic value.
+			 * @brief Set a named parameter for the given value.
+			 * @param pid Parameter id inside the object
+			 * @param v Parameter value reference
+			 * @details Use this to give the parameter a new generic value.
 			 * @warning The value @a v will NOT be cloned. That means
 			 * even if another object holds it, it will be holded here to.
 			 * If thats not what you mean, just call set() with v->clone().
@@ -191,21 +189,20 @@ namespace gear2d {
 			void set(parameterbase::id pid, parameterbase::value v);
 			
 			/**
-			 * @brief Copy the parameters from other to this
-			 * @p other Object to be copied from */
+			 * @brief Copy the parameters from other to this.
+			 * @param other Object to be copied from */
 			void copy(object::id other);
 			
 			/**
-			 * @brief Access a component by its family
-			 * @p f Family of the component
+			 * @brief Access a component by its family.
+			 * @param f Family of the component
 			 * @return A pointer to the component or NULL if it does not exists
 			 */
 			gear2d::component::base * component(gear2d::component::family f);
 			
 			/**
-			 * @brief Marks this object to be deleted
-			 * Marks this object to be deleted in the begin of
-			 * the next frame. */
+			 * @brief Marks this object to be deleted.
+			 * @details The object will be deleted in the next frame. */
 			void destroy();
 			
 		private:

@@ -10,10 +10,6 @@
 #include "SDL.h" // for the timer
 
 #include <algorithm>
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
-using boost::algorithm::split;
-using boost::algorithm::is_any_of;
 
 namespace gear2d {
 	
@@ -135,7 +131,7 @@ namespace gear2d {
 		/* TODO: travel the compath looking for family/component */
 		std::vector<std::string> comlist;
 		if ((*config)["compreload"].size() != 0) {
-			split(comlist, (*config)["compreload"], is_any_of(" "));
+			split(comlist, (*config)["compreload"], ' ');
 			for (int i = 0; i < comlist.size(); i++) {
 				std::cerr << "(Gear2D Engine) Pre-loading " << comlist[i] << std::endl;
 				cfactory->load(comlist[i]);
@@ -144,7 +140,7 @@ namespace gear2d {
 		}
 		/* load the indicated objects */
 		std::vector<object::type> objectlist;
-		split(objectlist, (*config)["objects"], is_any_of(" "));
+		split(objectlist, (*config)["objects"], ' ');
 		config->erase("objects");
 		
 		/* The rest is added to the object factory global parameters */

@@ -23,11 +23,6 @@ using namespace gear2d;
 #include <string>
 using namespace std;
 
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
-using boost::algorithm::split;
-using boost::algorithm::is_any_of;
-
 #include "SDL.h"
 #include "SDL_mixer.h"
 
@@ -186,7 +181,7 @@ class audiosource : public gear2d::component::base {
 		void loadsounds(string soundlist) {
 			if (soundlist == "") return;
 			set<string> sounds;
-			split(sounds, soundlist, is_any_of(" "));
+			split(sounds, soundlist, ' ');
 			for (set<string>::iterator sounddef = sounds.begin(); sounddef != sounds.end(); sounddef++) {
 				int p = sounddef->find('=');
 				string id = sounddef->substr(0, p);

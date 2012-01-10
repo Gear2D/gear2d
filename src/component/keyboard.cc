@@ -54,11 +54,6 @@ using namespace std;
 
 #include "SDL.h"
 
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
-using boost::algorithm::split;
-using boost::algorithm::is_any_of;
-
 class keyboard : public component::base {
 	private:
 		enum {
@@ -148,7 +143,7 @@ class keyboard : public component::base {
 		
 		void interest(string interested) {
 			std::set<string> keys;
-			split(keys, interested, is_any_of(" "));
+			split(keys, interested, ' ');
 			for (std::set<string>::iterator it = keys.begin(); it != keys.end(); it++) {
 				// build keyname
 				string keyname = *it;

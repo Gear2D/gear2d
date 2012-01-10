@@ -25,12 +25,6 @@ using namespace gear2d;
 using namespace std;
 
 
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
-using boost::algorithm::split;
-using boost::algorithm::is_any_of;
-
-
 class singleselect: public component::base {
 	private:
 		struct option;
@@ -181,7 +175,7 @@ class singleselect: public component::base {
 		void loadoptions(const string & optline) {
 			set<string> ids;
 			if (optline != "") {
-				split(ids, optline, is_any_of(" "));
+				split(ids, optline, ' ');
 				loadoptions(ids);
 			}
 		}

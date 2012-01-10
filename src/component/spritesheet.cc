@@ -25,11 +25,6 @@ using namespace gear2d;
 #include <string>
 using namespace std;
 
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
-using boost::algorithm::split;
-using boost::algorithm::is_any_of;
-
 class animation {
 	public:
 		string id;
@@ -122,7 +117,7 @@ class spritesheet : public component::base {
 			string animline = sig["animations"];
 			set<string> animations;
 			if (!animline.empty()) {
-				animations = split(animations, animline, is_any_of(" "));
+				animations = split(animations, animline, ' ');
 				string id;
 				for (set<string>::iterator i = animations.begin(); i != animations.end(); i++) {
 					id = *i;

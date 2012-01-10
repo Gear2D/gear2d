@@ -49,12 +49,6 @@ using namespace std;
 #include "SDL_ttf.h"
 #include "SDL_rotozoom.h"
 
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
-using boost::algorithm::split;
-using boost::algorithm::is_any_of;
-
-
 // this handles surface parameters
 class surface {
 	public:
@@ -149,8 +143,9 @@ class renderer : public component::base {
 				}
 				
 				SDL_Surface * render() {
-					string strsize = lexical_cast<string>(fontsz);
-					TTF_Font *& f = renderer::fonts[font+'@'+strsize];
+					char sz[4];
+					sprintf(sz, "%d", fontsz);
+					TTF_Font *& f = renderer::fonts[font+'@'+sz];
 					if (f == 0) {
 						f = TTF_OpenFont(font.c_str(), fontsz);
 					}
@@ -277,7 +272,7 @@ class renderer : public component::base {
 			 * */
 			if (textlist != "") {
 				set<string> texts;
-				split(texts, textlist, is_any_of(" "));
+				split(texts, textlist, ' ');
 				string pid;
 				while (!texts.empty()) {
 					const string & id = *texts.begin();
@@ -381,7 +376,7 @@ class renderer : public component::base {
 		void loadsurfaces(string surfacelist, string imgpath = "") {
 			set<string> surfaces;
 			set<string>::iterator surfacedef;
-			split(surfaces, surfacelist, is_any_of(" "));
+			split(surfaces, surfacelist, ' ');
 			for (surfacedef = surfaces.begin(); surfacedef != surfaces.end(); surfacedef++) {
 				int p = surfacedef->find('=');
 				string id = surfacedef->substr(0, p);
@@ -395,7 +390,7 @@ class renderer : public component::base {
 		void loadtexts(string textlist) {
 			if (textlist != "") {
 				set<string> texts;
-				split(texts, textlist, is_any_of(" "));
+				split(texts, textlist, ' ');
 				string pid;
 				while (!texts.empty()) {
 					const string & id = *texts.begin();
