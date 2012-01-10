@@ -4,8 +4,8 @@ Remove the CMakeCache.txt file and try again from another folder, e.g.:
 
 	rm CMakeCache.txt 
 	cd ..
-	mkdir cmake-make 
-	cd cmake-make
+	mkdir build
+	cd build
 	cmake -G \"Unix Makefiles\" ../gear2d
 ")
 endif()
