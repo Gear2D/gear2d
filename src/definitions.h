@@ -14,9 +14,8 @@
 
 
 /**
- * @file definitions.h
  * @author Leonardo Guilherme de Freitas
- * This file contains useful inline functions or templates */
+ */
 
 namespace gear2d {
 	class object;
@@ -49,15 +48,15 @@ namespace gear2d {
 		typedef void (component::base::*call)(std::string pid, component::base * lastwrite, gear2d::object * owner);
 	}
 	
-	/** @brief Type used to identify time difference in seconds (SECONDS!) */
+	/** @brief Type used to identify time difference in seconds (SECONDS!). */
 	typedef float timediff;
 	
-	/** @brief Type that defines a file name */
+	/** @brief Type that defines a file name. */
 	typedef std::string filename;
 	
 	
 	
-	/** @brief Clamp a value between its max and min */
+	/** @brief Clamp a value between its max and min. */
 	template <typename T>
 	void clamp(T & value, const T min, const T max) {
 		if (value > max) value = max;
@@ -66,7 +65,8 @@ namespace gear2d {
 	
 	
 	/**
-	 * @brief Evil class
+	 * @brief Evil class.
+	 * 
 	 * This is an evil class, so you can catch the evil whenever
 	 * you try good things. */
 	class evil : public std::exception {
@@ -79,6 +79,15 @@ namespace gear2d {
 			virtual const char* what() const throw() { return describe.c_str(); }
 	};
 	
+	/**
+	 * @brief String splitter to any container.
+	 * @param elems Target element container.
+	 * @param s String to be splitted.
+	 * @param delim Delimiting char.
+	 * @return elems
+	 * 
+	 * Uses strinstream and getline to split a string using the given delimiter.
+	 */
 	template <typename container_t>
 	container_t & split(container_t & elems, const std::string & s, char delim) {
 		std::stringstream ss(s);
@@ -91,6 +100,12 @@ namespace gear2d {
 		return elems;
 	}
 	
+	/**
+	 * @brief Handy shortcut for the split function.
+	 * @param s String to be splitted.
+	 * @param delim Delimiting char.
+	 * @return Instance of the container
+	 */
 	template <typename container_t>
 	container_t split(const std::string & s, char delim) {
 		container_t elems;
@@ -108,12 +123,10 @@ namespace gear2d {
 	 * You can (and should!) do a template specialization of this method
 	 * if you know better than this function.
 	 * @code
-	 * namespace gear2d {  namespace component {
 	 * template<> eval<your-fancy-type>(std::string raw, your-fancy-type def) {
 	 *     // do your stuff to convert raw string to your-fancy-type
 	 *     // and then return it
 	 * }
-	 * } }
 	 * @endcode
 	 * 
 	 * The default works very well for basic types.
@@ -131,9 +144,5 @@ namespace gear2d {
 		if (sstr.fail()) t = def;
 		return t;
 	}
-	
-/*	template<typename T> T & min(const T & a, const T & b) { return a < b ? a : b; }
-	template<typename T> T & max(const T & a, const T & b) { return a > b ? a : b; }*/
 }
-
 #endif
