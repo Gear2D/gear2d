@@ -11,5 +11,5 @@ Remove the CMakeCache.txt file and try again from another folder, e.g.:
 endif()
 
 cmake_minimum_required(VERSION 2.6)
-project(Gear2D)
+project(gear2d)
 add_subdirectory(src)
