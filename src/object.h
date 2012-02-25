@@ -22,12 +22,13 @@ namespace gear2d {
 	namespace component { class base; class factory; typedef std::string type; typedef std::string family; }
 	/**
 	 * @brief Gear2D game object component-container.
+	 * 
 	 * This is the owner of components in Gear2D
 	 * game engine. Components should be attached
 	 * to these.
 	 * 
 	 * @warning Although this class API is well documented, you shouldn't use it
-	 manually if you are just creating a game. */
+	 * manually if you are just creating a game. */
 	class object {
 		public:
 			/** @brief Type of objects identifier type. */
