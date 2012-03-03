@@ -63,6 +63,12 @@ namespace gear2d {
 		if (value < min) value = min;
 	}
 	
+	/** @brief return the max value between x and y */
+	template <typename T>
+	int max(T & x, T & y) {
+		if (x < y) return x;
+		else return y;
+	}
 	
 	/**
 	 * @brief Evil class.
