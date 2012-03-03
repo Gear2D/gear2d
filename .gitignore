@@ -1,6 +1,7 @@
 .kdev4
-debug
+debug/
 gear2d.kdev4
 *.swp
 doc
 *~
+build/
