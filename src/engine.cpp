@@ -7,12 +7,20 @@
 #include <string>
 #include <cstdio>
 #include <ctime>
-#include "SDL.h" // for the timer
+#include "SDL.h"
 
 #include <algorithm>
 
+#ifndef GEAR2D_VERSION
+#define GEAR2D_VERSION "undefined"
+#warning GEAR2D_VERSION undefined! Gear2D should be compiled with -DGEAR2D_VERSION=<version>
+#endif
+
+extern "C" {
+	const char * libraryversion = GEAR2D_VERSION;
+}
+
 namespace gear2d {
-	
 	std::map<std::string, std::string> * engine::config;
 	component::factory * engine::cfactory;
 	object::factory * engine::ofactory;
@@ -22,6 +30,8 @@ namespace gear2d {
 	bool engine::initialized;
 	bool engine::started;
 	std::string * engine::nextscene;
+	
+	const char * engine::version() { return libraryversion; }
 	
 	int engine::eventfilter(const void * _ev) {
 		const SDL_Event * ev = (const SDL_Event*)_ev;

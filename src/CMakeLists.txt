@@ -71,11 +71,16 @@ endif()
 set(Gear2D_VERSION_MAJOR "0")
 set(Gear2D_VERSION_MINOR "0")
 set(Gear2D_VERSION_PATCH "3")
+
 set(Gear2D_VERSION "${Gear2D_VERSION_MAJOR}.${Gear2D_VERSION_MINOR}.${Gear2D_VERSION_PATCH}")
+add_definitions(-DGEAR2D_VERSION="${Gear2D_VERSION}")
+
+
 set(CPACK_PACKAGE_VENDOR "Gear2D Labs")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "gear2d")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Gear2D - Component-based game engine")
 set(CPACK_PACKAGE_VERSION ${Gear2D_VERSION})
+
 set(CPACK_SOURCE_IGNORE_FILES "\\\\.git.*;${CMAKE_BINARY_DIR}/.*;.*~;\\\\.kdev4/.*;.*\\\\.kdev4;.*\\\\.swp")
 set(PACK_PACKAGE_EXECUTABLES gear2d;Gear2D Game Engine)
 set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
