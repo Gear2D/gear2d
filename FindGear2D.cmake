@@ -1,8 +1,9 @@
-# FindGear2D.cmake, version 1.0
+# FindGear2D.cmake, version 1.0.1
 # Locate Gear2D library
 # This module defines
 # Gear2D_LIBRARY, the name of the library to link against
 # Gear2D_FOUND, if it was found
+# Gear2D_VERSION, version of found library
 # Gear2D_INCLUDE_DIR, where to find gear2d.h
 # Gear2D_LINK_DIR, where to find gear2d.so/gear2d.dll
 
@@ -68,8 +69,9 @@ ENDIF(Gear2D_INCLUDE_DIR AND Gear2D_LIBRARY)
 
 IF(Gear2D_FOUND)
 	get_filename_component(Gear2D_LINK_DIR ${Gear2D_LIBRARY} PATH)
+	execute_process(COMMAND gear2d -v OUTPUT_VARIABLE Gear2D_VERSION)
 	IF (NOT Gear2D_FIND_QUIETLY)
-		MESSAGE(STATUS "Found Gear2D: ${Gear2D_LIBRARY} at ${Gear2D_LINK_DIR}")
+		MESSAGE(STATUS "Found Gear2D: ${Gear2D_LIBRARY} version ${Gear2D_VERSION}")
 	ENDIF (NOT Gear2D_FIND_QUIETLY)
 ELSE(Gear2D_FOUND)
 	IF (Gear2D_FIND_REQUIRED)
