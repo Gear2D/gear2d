@@ -70,10 +70,11 @@ endif()
 
 set(Gear2D_VERSION_MAJOR "0")
 set(Gear2D_VERSION_MINOR "0")
-set(Gear2D_VERSION_PATCH "3")
+set(Gear2D_VERSION_PATCH "4")
 
 set(Gear2D_VERSION "${Gear2D_VERSION_MAJOR}.${Gear2D_VERSION_MINOR}.${Gear2D_VERSION_PATCH}")
 add_definitions(-DGEAR2D_VERSION="${Gear2D_VERSION}")
+message(STATUS "Building Gear2D ${Gear2D_VERSION}")
 
 
 set(CPACK_PACKAGE_VENDOR "Gear2D Labs")
