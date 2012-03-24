@@ -1,0 +1,13 @@
+/**
+ * @page installation Installation
+ * 
+ * @section platform-specific-instructions Platform-specific instructions
+ * - @subpage installation-linux
+ * - @subpage installation-windows
+ * 
+ * Test
+ * 
+ * @page installation-linux Linux Installation
+ * 
+ * @page installation-windows Windows Installation
+ */

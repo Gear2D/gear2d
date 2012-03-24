@@ -461,6 +461,11 @@ table.memberdecls {
 /*         background-image: -webkit-gradient(linear,center top,center bottom,from(#FFFFFF), color-stop(0.6,#FFFFFF), color-stop(0.60,#FFFFFF), color-stop(0.95,#F7F8FB), to(#EEF1F7)); */
 }
 
+.textblock {
+  width: 80%;
+  text-align: justify;
+}
+
 .paramkey {
 	text-align: right;
 }

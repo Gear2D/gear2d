@@ -17,13 +17,12 @@ using std::endl;
 /** 
  * @file component.h
  * @author Leonardo Guilherme de Freitas
- * @brief This file contains the base component interface
+ * @brief This file contains the base component interface.
  * 
  * Every component MUST implement this base class if its meant
  * to be a component.
- * 
- * TODO: a component creation how-to
  */
+
 
 namespace gear2d {
 	class object;

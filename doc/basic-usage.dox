@@ -1,0 +1,31 @@
+/**
+ * @page basic-usage Basic Usage
+ *
+ * @section basic-usage-how-to-use How to use the Engine
+ * This page describes in detailed information the basic procedure
+ * for using the engine, after it is installed. See \ref installation
+ * before going forward on this page.
+ * 
+ * @subsection basic-usage-requires Basic usage of the engine requires:
+ * - The engine and some previously-installed components
+ * - A great idea for a game
+ * - A plain-text editor (notepad will do)
+ * - Game assets (images, sounds, etc)
+ * 
+ * @subsection basic-usage-main-concepts Things you need to know:
+ * - \ref scene-file "Scenes" are created using text files describing where components are found and which game
+ * objects/entities are present in this scene. Each scene requires its own file.
+ * 
+ * - \ref entities "Game Objects or Entities" are created using a text file. Each file corresponds to an
+ * entity. This file should contain a list of attached components, followed by
+ * a list of key-value pairs, called parameters, which are used by attached components.
+ * 
+ * - A component is used to model behaviour and to add features to an entity. For instance,
+ * to show an entity on screen, you should attach the renderer component. The render component
+ * might use a parameter called @c renderer.surfaces, which you might want to define in the
+ * entity file to be a list of surfaces representing it.
+ * 
+ * @section scene-file Scene files
+ * This section describes how scene files works and how to use them to
+ * create a game.
+ */
