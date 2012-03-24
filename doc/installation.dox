@@ -1,13 +1,34 @@
 /**
- * @page installation Installation
- * 
- * @section platform-specific-instructions Platform-specific instructions
- * - @subpage installation-linux
- * - @subpage installation-windows
- * 
- * Test
- * 
- * @page installation-linux Linux Installation
- * 
- * @page installation-windows Windows Installation
- */
+  @page installation Installation
+  
+  Gear2D installation requires the following libraries and tools:
+  - <a href="http://libsdl.org">SDL 1.2</a>
+  
+  To install standard components, you'll need
+  - <a href="http://libsdl.org">SDL 1.2</a>
+  - <a href="http://http://www.libsdl.org/projects/SDL_ttf/">SDL_ttf 2.0</a>
+  - <a href="http://http://www.libsdl.org/projects/SDL_image/">SDL_image 2.0</a>
+  - <a href="http://http://www.libsdl.org/projects/SDL_mixer/">SDL_mixer 2.0</a>
+  
+  If you plan on installing from source code, you'll need a
+  compiler toolchain (GNU's <a href="http://gcc.gnu.org">GCC</a> is
+  recommended. <a href="http://www.mingw.org">MinGW</a> is also tested
+  and able to compile Gear2D on Microsoft Windows platforms) and
+  <a href="http://www.cmake.org">CMake</a>. Instructions
+  on these will be presented on platform-specific pages.
+  
+  @section download-information Downloads
+  You can reach <a href="http://gear2d.com/downloads.php">Gear2D Downloads
+  Page</a> for released versions, stable or not. In the page
+  http://github.com/Gear2D you can have access to all our public source-code
+  repositories, using Git.
+  
+  @section directory-conventions Directory conventions
+  The following is a list of directories present in any compressed binary package
+  (.zip and .tar.gz), in any platform:
+  
+  @section platform-specific-instructions Platform-specific instructions
+  - @subpage installation-linux
+  - @subpage installation-windows
+
+  **/

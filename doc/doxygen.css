@@ -36,6 +36,17 @@ dt {
 	font-weight: bold;
 }
 
+code {
+	border-bottom: 1px dotted #333;
+	
+	padding-left: 1px;
+	padding-right: 1px;
+	border-radius: 0.3em;
+	-webkit-border-radius: .3em;
+	-moz-border-radius: .3em;
+	display: inline;
+}
+
 div.multicol {
 	-moz-column-gap: 1em;
 	-webkit-column-gap: 1em;
