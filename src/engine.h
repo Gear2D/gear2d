@@ -18,7 +18,8 @@ namespace gear2d {
 	namespace component { class base; class factory; }
 	
 	/**
-	 * @brief Gear2D main engine that binds everything
+	 * @brief Gear2D main engine that binds everything.
+	 * 
 	 * This is where your game should start. Everything
 	 * that happens in Gear2D is controlled by this engine -
 	 * it commands registering and loading of components and
@@ -33,7 +34,7 @@ namespace gear2d {
 			
 			/**
 			 * @brief Prepare the engine for running.
-			 * @p reset Force the initialization even if already initialized
+			 * @param force Force the initialization even if already initialized
 			 * 
 			 * This should be called before any attaching
 			 * of components can be made */
@@ -41,21 +42,20 @@ namespace gear2d {
 			
 			/**
 			 * @brief Load these configs on the engine.
-			 * @p configfile The name of the file to load config from
+			 * @param configfile The name of the file to load config from
 			 * 
-			 * When you instantiate a engine it will load all of its
-			 * configurations from the file and be ready for running */
+			 * Loads a @p configfile and read scene configurations from it */
 			static void load(std::string configfile = "gear2d.yaml");
 			
 			/**
 			 * @brief Load configurations from a config mapping.
-			 * @p config map of configurations
+			 * @param config map of configurations
 			 */
 			static void load(map<std::string, std::string> & config);
 
 			/**
 			 * @brief Select a new scene config to load.
-			 * @p configfile The name of the file to load config from
+			 * @param configfile The name of the file to load config from
 			 * 
 			 * At the end of the running frame, the engine will
 			 * load the file and re-run everything. All loaded
@@ -64,18 +64,18 @@ namespace gear2d {
 			
 			/**
 			 * @brief Add a new component to the update pipeline.
-			 * @p c Component pointer to be added
+			 * @param c Component pointer to be added
 			 * 
 			 * This add a new component to be updated every frame */
 			static void add(component::base * c);
 			
 			/**
 			 * @brief Remove a component off the update pipeline.
-			 * @p c Component pointer to be deleted
-			 * @p rightnow Remove this component right now. This might break if the component is being updated.
+			 * @param c Component pointer to be deleted
+			 * @param rightnow Remove this component right now. This might break if the component is being updated.
 			 * 
 			 * This removes the component of the update pipeline. */
-			static void remove(component::base * c, bool righnow = false);
+			static void remove(component::base * c, bool rightnow = false);
 			
 			/**
 			 * @brief Destroy/delete an game object and its components. */

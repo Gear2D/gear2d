@@ -16,11 +16,11 @@
 #include "engine.h"
 
 /**
+ * @namespace gear2d
  * @brief Gear2D Engine main namespace.
  * Everything created or managed by gear2d shall be
  * within this namespace
  */
-
 namespace gear2d {
 }
 #endif

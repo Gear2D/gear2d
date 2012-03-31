@@ -13,10 +13,13 @@
 #include <iterator>
 
 
-/**
+/** 
+ * @file definitions.h
+ * @brief Common definitions and useful functions.
  * @author Leonardo Guilherme de Freitas
- */
-
+ * 
+ * This header contains useful functions like split, some forward
+ * declarations and common definitions used thoughout the engine */
 namespace gear2d {
 	class object;
 	namespace component { 
@@ -48,22 +51,37 @@ namespace gear2d {
 		typedef void (component::base::*call)(std::string pid, component::base * lastwrite, gear2d::object * owner);
 	}
 	
-	/** @brief Type used to identify time difference in seconds (SECONDS!). */
+	/**
+	 * @var typedef float timediff
+	 * @brief Type used to identify time difference in seconds (SECONDS!). */
 	typedef float timediff;
 	
-	/** @brief Type that defines a file name. */
+	/**
+	 * @var typedef std::string filename 
+	 * @brief Type that defines a file name. */
 	typedef std::string filename;
 	
 	
 	
-	/** @brief Clamp a value between its max and min. */
+	/**
+	 * @fn void clamp(T & value, const T min, const T max)
+	 * @brief Clamp a value between its max and min.
+	 * @param value Value to be clamped
+	 * @param min Minimum value. If <code>value</code> is less than it, it will be set to <code>min</code>
+	 * @param max Maximum value. If <code>value</code> is greater than it, it will be set to <code>max</code>
+	 * @relates gear2d::component::base
+	 */
 	template <typename T>
 	void clamp(T & value, const T min, const T max) {
 		if (value > max) value = max;
 		if (value < min) value = min;
 	}
 	
-	/** @brief return the max value between x and y */
+	/**
+	 * @fn int max(T & x, T & y)
+	 * @param x First value to compare
+	 * @param y Second value to compare 
+	 * @brief return the max value between x and y */
 	template <typename T>
 	int max(T & x, T & y) {
 		if (x < y) return x;
@@ -74,25 +92,43 @@ namespace gear2d {
 	 * @brief Evil class.
 	 * 
 	 * This is an evil class, so you can catch the evil whenever
-	 * you try good things. */
+	 * you try good things. 
+	 * 
+	 * This exception is thrown whenever an irrecoverable error occurs.
+	 * Ideally the <i>modus operandi</i> for the engine is to fail
+	 * silently and continue running, but some errors throw this exception,
+	 * like when a required component is not found.
+	 *
+	 */
 	class evil : public std::exception {
 		private:
 			std::string describe;
 			
 		public:
+			/**
+			 * @brief Evil constructor.
+			 * @param describe human-readable description of the evil that just happened.
+			 */
 			evil(std::string describe = "Something evil happened!") throw() : describe(describe) { }
 			virtual ~evil() throw() { };
+			
+			/**
+			 * @brief Describes the error.
+			 * @returns An c-type string with the error description
+			 */
 			virtual const char* what() const throw() { return describe.c_str(); }
 	};
 	
 	/**
+	 * @fn container_t & split(container_t & elems, const std::string & s, char delim)
 	 * @brief String splitter to any container.
 	 * @param elems Target element container.
 	 * @param s String to be splitted.
 	 * @param delim Delimiting char.
 	 * @return elems
+	 * @relates gear2d::component::base
 	 * 
-	 * Uses strinstream and getline to split a string using the given delimiter.
+	 * Uses stringstream and getline to split a string using the given delimiter.
 	 */
 	template <typename container_t>
 	container_t & split(container_t & elems, const std::string & s, char delim) {
@@ -107,10 +143,12 @@ namespace gear2d {
 	}
 	
 	/**
+	 * @fn container_t split(const std::string & s, char delim)
 	 * @brief Handy shortcut for the split function.
 	 * @param s String to be splitted.
 	 * @param delim Delimiting char.
 	 * @return Instance of the container
+	 * @relates gear2d::component::base
 	 */
 	template <typename container_t>
 	container_t split(const std::string & s, char delim) {
@@ -119,17 +157,19 @@ namespace gear2d {
 	}
 	
 	/**
+	 * @fn datatype eval(std::string raw, datatype def)
 	 * @brief Evaluate a string to a type
 	 * @param raw Raw string to be evaluated
 	 * @param def Default if raw is empty
+	 * @relates gear2d::component::base
 	 * 
-	 * This tries to do a lexical cast to the raw string to the
+	 * This tries to do a lexical cast from the raw string to the
 	 * destination (datatype) type.
 	 * 
 	 * You can (and should!) do a template specialization of this method
-	 * if you know better than this function.
+	 * if you know better than this function. Example:
 	 * @code
-	 * template<> eval<your-fancy-type>(std::string raw, your-fancy-type def) {
+	 * template<> eval<your-fancy-customtype>(std::string rawstr, your-fancy-customtype def) {
 	 *     // do your stuff to convert raw string to your-fancy-type
 	 *     // and then return it
 	 * }
@@ -142,7 +182,7 @@ namespace gear2d {
 	 * or int if raw is empty. Check your arguments.
 	 */
 	template<typename datatype>
-	datatype eval(std::string raw, datatype def) {
+	datatype eval(std::string raw, datatype def = datatype()) {
 		std::stringstream sstr;
 		datatype t;
 		sstr << raw;

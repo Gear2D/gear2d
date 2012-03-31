@@ -147,7 +147,7 @@ namespace gear2d {
 				
 				/**
 				 * @brief Method that will be called to handle value changes.
-				 * @param id Parameter ID of the changed parameter
+				 * @param pid Parameter ID of the changed parameter
 				 * @param lastwrite The last component to write in this parameter (likely the one who triggered it)
 				 * @param owner The owner of the parameter (where it comes from)
 				 * 
@@ -205,7 +205,6 @@ namespace gear2d {
 				/**
 				 * @brief Reads a shared parameter and return its value
 				 * @param pid Parameter id to be read
-				 * @param datatype Type of the parameter
 				 * @warning The parameter will be created if it does not exists */
 				template<typename datatype>
 				datatype read(parameterbase::id pid) {
@@ -229,12 +228,17 @@ namespace gear2d {
 				}
 				
 			public:
-								/**
+				/**
 				 * @brief Writes in a shared parameter in another object
+				 * @param oid Object id that holds the parameter
 				 * @param pid Parameter id to be write to
 				 * @param source Source from it shall be copied
-				 * @warning Be careful about type promotion. Be explicit if necessary.
-				 * @warning The parameter will @b*NOT* be created if it does not exists */
+				 * @warning Be careful about type promotion, never rely on it. Be explicit if necessary.
+				 * @warning The parameter will @b *NOT* be created if it does not exists.
+				 * This behaviour is different from void
+				 * the previous \ref write(parameterbase::id pid, const datatype & source) "write"
+				 * function.
+				 */
 				template<typename datatype>
 				void write(object::id oid, parameterbase::id pid, const datatype & source) {
 					parameter<datatype> * v = (parameter<datatype> *) oid->get(pid);
@@ -264,10 +268,7 @@ namespace gear2d {
 				 * 
 				 * Evaluates the raw string to datatype and then set the parameter
 				 * to it, using eval(). eval may be specialized to mach your specific
-				 * needs. Look at \ref eval for more info on how to do that.
-				 * 
-				 * @warning This suffer from the same issue as @ref component::base::set.
-				 * it will be initialized only once. Latter is evil.
+				 * needs. Look at @ref eval for more info on how to do that.
 				 */
 				template<typename datatype>
 				void init(parameterbase::id pid, std::string raw, datatype def) {
@@ -281,7 +282,8 @@ namespace gear2d {
 				/**
 				 * @brief Uses another parameter to set the pid
 				 * @param pid Parameter id
-				 * @param param Parameter to be associated with pid
+				 * @param raw Parameter raw data to be associated with pid
+				 * @deprecated
 				 * 
 				 * Sets pid to point to an existing raw parameter. Likely used to provide
 				 * data shared among many instances of the same component and meant to
@@ -290,9 +292,8 @@ namespace gear2d {
 				 * @warning This is dangerous as hell because we allow referencing data
 				 * thats inside the parameter (even if its const) everywhere. Hell, this method
 				 * is even encouraging this kind of usage.  Using this twice will
-				 * make all the old references break in the ugliest form possible. If you happen
-				 * to free the old parameter, its better to run for your nuclear shelter because
-				 * this is gonna blow. Thats why it WILL fail (throw evil at you) if the object
+				 * make all the old references break in the ugliest form possible.
+				 * Thats why it WILL fail (throw evil at you) if the object
 				 * already have a parameter with the same name.
 				 * 
 				 * @warning Note that \ref read(), \ref write(), \ref add and \ref raw creates the parameter
@@ -333,7 +334,7 @@ namespace gear2d {
 				 * 
 				 * @warning Be aware that if the
 				 * parameter does not exists, it will not be created and it
-				 * will fail silently. Use if \p{(exists(pid)) hook(pid)} if you
+				 * will fail silently. Use <code>if (exists(pid)) hook(pid)</code> if you
 				 * want to know if/when it fails. If you know the component where that
 				 * parameter is coming from, its better to add it to the dependency
 				 * list, no?
@@ -353,7 +354,7 @@ namespace gear2d {
 				 *
 				 * @warning Be aware that if the
 				 * parameter does not exists, it will not be created and it
-				 * will fail silently. Use if \p{(exists(pid)) hook(pid)} if you
+				 * will fail silently. Use <code>if (exists(pid)) hook(pid)</code> if you
 				 * want to know if/when it fails.
 				 */
 				void hook(parameterbase::id pid, component::call handlerfp) {
@@ -395,18 +396,6 @@ namespace gear2d {
 				 * if the component was built with a factory and will
 				 * only work at setup() time, not at constructing time. */
 				component::base * build(component::selector s);
-				
-				/**
-				 * @brief Attach a component into the current owner object.
-				 * @param com Component to attach
-				 * @warning Please notice that there will be some dependency
-				 * checking. If it fails, an exception will be raised and it will
-				 * not be attached.
-				 * 
-				 * @throws evil Error when there's any dependency mismatch
-				 */
-// 				void attach(component::base * com) throw (gear2d::evil);
-				
 				
 				/**
 				 * @brief Spawns another object.

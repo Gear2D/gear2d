@@ -26,12 +26,12 @@ namespace gear2d {
 	class object;
 
 	/**
-	 * @brief Base parameter class
-	 * This is the base parameter container class.
+	 * @brief Base parameter class.
+	 * 
 	 * All parameters should inherit this, also all
 	 * parameters must be able to convert a string
 	 * to its value (because values will be loaded
-	 * as strings from data files)
+	 * as strings from data files).
 	 */
 	class parameterbase {
 		public:
@@ -47,6 +47,7 @@ namespace gear2d {
 		public:
 			/**
 			 * @brief Component ID that last performed a write on this parameter
+			 * 
 			 * This value should represent the last write access from a component,
 			 * so setting this value is component::base::write() responsibility.
 			 * 
@@ -61,7 +62,8 @@ namespace gear2d {
 			
 			/** 
 			 * @brief Object that own this parameters.
-			 * This value represent where this parameter belongs. It is
+			 * 
+			 * This pointer is a cross-reference to its owner. It is
 			 * set whenever you call set() in the object to insert a parameter 
 			 * @warning If you happen to use parameters outsite object API, managing
 			 * them is your responsibility
@@ -70,14 +72,13 @@ namespace gear2d {
 			
 			/**
 			 * @brief Parameter ID of this parameter.
-			 * This value represents the id of this parameter
-			 * 
 			 * @warning If you happen to use parameters outsite object API, managing
 			 * them is your responsibility */
 			parameterbase::id pid;
 			
 			/**
 			 * @brief Inform that this parameter must be destroyed
+			 * 
 			 * Inform to the parent object that this parameter must
 			 * be destroyed whenever its being deleted
 			 * This value is automatically set when a parameter is cloned from
@@ -85,6 +86,7 @@ namespace gear2d {
 			bool dodestroy;
 			
 		public:
+			/** @brief Initializes an empty parameterbase */
 			parameterbase() { dodestroy = true; lastwrite = 0; owner = 0; pid = ""; }
 			
 			/** @brief Clone this parameter and its value */
@@ -95,12 +97,31 @@ namespace gear2d {
 
 			/** 
 			 * @brief Hook a new listener to this parameter
-			 * Add a interested in this component for
-			 * value-changed notifications */
+			 * @param c Component to be notified of value-changes
+			 * 
+			 * Add an interested component in this component for
+			 * value-changed notifications. When there's a pending
+			 * notification, handle() will be called.
+			 */
 			void hook(component::base * c);
 			
+			/**
+			 * @brief Hook a new listener to this parameter using a custom callback.
+			 * @param c Component to be notified of value-changes
+			 * @param h Callback function to be called in the component whenever
+			 * there is a value change.
+			 * 
+			 * @see gear2d::call
+			 */
 			void hook(component::base * c, component::call h);
 			
+			/**
+			 * @brief Compare two parameters.
+			 * @param other Other parameter to compare.
+			 * 
+			 * This method basically compares if the owners are the same
+			 * and if the parameter ids are the same.
+			 */
 			virtual bool operator==(const parameterbase & other) const {
 				return (owner == owner) && (pid == other.pid);
 			}
@@ -140,7 +161,7 @@ namespace gear2d {
 		public:
 			/**
 			 * @brief Build a link based on another link
-			 * @p other Other link
+			 * @param other Other link
 			 */
 			link(const link<basetype> & other)
 			: target(other.target)
@@ -187,6 +208,17 @@ namespace gear2d {
 			}
 	};
 	
+	/**
+	 * @class parameter
+	 * @brief Generic parameter class implementing parameterbase.
+	 * 
+	 * This class implements the parameterbase interface and it is
+	 * specialized with the type of the parameter to hold. It is a 
+	 * sort-of shared pointer (it hols a pointer to the raw data),
+	 * and provides listeners to value-change notifications.
+	 * 
+	 * It is the mother of the blackboard system.
+	 */
 	template<typename datatype>
 	class parameter : public parameterbase {
 		private:
@@ -196,12 +228,12 @@ namespace gear2d {
 			
 		public:
 			/**
-			 * @brief Create a parameter pointing to an already existing raw buffer
-			 * @p raw Pointer to this pre-allocated raw. It will not be deleted.
+			 * @brief Create a parameter pointing to an already existing raw buffer.
+			 * @param raw Pointer to this pre-allocated raw. It will not be deleted.
 			 * 
 			 * @warning Don't keed with me and delete raw before destroying this.
 			 * I will crash and will laugh at you, because its your fault. You've been
-			 * warned, beach. */
+			 * warned. */
 			parameter(datatype * raw) : raw(raw), locked(false), mine(false) { }
 			
 			/**
@@ -209,14 +241,16 @@ namespace gear2d {
 			parameter() : raw(new datatype), locked(false), mine(true) { }
 			
 			/**
-			 * @brief Creates a new parameter using a raw value as base
-			 * Copies the raw into a new space */
+			 * @brief Creates a new parameter using a raw value as base.
+			 * 
+			 * Copies the raw data into a new space */
 			parameter(datatype raw) : raw(new datatype(raw)), locked(false), mine(false) { }
 			
 			/**
-			 * @brief Sets internal data of parameter
-			 * @p raw Raw data to set
+			 * @brief Sets internal data of parameter.
+			 * @param raw Raw data to set
 			 * @throw evil You cannot write to a parameter while we're updating to the listeners
+			 * 
 			 * If you ever happen to listen to a component value changed signals (hook()),
 			 * do not try to write it in handle(). If you do, live with the evil you are causing.
 			 * @code try { } catch (evil & e) { } @endcode
@@ -234,9 +268,13 @@ namespace gear2d {
 			}
 			
 			/**
-			 * @brief Set this parameter based on a generic other
-			 * @p other parameter to be copied from
-			 * This will call cast the parameter and set from its raw value. */
+			 * @brief Set this parameter based on a generic other.
+			 * @param other parameter to be copied from
+			 * 
+			 * This will call cast the parameter and set from its raw value.
+			 *
+			 * @warning There's no type checking or whatsoever.
+			 */
 			virtual void set(const parameterbase * other) throw (evil) {
 				const parameter<datatype> * p = static_cast<const parameter<datatype> *>(other);
 				if (pid != p->pid) {
@@ -246,7 +284,8 @@ namespace gear2d {
 // 				set(*(p->raw));
 			}
 			/**
-			 * @brief Clone a parameter
+			 * @brief Clone a parameter.
+			 * 
 			 * This is used to create a new parameter using an
 			 * existing one. Useful when parameters are used
 			 * as templates */
@@ -272,6 +311,10 @@ namespace gear2d {
 			virtual parameter<datatype> & operator=(const datatype & raw) {
 				set(raw);
 				return *this;
+			}
+			
+			virtual bool operator==(const parameter<datatype> & other) {
+				return (*raw == *(other.raw));
 			}
 			
 			virtual ~parameter() { 

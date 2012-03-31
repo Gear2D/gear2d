@@ -21,6 +21,7 @@ using std::list;
 namespace gear2d {
 	namespace component { class base; class factory; typedef std::string type; typedef std::string family; }
 	/**
+	 * @class object
 	 * @brief Gear2D game object component-container.
 	 * 
 	 * This is the owner of components in Gear2D
@@ -43,6 +44,7 @@ namespace gear2d {
 		public:
 				/**
 				 * @brief Object factory able to load and configure its components.
+				 * 
 				 * This is a object factory that, given an id, its able to load
 				 * the file with its components and configure them. An object factory
 				 * needs an component factory to work */
@@ -58,6 +60,7 @@ namespace gear2d {
 						/**
 						 * @brief Creates a new object factory.
 						 * @param cfactory Component factory to be used when building objects
+						 * 
 						 * Object factories depends on a component factory to
 						 * build its components. */
 						factory(component::factory & cfactory);
@@ -65,7 +68,8 @@ namespace gear2d {
 						/**
 						 * @brief Load a set of parameters stored in a file.
 						 * @param objtype Type of the object
-						 * @param file File where the parameters are stored
+						 * @param filename File where the parameters are stored
+						 * 
 						 * Loads a file (with the yaml format) that has the
 						 * parameters for building the object.
 						 * Note that if the file is not specified, a file
@@ -84,6 +88,7 @@ namespace gear2d {
 						 * @brief Set the parameters for loading the object.
 						 * @param objtype Type of the object to be registered
 						 * @param sig Signature of a object
+						 * 
 						 * This is used to define how a factory would initialize
 						 * the component to be added. */
 						void set(object::type objtype, object::signature sig);
@@ -91,6 +96,7 @@ namespace gear2d {
 						/**
 						 * @brief Build a component previously stored in the factory.
 						 * @param objtype Type of the already-registered object to be built
+						 * 
 						 * This uses information from set() and component factory to
 						 * create a new object with the registered components */
 						object::id build(object::type objtype);
@@ -140,7 +146,7 @@ namespace gear2d {
 			 ** @param c Pointer to component to be added
 			 ** @warning If your component happen to depend
 			 ** on another, they must be loaded prior to the
-			 ** attachment of \ref c, or the attachment will
+			 ** attachment of @p c, or the attachment will
 			 ** fail if they're not found
 			 **
 			 ** @warning If another component of the same
