@@ -1,6 +1,8 @@
 /**
   @page installation Installation
   
+  @section needed-libraries Needed libraries and tools
+  
   Gear2D installation requires the following libraries and tools:
   - <a href="http://libsdl.org">SDL 1.2</a>
   
@@ -24,8 +26,30 @@
   repositories, using Git.
   
   @section directory-conventions Directory conventions
-  The following is a list of directories present in any compressed binary package
-  (.zip and .tar.gz), in any platform:
+  The following is a list of directories present in any compressed gear2d
+  binary package (.zip and .tar.gz), in any platform:
+  <dl>
+	<dt>@p bin/: </dt>
+	<dd>Binary and executable files. The <code>gear2d</code> executable 
+	shall be here. The @p gear2d dynamic library is here too on Windows
+	platforms.</dd>
+	<dt>@p include/gear2d: </dt>
+	<dd>Header files for component developers are here. You'll only need to
+	include @p gear2d.h. </dd>
+	<dt>@p lib/: </dt>
+	<dd>Dynamic libraries and DLLs. On Windows systems, it shall only contains
+		standard components. On linux, the @p gear2d library (that you shall link
+		your components to) resides here; on Windows, it resides on @p bin/. </dd>
+	<dt> @p share/gear2d: </dt>
+	<dd>Directory containing shared resources for the engine.</dd>
+	<dt> @p share/doc/gear2d: </dt>
+	<dd>Directory containing documentation of the engine.</dd>
+  </dl>
+  
+  Note that these folders are usually contained in a top-level directory,
+  named  <code>gear2d-&lt;version&gt;.bin</code> for Linux platforms and
+  <code>Gear2D-&lt;version&gt;</code> for windows platforms, unless specified
+  otherwise.
   
   @section platform-specific-instructions Platform-specific instructions
   - @subpage installation-linux

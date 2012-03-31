@@ -1,11 +1,136 @@
 /**
  @page installation-linux Installation: Linux
  
- @section installation-linux-binaries Installing using archived binaries
+ -# Prepare your enviroenment by installing SDL.
+ @note
+ There are some links that can be helpful on installing SDL:<ul>
+ <li>http://ubuntu-gamedev.wikispaces.com/How-To+Setup+SDL+for+games+development</li>
+ <li>http://www.libsdl.org/download-1.2.php</li>
+ <li>http://www.noquarterarcade.com/linux-sdl-development-setup</li>
+ <li>http://forums.libsdl.org/viewtopic.php?t=5194&sid=51d3db8cb90f4e3ff042f5b717e9d640</li>
+ </ul>
+ -# Then obtain the package you wish to install.
+ @note Refer to the @ref download-information page on how to obtain
+ binary packages.
  
- Emma ammo anno
  
- @subsection yea Yeah
+ @section installation-linux-binaries Binary compressed packages
+ 
+ Once the dowloaded package is uncompressed, there are a couple of places where
+ you can place its contents to make them available to regular users:
+
+ - Use the system @p /usr/local directory structure:
+ <table border=0px>
+ <tr><td>@p gear2d/bin/* </td><td>➔  @p /usr/local/bin </td></tr>
+ <tr><td>@p gear2d/lib/* </td><td>➔ @p /usr/local/lib </td></tr>
+ <tr><td>@p gear2d/share/* </tr><td>➔ @p /usr/local/share </td></tr>
+ </table>
+ Usually, @p /usr/local is already on the @p PATH variable and the system
+ already looks in @p /usr/local/lib for shared libraries. At this step,
+ Gear2D installation is complete.
+ 
+ - Use a local folder. In this scenario, either you put Gear2D @p bin/ directory
+ on the @p PATH and @p lib/ directory on @p LD_LIBRARY_PATH variable, or you use
+ a script to do this for you. This is particularly useful if you wish to
+ distribute the engine along with your game.
+  \code
+  #!/bin/bash
+  # Example of a bash script to execute Gear2D from an non-standard folder,
+  # assuming the folder ./gear2d/ contains the uncompressed Gear2D package
+  # and that you want to execute it in this level.
+  
+  PATH="./gear2d/bin:$PATH"
+  LD_LIBRARY_PATH="./gear2d/lib:$LD_LIBRARY_PATH"
+  gear2d
+  \endcode
+	@note You can use
+	<code>LD_LIBRARY_PATH="./gear2d/lib" ./gear2d/bin/gear2d</code> to
+	execute the engine without a script, from a command line.
+	
+ @subsection installation-linux-binaries-components Components
+ 
+ Standard components are distributed in a separate package. Before downloading
+ it, make sure the component package version match the engine version. You can
+ easly check that by looking at the archive name.
+ 
+ Once downloaded, you'll notice that its directory structure matches the one
+ in the binary Gear2D package; this is intentional. Use the same techinique
+ used before.
+ 
+ - If using the system folder (@p /usr/local, for instance):
+ <table border=0px>
+ <tr><td>@p gear2d-components/lib/* </td><td>➔  @p /usr/local/lib </td></tr>
+ </table>
+
+ - If using a local folder:
+ <table border=0px>
+ <tr><td>@p gear2d-components/lib/* </td><td>➔ @p .@p /path/to/gear2d/lib </td></tr>
+ </table>
+ 
+ At this point, standard components are installed.
+ 
+ @section installation-linux-source Source Code
+ 
+ @subsection installation-linux-source-prepare Preparing the enviroenment
+ 
+ Source packages are distributed on the <a href="http://gear2d.com">Gear2D</a>
+ page, and you can also check our git repositories for the latest code.
+ @note Code available in the Git repository may not be stable and may not even
+ compile at all.
+ 
+ Before continuing, you'll need to install the GNU's toolchain (chances are that
+ it is already installed) and the development packages for SDL 1.2. You might need to
+ refer to the documentation of your distribution on how to install it.
+ 
+ If also installing components from source code, you'll need to install
+ development versions for SDL_ttf, SDL_mixer and SDL_image.
+ Also, you'll need CMake installed. Refer to your package manager, it should
+ be available to install these in the same way you installed SDL.
  
  
- */
+ @subsection installation-linux-source-build Building the source code
+ 
+ - Unpack the source tarball:
+ @verbatim
+ tar xvf gear2d-*.tar.bz2
+ @endverbatim
+
+ 
+ - Enter there, make a build folder, and enter inside it:
+ @verbatim
+ cd gear2d-*
+ mkdir build/
+ cd build/
+ @endverbatim 
+ 
+ - Run cmake:
+ @verbatim
+ cmake ../
+ @endverbatim
+ That should generate necessary build files and prepare it to install
+ on @p /usr/local folder. If you wish to prepare it to install somewhere else,
+ run cmake like this:
+ @verbatim
+ cmake -DCMAKE_INSTALL_PREFIX=/path/where/gear2d/shall/be ../
+ @endverbatim
+ 
+ - Run make:
+ @verbatim
+ make
+ @endverbatim
+ 
+ - Finally, install it.
+ @verbatim
+ make install
+ @endverbatim
+ If it fails, you might need root user access (when installing to a system
+ folder, for instance):
+ @verbatim
+ sudo make install
+ @endverbatim
+ 
+ If nothing fails, Gear2D shall be installed.
+ 
+ Repeat the same process for standard components.
+
+ **/
