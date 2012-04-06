@@ -1,0 +1,20 @@
+/**
+
+@page downloads Downloads
+@section downloads-packages Downloadable packages
+
+Gear2D uses Sourceforge service do provide downloads. They are named
+using the following scheme:
+
+<table>
+
+<tr><td>Platform</td>            <td>Description</td>                                                   <td>File</td></tr>
+
+<tr><td rowspan=3>Windows 32</td><td>Executable installer for the engine and standard components</td>   <td><code>.exe</code></td></tr>
+<tr>                             <td>Source code prepared to compile on Windows platforms</td>          <td><code>.src.zip</code></td></tr>
+<tr>                             <td>Compressed binaries for Windows 32 bits</td>                       <td><code>.zip</code></td></tr>
+<tr><td rowspan=3>Linux</td>     <td> Compressed binaries for Linux</td>                                <td><code>.bin.tar.bz2</code></td></tr>
+<tr>                             <td> Source code prepared to compile on Linux platforms</td>           <td><code>.tar.bz2</code></td></tr>
+</table>
+
+*/

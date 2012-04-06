@@ -1,7 +1,7 @@
 /**
  @page installation-linux Installation: Linux
  
- -# Prepare your enviroenment by installing SDL.
+ -# Prepare your environment by installing SDL.
  @note
  There are some links that can be helpful on installing SDL:<ul>
  <li>http://ubuntu-gamedev.wikispaces.com/How-To+Setup+SDL+for+games+development</li>

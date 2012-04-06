@@ -938,7 +938,7 @@ HTML_STYLESHEET        = @CMAKE_CURRENT_SOURCE_DIR@/doxygen.css
 # files. In the HTML_STYLESHEET file, use the file name only. Also note that 
 # the files will be copied as-is; there are no commands or markers available.
 
-HTML_EXTRA_FILES       = 
+HTML_EXTRA_FILES       = @CMAKE_CURRENT_SOURCE_DIR@/gear2d-feed.png
 
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output. 
 # Doxygen will adjust the colors in the style sheet and background images 
