@@ -17,7 +17,8 @@
   defined there are available to components to be used and
   shared.
   
-  @section manpages Manual Pages
+  @section subpages Subpages:
+  - @subpage downloads
   - @subpage installation 
   - @subpage basic-usage
   - @subpage components

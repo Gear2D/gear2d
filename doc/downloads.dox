@@ -1,0 +1,21 @@
+/**
+
+@page downloads Downloads
+@section downloads-packages Downloadable packages
+
+Gear2D uses Sourceforge service do provide downloads. They are named
+using the following scheme:
+
+<table>
+<tr><td>Platform</td>            <td>Description</td>                                                   <td>Engine</td>                              <td>Standard components</td></tr>
+<tr><td rowspan=3>Windows 32</td><td>Executable installer for the engine and standard components</td>   <td><a href="http://www.sourceforge.net/projects/gear2d/files/gear2d"><code>Gear2D-&lt;version&gt;.exe</code></a></td>       <td><a href="http://www.sourceforge.net/projects/gear2d/files/gear2d-components"><code>Gear2D-Components-&lt;version&gt;.exe</code></a></td></tr>
+<tr>                             <td>Compressed binaries for Windows 32 bits</td>                       <td><a href="http://www.sourceforge.net/projects/gear2d/files/gear2d"><code>Gear2D-&lt;version&gt;.zip</code></a></td>       <td><a href="http://www.sourceforge.net/projects/gear2d/files/gear2d-components"><code>Gear2D-Components-&lt;version&gt;.zip</code></a></td></tr>
+<tr>                             <td>Source code prepared to compile on Windows platforms</td>          <td><a href="http://www.sourceforge.net/projects/gear2d/files/gear2d"><code>Gear2D-&lt;version&gt;.src.zip</code></a></td>   <td><a href="http://www.sourceforge.net/projects/gear2d/files/gear2d-components"><code>Gear2D-Components-&lt;version&gt;.src.zip</code></a></td></tr>
+<tr><td rowspan=2>Linux</td>     <td>Self-extracting binary installer</td>                              <td><a href="http://www.sourceforge.net/projects/gear2d/files/gear2d"><code>gear2d-&lt;version&gt;.sh</code></a></td>        <td><a href="http://www.sourceforge.net/projects/gear2d/files/gear2d-components"><code>gear2d-components-&lt;version&gt;.sh</code></a></td></tr>
+<tr>                             <td>Source code prepared to compile on Linux platforms</td> <td rowspan=2><a href="http://www.sourceforge.net/projects/gear2d/files/gear2d"><code>gear2d-&lt;version&gt;.tar.bz2</code></a></td>    <td rowspan=2><a href="http://www.sourceforge.net/projects/gear2d/files/gear2d-components"><code>gear2d-components-&lt;version&gt;.tar.bz2</code></a></td></tr>
+<tr><td>Mac</td>                 <td>Source code prepared to compile on Mac platforms</td>                                                                                                                                           </tr>       
+</table>
+
+See the @ref installation page on how to install these packages.
+
+*/

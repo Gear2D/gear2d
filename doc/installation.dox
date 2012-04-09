@@ -17,17 +17,16 @@
   recommended. <a href="http://www.mingw.org">MinGW</a> is also tested
   and able to compile Gear2D on Microsoft Windows platforms) and
   <a href="http://www.cmake.org">CMake</a>. Instructions
-  on these will be presented on platform-specific pages.
+  on these will be presented on the @ref platform-specific-instructions page.8
   
   @section download-information Downloads
-  You can reach <a href="http://gear2d.com/downloads.php">Gear2D Downloads
-  Page</a> for released versions, stable or not. In the page
+  You can reach the @ref downloads page for released versions, stable or not. In the page
   http://github.com/Gear2D you can have access to all our public source-code
   repositories, using Git.
   
   @section directory-conventions Directory conventions
-  The following is a list of directories present in any compressed gear2d
-  binary package (.zip and .tar.gz), in any platform:
+  The following is a list of directories present in any gear2d
+  binary package, in any platform:
   <dl>
 	<dt>@p bin/: </dt>
 	<dd>Binary and executable files. The <code>gear2d</code> executable 
@@ -47,7 +46,7 @@
   </dl>
   
   Note that these folders are usually contained in a top-level directory,
-  named  <code>gear2d-&lt;version&gt;.bin</code> for Linux platforms and
+  named  <code>gear2d-&lt;version&gt;</code> for Linux platforms and
   <code>Gear2D-&lt;version&gt;</code> for windows platforms, unless specified
   otherwise.
   

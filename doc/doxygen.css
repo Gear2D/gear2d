@@ -31,11 +31,14 @@ h2 {
 
 h3 {
 	font-size: 100%;
-	color: #333333;
+	border-left:4px solid;
+	padding: 0 0 0 6px;
+	border-color: #c61717;
+	color: #C61717;
 }
 
 h4 {
-	color: #C61717;
+	color: #333333;
 }
 
 dt {
@@ -50,6 +53,11 @@ p {
 h1, h2, h3, h4, h5 {
 	font-family: 'Inder', sans-serif;
 	letter-spacing: 1px;
+}
+
+div.newsitem p {
+	padding-left: 0 0 0 16px;
+	color: red;
 }
 
 code {

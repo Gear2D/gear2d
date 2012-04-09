@@ -1,7 +1,7 @@
 /**
  @page installation-linux Installation: Linux
  
- -# Prepare your enviroenment by installing SDL.
+ -# Prepare your environment by installing SDL.
  @note
  There are some links that can be helpful on installing SDL:<ul>
  <li>http://ubuntu-gamedev.wikispaces.com/How-To+Setup+SDL+for+games+development</li>
@@ -16,23 +16,38 @@
  
  @section installation-linux-binaries Binary compressed packages
  
- Once the dowloaded package is uncompressed, there are a couple of places where
- you can place its contents to make them available to regular users:
+ There is a self-extracting compressed binary package that you can download
+ and execute on a console. You can execute it with the @p --help argument
+ to show a list of possible options. Here is a summary and a brief explanation
+ for your convenience:
 
- - Use the system @p /usr/local directory structure:
- <table border=0px>
- <tr><td>@p gear2d/bin/* </td><td>➔  @p /usr/local/bin </td></tr>
- <tr><td>@p gear2d/lib/* </td><td>➔ @p /usr/local/lib </td></tr>
- <tr><td>@p gear2d/share/* </tr><td>➔ @p /usr/local/share </td></tr>
+ <table>
+ <tr><td>@p --help </td><td>Print the help message</td></tr>
+ <tr><td>@p --prefix=dir </td><td>Setup a directory where to install. For instance, to install <br />using the system-wide @p /usr path, run with @p --prefix=/usr </td></tr>
+ <tr><td>@p --include-subdir </td><td>Include a top-level directory, namely, <code>gear2d-&lt;version&gt;/</code>, in<br /> the extraction prefix.</td></tr>
+ <tr><td>@p --exclude-subdir </td><td>Exclude the top-level directory, placing the archive contents directly under<br /> the specified prefix.</td></tr>
  </table>
+
+ @subsection installation-linux-binexamples Examples using the installer
+ 
+ Using this self-extracting script you can install the engine in various places:
+ - Use the system @p /usr/local directory structure.
  Usually, @p /usr/local is already on the @p PATH variable and the system
- already looks in @p /usr/local/lib for shared libraries. At this step,
- Gear2D installation is complete.
+ already looks in @p /usr/local/lib for shared libraries. Use the following
+ command:
+ \code
+ $ sudo ./gear2d-<version>.sh --prefix=/usr/local --exclude-subdir
+ \endcode
  
  - Use a local folder. In this scenario, either you put Gear2D @p bin/ directory
  on the @p PATH and @p lib/ directory on @p LD_LIBRARY_PATH variable, or you use
  a script to do this for you. This is particularly useful if you wish to
- distribute the engine along with your game.
+ distribute the engine along with your game. To use it on a local folder,
+ use the following command:
+ \code
+ $ ./gear2d-<version>.sh --include-subdir
+ \endcode
+ You might want to use this script:
   \code
   #!/bin/bash
   # Example of a bash script to execute Gear2D from an non-standard folder,
@@ -53,9 +68,8 @@
  it, make sure the component package version match the engine version. You can
  easly check that by looking at the archive name.
  
- Once downloaded, you'll notice that its directory structure matches the one
- in the binary Gear2D package; this is intentional. Use the same techinique
- used before.
+ Once downloaded, you'll be able to install them using the same procedure
+ as before
  
  - If using the system folder (@p /usr/local, for instance):
  <table border=0px>
