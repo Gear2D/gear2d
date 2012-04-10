@@ -1,4 +1,90 @@
 /*! @page installation-windows Installation: Windows
 
+ @section installation-windows-installer Using the installer
+ 
+ Gear2D comes with an executable installer for Microsoft Windows platforms.
+ Using it, you can specify a place for the installation and if you want
+ the @p PATH variable to contain the path to the gear2d executable (its
+ advisable to).
+ 
+ There is also an installer for the standard components, which installs itself
+ to the same place where you previously installed the engine.
+ 
+ They are straightforward to use.
+ 
+ @subsection installation-windows-shortcut Creating a shortcut
+ 
+ Once Gear2D its installed, you'll need to create a shortcut to
+ it so you can place it inside a game. Access the installation folder. Inside
+ the @p bin/ folder there's a file named @p gear2d.exe, which is the engine main
+ executable. Click with the right button on it and choose "Send -> to Desktop
+ (create a shortcut)". Copy and paste that shortcut to execute new games.
+ 
+ @section installation-windows-zipped Using the compressed binaries
+ 
+ There's also a @p .zip file containing the engine's files. It follows the
+ same structure as described in @ref directory-conventions. You can unzip it
+ anywhere you want. Use the same procedure as described above to create a
+ shortcut to the top-level (the executable is inside the @p bin/ folder).
+ 
+ \note Both binary packages are compiled using MinGW, unless specified otherwise.
+ 
+ @section installation-windows-source Source Code
+ 
+ A package with the source code is provided both for the engine and the
+ standard components library. To do that you'll need:
+ 
+ - CMake
+ - A compiler toolchain (MinGW is known to work. VC++ is not tested)
+ - SDL, SDL_image, SDL_ttf and SDL_mixer development libraries
+ 
+ \note Instructions bellow are for MinGW.
+ 
+ @subsection installation-windows-mingw-prepare Prepare the environment
+ 
+ -# Download and install <a href="http://www.cmake.org/cmake/resources/software.html">CMake</a>.
+ -# Download and install <a href="http://sourceforge.net/projects/mingw/files/">MinGW</a> on
+ @p C:\\MinGW. When prompted, install the C and C++ compiler, the Developer Toolkit and MSYS.
+ -# Download MinGW-compatible development libraries for <a href="http://www.libsdl.org/download-1.2.php">SDL</a>.
+ Once uncompressed, copy the folders @p lib/, @p bin/ and @p include/ to MinGW's root folder (@p C:\\MinGW). Also,
+ make sure @p C:\\MinGW\\bin is on the @p PATH variable.
+ -# Download development libraries for <a href="http://www.libsdl.org/projects/SDL_image/">SDL_image</a>,
+ <a href="http://www.libsdl.org/projects/SDL_mixer/">SDL_mixer</a> and 
+ <a href="http://www.libsdl.org/projects/SDL_ttf/">SDL_ttf</a> libraries, 
+ usually named <code>SDL_&lt;library&gt;-devel-&lt;version&gt;-VC.zip</code>, where
+ @p library is the library name and @p version is the SDL version of that library. Use
+ the same procedure as before for the @p include/ and @p lib/ folders.
+ 
+ @subsection installation-windows-mingw-build Build the source
+ 
+ Obtain the package <code>Gear2D-&lt;version&gt;.src.zip</code> and
+ <code>Gear2D-Components-&lt;version&gt;.src.zip</code>, which contains the source code prepared
+ to compile on Microsoft Windows.
+ 
+ Uncompress them. Using the MSYS terminal, navigate to the uncompressed folder.
+ Create a directory (using mkdir) called build. Enter inside and perform:
+  \code
+  cmake -G "MSYS Makefiles" ../
+  \endcode
+  \warning It is necessary to use the MSYS terminal for this to work. If you want
+  to use the default Windows console, you should perform
+  \code
+  cmake -G "MinGW Makefiles" ../
+  \endcode 
+  
+  Followed by
+  \code
+  make
+  \endcode
+  
+  and by
+  \code
+  make install
+  \endcode
+  
+  You might need to execute the MSYS terminal with administrator permission to
+  install it on <code>Program Files</code> folder. Repeat the same procedure for
+  standard components.
+  
 
 */

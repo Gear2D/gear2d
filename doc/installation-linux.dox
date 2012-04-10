@@ -36,7 +36,7 @@
  already looks in @p /usr/local/lib for shared libraries. Use the following
  command:
  \code
- $ sudo ./gear2d-<version>.sh --prefix=/usr/local --exclude-subdir
+ sudo ./gear2d-<version>.sh --prefix=/usr/local --exclude-subdir
  \endcode
  
  - Use a local folder. In this scenario, either you put Gear2D @p bin/ directory
@@ -45,7 +45,7 @@
  distribute the engine along with your game. To use it on a local folder,
  use the following command:
  \code
- $ ./gear2d-<version>.sh --include-subdir
+ ./gear2d-<version>.sh --include-subdir
  \endcode
  You might want to use this script:
   \code
@@ -69,17 +69,21 @@
  easly check that by looking at the archive name.
  
  Once downloaded, you'll be able to install them using the same procedure
- as before
+ as before, but this time you have to provide a path to the @p --prefix option
+ to point where gear2d is installed:
  
- - If using the system folder (@p /usr/local, for instance):
- <table border=0px>
- <tr><td>@p gear2d-components/lib/* </td><td>➔  @p /usr/local/lib </td></tr>
- </table>
-
- - If using a local folder:
- <table border=0px>
- <tr><td>@p gear2d-components/lib/* </td><td>➔ @p .@p /path/to/gear2d/lib </td></tr>
- </table>
+ - If you installed in a system folder (@p /usr, for instance)
+ \code
+ ./gear2d-components-<version>.sh --prefix=/usr/
+ \endcode
+ 
+ - If you installed on a local folder with the subdir: (For example, @p /opt/gear2d):
+ \code
+ ./gear2d-components-<version>.sh --prefix=/opt/gear2d
+ \endcode
+ 
+ It will uncompress a @p lib/ folder that needs to match the @p lib/ on the
+ gear2d installation directory.
  
  At this point, standard components are installed.
  
@@ -145,6 +149,7 @@
  
  If nothing fails, Gear2D shall be installed.
  
- Repeat the same process for standard components.
+ Repeat the same process for standard components, providing the same
+ prefix (or none, if you installed gear2d without specifying the prefix)
 
  **/

@@ -50,6 +50,11 @@
   <code>Gear2D-&lt;version&gt;</code> for windows platforms, unless specified
   otherwise.
   
+  \note Use these conventions when creating components with your favorite IDE or
+  compiler: @p include/gear2d is the place you want to add to your include paths;
+  @p bin/ and @p lib/ are the places you'd add to the link paths, and you should link
+  agains the @p gear2d library.
+  
   @section platform-specific-instructions Platform-specific instructions
   - @subpage installation-linux
   - @subpage installation-windows

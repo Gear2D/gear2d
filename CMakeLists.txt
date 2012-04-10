@@ -15,7 +15,7 @@ project(gear2d)
 
 set(Gear2D_VERSION_MAJOR "0")
 set(Gear2D_VERSION_MINOR "0")
-set(Gear2D_VERSION_PATCH "4")
+set(Gear2D_VERSION_PATCH "9998")
 
 set(Gear2D_VERSION "${Gear2D_VERSION_MAJOR}.${Gear2D_VERSION_MINOR}.${Gear2D_VERSION_PATCH}")
 add_definitions(-DGEAR2D_VERSION="${Gear2D_VERSION}")
