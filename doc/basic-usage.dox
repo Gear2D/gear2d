@@ -6,29 +6,109 @@
   for using the engine, after it is installed. See \ref installation
   before going forward on this page.
   
-  @subsection basic-usage-requires Basic usage of the engine requires:
+  @subsection basic-usage-requires Basic usage of the engine requires
+  
   - The engine and some previously-installed components
   - A great idea for a game
   - A plain-text editor (notepad will do)
   - Game assets (images, sounds, etc)
   
-  @subsection basic-usage-main-concepts Things you need to know:
-  - \ref scene-file "Scenes" are created using text files describing where
-  components are found and which game
-  objects/entities are present in this scene. Each scene requires its own file.
+  @subsection basic-usage-main-concepts Things you need to know
   
-  - \ref entities "Game Objects or Entities" are created using a text file. Each file corresponds to an
-  entity. This file should contain a list of attached components, followed by
-  a list of key-value pairs, called parameters, which are used by attached components.
+  - A \ref scenes "Scene" can be seen as a stage of a theatrical play. You
+  must define a list of entities that participate in the beginning so the play
+  can start properly. Scenes are created using a simple text file, in the
+  YAML format.
   
-  - A component is used to model behaviour and to add features to an entity. For instance,
-  to show an entity on screen, you should attach the renderer component. The render component
-  might use a parameter called @c renderer.surfaces, which you might want to define in the
-  entity file to be a list of surfaces representing it.
+  - \ref entities "Entities" are like the actors of the play. Each one of them
+  has their features and behaviors. You can model their features using a list
+  of parameters to be shared and define their behaviors using components that
+  make use of available parameters. Entities are also created using YAML files.
   
-  @section scene-file Scene files
+  - \ref components "Components" are used to define a behavior of an entity.
+  When they're @b attached to them, they can access and modify their parameters,
+  making these modifications available to other components attached to the same
+  entity. Using components you can also spawn new entities in the scene and
+  destroy others. You can also communicate with them, using their parameters.
+  Components are created using the C++ language.
+  
+
+  @section scenes Scene files
   This section describes how scene files works and how to use them to
   create a game.
   
+  This is how an scene file looks like:
+  \code
+  # path where the engine will look for component libraries
+  compath: com/,/usr/local/lib/gear2d/component
+
+  # path where you have defined your entities.
+  objpath: entities/
+  
+  # list of objects that are present in the beginning of the scene
+  objects: background player enemy
+  
+  # global parameters to be used by the renderer component,
+  # defining the screen size
+  renderer.x: 800
+  renderer.y: 600
+  \endcode
+  
+  These are called parameters. @p compath, @p objpath and @p objects are
+  parameters used by the engine itself, but, @p renderer.x and @p renderer.y
+  are parameters that are passed around to every component. These two are
+  particularly useful to the renderer component that, when initialized,
+  creates the screen.
+  
+  \note See the appendix for @ref appendix-scene-parameters "scene parameters" to a list of parameters that
+  influence the workings of the engine.
+  
+  If you put that in a file named <code>gear2d.yaml</code> and run the engine
+  in the same folder, you'll get a 800x600 screen and the entities @p background,
+  @p player and @p enemy loaded.
+  
+  Each scene must have its own file and @p gear2d.yaml is the default scene; it'll
+  be opened when you run the engine with no arguments.
+  
   @section entities Entity files
+  
+  Entities, much like scenes, are defined using YAML files. They must be in
+  the folder referenced by the scene file. For instance, in the example above,
+  it is inside @p entities/. For every referenced entity you must have an
+  YAML file named before the entity name. For instance, the file
+  <code>entities/background.yaml</code> corresponds to the background entity.
+  
+  This is how an entity file looks like:
+  \code
+  # list of attached components
+  attach: spatial/space2d renderer/renderer
+  
+  # list of surfaces to be loaded and rendered
+  renderer.surfaces: bg=background.png
+  
+  # position of this entity
+  x: 0
+  Y: 0
+  \endcode
+  
+  The @p attach parameter is used by the engine to know which components to attach,
+  where all the others can be used as shared key-value pairs for the entity. For
+  instance, the @p x and @p y parameters are initialized by the @p spatial/space2d
+  component. The @p renderer.surfaces parameter is initialized and used by the
+  @p renderer/renderer component to load specified surfaces; this component also
+  uses @p x and @p y to put the specified surface on the right place.
+  
+  @subsection basic-usage-families-and-types Component families and types
+  
+  Components are separated by a family and a type. Each family groups
+  components by a common functionality and/or behavior. For instance, the
+  @p spatial family groups components that manage spatial coordinates. Inside
+  a family, you have component types. Each type must conform to its family
+  thus implement similar functionality, but can implement them in a different way or
+  provide a new feature. There could be a @p space2d component type inside the @p spatial
+  family that could implement spherical coordinates, for instance.
+  
+  \note Consult the documentation for the component you intend to use to know
+  their parameters.
+  
 */
