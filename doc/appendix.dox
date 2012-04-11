@@ -1,0 +1,86 @@
+/*!
+ @page appendix Appendix
+ 
+ @section appendix-scene-parameters Scene parameters
+ 
+ List of parameters on scene files that modify the workings of the engine:
+ <dl>
+	<dt>@p compath: </dt>
+	<dd>Inform a list of comma-separated paths where the engine will look for component
+	libraries. That is, if your entity has an @p spatial/space2d component attached in it,
+	the engine will look for a file named <code>spatial/space2d.so</code> in one
+	of the mentioned paths. The list must NOT have space between the value and the comma.
+	
+	Example:
+	\code
+compath: /usr/lib/gear2d/component,/opt/gear2d/component,C:\\Program Files\\Gear2D\\lib\\gear2d\\component
+	\endcode
+	</dd>
+	
+	<dt>@p objpath: </dt>
+	<dd>Inform a path to look for entities/objects that are defined in the @p objects parameter.
+	This path will also be used when spawning entities using the @ref gear2d::component::base::spawn "spawn" method.
+	
+	Example:
+	\code
+objpath: scene1/
+	\endcode
+	</dd>
+	
+	<dt>@p objects: </dt>
+	<dd>List of objects, separated by space, that are present in the beginning of the scene.
+	
+	Example:
+	\code
+objects: background player enemy-spawner
+	\endcode
+	</dd>
+	
+ </dl>
+
+ @example greeter-component A greeter component
+ 
+ Example of a greeter component, written in C++
+ 
+ \code
+#include "gear2d.h"
+using namespace gear2d;
+ 
+class helloperson : public component::base {
+	public:
+		// constructor and destructor
+		helloperson() { }
+		virtual ~helloperson() { }
+		
+		// greeter family
+		virtual gear2d::component::family family() { return "greeter"; }
+		
+		// hello world type
+		virtual gear2d::component::type type() { return "helloperson"; }
+		
+		// setup phase, to initialize paramters and other stuff
+		virtual void setup(object::signature & signature) {
+			// initialize the parameter person
+			// using the object signature, default
+			// to "Anonymous"
+			init("person", sig["person"], "Anonymous");
+			
+			// initialize/writes the parameter "greetedtimes" to hold 0
+			write("greetedtimes", 0);
+		}			
+		
+		virtual void update(timediff dt) {
+			// add 1 to the number of times we're greeted someone
+			add("greetedtimes", 1);
+			
+			// Print how many times we've greeted someone
+			std::cout << "Hello, " << read<string>("person") << "! ";
+			std::cout << "I have greeted you " << read<int>("greetedtimes") << " times already!" << std::endl;
+		}
+};
+
+// the build function
+extern "C" { component::base * build() { return new helloperson(); } }
+\endcode
+
+*/
