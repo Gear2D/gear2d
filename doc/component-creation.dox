@@ -1,0 +1,26 @@
+/*!
+@page component-creation Component creation
+
+ This page describes the basics to create a component.
+ 
+ Before continuing:
+ 
+-# Be sure to have installed the engine. See @ref installation page
+ on how to do that.
+-# Before continuing, you must feel comfortable with the concepts presented in
+ the @ref basic-usage page.
+ 
+ You must know:
+ 
+- C++
+- How to use a compiler and a linker
+
+ As mentioned before, components are distributed in the form of a library
+ (like a .dll for windows). Thus, your source file must be compiled and linked
+ to form a shared object.
+ 
+ You can create components using as many C++ files as you want, but, for
+ every component there must be a single library.
+ 
+ 
+*/
