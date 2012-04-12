@@ -6,6 +6,9 @@
 # Gear2D_VERSION, version of found library
 # Gear2D_INCLUDE_DIR, where to find gear2d.h
 # Gear2D_LINK_DIR, where to find gear2d.so/gear2d.dll
+# Gear2D_COMPONENT_PREFIX, prefix to install components
+
+if (NOT Gear2D_FOUND)
 
 if (WIN32)
 	find_path(Gear2D_INCLUDE_DIR gear2d.h
@@ -65,17 +68,20 @@ endif(WIN32)
 
 IF(Gear2D_INCLUDE_DIR AND Gear2D_LIBRARY)
 	SET(Gear2D_FOUND TRUE)
-	SET(Gear2D_COMPONENT_PREFIX ${Gear2D_LIBRARY}/../lib/gear2d/component)
 ENDIF(Gear2D_INCLUDE_DIR AND Gear2D_LIBRARY)
 
 IF(Gear2D_FOUND)
 	get_filename_component(Gear2D_LINK_DIR ${Gear2D_LIBRARY} PATH)
 	execute_process(COMMAND gear2d -v OUTPUT_VARIABLE Gear2D_VERSION)
+	SET(Gear2D_COMPONENT_PREFIX ${Gear2D_LINK_DIR}/../lib/gear2d/component)
 	IF (NOT Gear2D_FIND_QUIETLY)
 		MESSAGE(STATUS "Found Gear2D: ${Gear2D_LIBRARY} version ${Gear2D_VERSION}")
+		MESSAGE(STATUS "Guessed Gear2D component prefix: ${Gear2D_COMPONENT_PREFIX}")
 	ENDIF (NOT Gear2D_FIND_QUIETLY)
 ELSE(Gear2D_FOUND)
 	IF (Gear2D_FIND_REQUIRED)
 		MESSAGE(FATAL_ERROR "Could not find Gear2D")
 	ENDIF (Gear2D_FIND_REQUIRED)
 ENDIF(Gear2D_FOUND)
+
+ENDIF(NOT Gear2D_FOUND)
