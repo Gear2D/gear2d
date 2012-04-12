@@ -28,10 +28,14 @@ namespace gear2d {
 	class object;
 	class engine;
 
-	/** @brief Component namespace
+	/**
+	 * @namespace component
+	 * @brief Component namespace
+	 * 
 	 ** Where all components shall live
 	 ** Every component should be declared within
-	 ** this namespace */
+	 ** this namespace 
+	 **/
 	namespace component {
 		
 		
@@ -117,7 +121,9 @@ namespace gear2d {
 		 * container of them.
 		 * 
 		 * @warning A component only receives update(), message
-		 * or anything when attached to a game object. */
+		 * or anything when attached to a game object.
+		 * 
+		 */
 		class base {
 			friend class gear2d::object;
 			friend class gear2d::engine;

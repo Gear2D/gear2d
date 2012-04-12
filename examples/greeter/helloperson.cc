@@ -10,7 +10,7 @@ class helloperson : public component::base {
 		// greeter family
 		virtual gear2d::component::family family() { return "greeter"; }
 		
-		// hello world type
+		// helloperson type
 		virtual gear2d::component::type type() { return "helloperson"; }
 		
 		// setup phase, to initialize paramters and other stuff
