@@ -24,6 +24,7 @@ padding-left: 20px;" target="_blank" > News feed</a>
   - @subpage downloads
   - @subpage installation 
   - @subpage basic-usage
-  - @subpage components
+  - @subpage component-creation
+  - @subpage appendix
   
 **/
