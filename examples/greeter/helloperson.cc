@@ -1,5 +1,7 @@
+#include <iostream>
 #include "gear2d.h"
 using namespace gear2d;
+using namespace std;
  
 class helloperson : public component::base {
 	public:
@@ -14,11 +16,11 @@ class helloperson : public component::base {
 		virtual gear2d::component::type type() { return "helloperson"; }
 		
 		// setup phase, to initialize paramters and other stuff
-		virtual void setup(object::signature & signature) {
+		virtual void setup(object::signature & sig) {
 			// initialize the parameter person
 			// using the object signature, default
 			// to "Anonymous"
-			init("person", sig["person"], "Anonymous");
+			init<string>("person", sig["person"], "Anonymous");
 			
 			// initialize/writes the parameter "greetedtimes" to hold 0
 			write("greetedtimes", 0);

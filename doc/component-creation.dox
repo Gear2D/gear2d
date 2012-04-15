@@ -22,5 +22,9 @@
  You can create components using as many C++ files as you want, but, for
  every component there must be a single library.
  
+ I've set up, for your convenience, an example project for a greeter component
+ with two files, a @ref appendix-greeter-code "helloperson.cc" and a
+ @ref appendix-greeter-cmake "CMakeLists.txt".
+ 
  
 */

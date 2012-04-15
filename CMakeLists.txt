@@ -47,7 +47,7 @@ set(CPACK_PACKAGE_INSTALL_DIRECTORY "gear2d")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Gear2D - Component-based game engine")
 set(CPACK_PACKAGE_VERSION ${Gear2D_VERSION})
 
-set(CPACK_SOURCE_IGNORE_FILES "\\\\.git.*;${CMAKE_BINARY_DIR}/.*;.*~;\\\\.kdev4/.*;.*\\\\.kdev4;.*\\\\.swp")
+set(CPACK_SOURCE_IGNORE_FILES "\\\\.git.*;${CMAKE_BINARY_DIR}/.*;.*~;\\\\.kdev4/.*;.*\\\\.kdev4;.*\\\\.swp;.*examples/.*/build/.*;.*\\\\.o")
 set(PACK_PACKAGE_EXECUTABLES gear2d;Gear2D Game Engine)
 set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
 set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README)

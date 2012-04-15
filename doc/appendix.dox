@@ -38,9 +38,15 @@ objects: background player enemy-spawner
 	
  </dl>
 
- @section greeter Greeter component
+ @section appendix-greeter Greeter component
  Example of a greeter component, written in C++
+
+ @subsection appendix-greeter-code C++ Code:
  
  \include greeter/helloperson.cc
+ 
+ @subsection appendix-greeter-cmake CMakeLists.txt to build the code
+ 
+ \include greeter/CMakeLists.txt
 
 */
