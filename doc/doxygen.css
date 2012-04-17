@@ -9,6 +9,7 @@
  * #0066CC  (blue-like2)*/
 
 @import url(http://fonts.googleapis.com/css?family=VT323);
+@import url(http://fonts.googleapis.com/css?family=Nova+Mono);
 @import url(http://fonts.googleapis.com/css?family=Inder);
 
 body {
@@ -182,9 +183,9 @@ dl.el {
 }
 
 .fragment {
-	font-family: "VT323", monospace, fixed;
+	font-family:  "Nova Mono", monospace, fixed;
 /* 	font-weight: bold; */
-	font-size: 14px;
+	font-size: 12px;
 }
 
 pre.fragment {
@@ -536,15 +537,15 @@ table.memberdecls {
 }       
         
 .params .paramdir {
-        font-family: 'VT323', "courier new", courier, monospace;
+        font-family: "Nova Mono", monospace;
         vertical-align: top;
 }
 
 
 tt, code, kbd, samp {
 	font-weight: normal;
-	font-size: 14px;
-	font-family: 'VT323', "courier new", courier, monospace;
+	font-size: 12px;
+	font-family: "Nova Mono", monospace;
 }
 
 
@@ -728,7 +729,7 @@ table.doxtable th {
         background-repeat:no-repeat;
         background-position:right;
         color:#333;
-		font-family: 'VT323', inherit; 
+		font-family: inherit; 
         font-size: 8pt;
 }
 

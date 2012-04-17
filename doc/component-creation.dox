@@ -7,7 +7,7 @@
  
 -# Be sure to have installed the engine. See @ref installation page
  on how to do that.
--# Before continuing, you must feel comfortable with the concepts presented in
+-# Feel comfortable with the concepts presented in
  the @ref basic-usage page.
  
  You must know:
@@ -25,6 +25,5 @@
  I've set up, for your convenience, an example project for a greeter component
  with two files, a @ref appendix-greeter-code "helloperson.cc" and a
  @ref appendix-greeter-cmake "CMakeLists.txt".
- 
  
 */
