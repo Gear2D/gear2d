@@ -136,8 +136,10 @@ namespace gear2d {
 		std::string item;
 		std::insert_iterator<container_t> it(elems, elems.begin());
 		while(std::getline(ss, item, delim)) {
-			*it = item;
-			it++;
+			if (it->length() > 0) {
+				*it = item;
+				it++;
+			}
 		}
 		return elems;
 	}
