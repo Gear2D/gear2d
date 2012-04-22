@@ -23,4 +23,3 @@ add_library(helloperson MODULE helloperson.cc)
 install(TARGETS helloperson
 		LIBRARY
 		DESTINATION greeter)
-

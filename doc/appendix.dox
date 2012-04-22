@@ -48,5 +48,16 @@ objects: background player enemy-spawner
  @subsection appendix-greeter-cmake CMakeLists.txt to build the code
  
  \include greeter/CMakeLists.txt
+ 
+ Use the following shell command to compile @c helloperson into a shared
+ object:
+ 
+ \code
+ mkdir build
+ cd build/
+ cmake -DCMAKE_INSTALL_PREFIX=path/to/your/game/component/folder ../
+ make
+ make install
+ \endcode
 
 */

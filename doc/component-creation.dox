@@ -24,6 +24,7 @@
  
  I've set up, for your convenience, an example project for a greeter component
  with two files, a @ref appendix-greeter-code "helloperson.cc" and a
- @ref appendix-greeter-cmake "CMakeLists.txt".
+ @ref appendix-greeter-cmake "CMakeLists.txt". Using CMake is advisable, as
+ it is cross-platform and can easily generate build files.
  
 */
