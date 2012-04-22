@@ -367,7 +367,6 @@ namespace gear2d {
 					parameterbase::value v = owner->get(pid);
 					if (v == 0) return;
 					v->hook(this, handlerfp);
-					cout << type() << " " << family() << " hooking " << &component::base::handle << endl;
 				}
 				
 				/**
