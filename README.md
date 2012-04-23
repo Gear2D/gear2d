@@ -1,4 +1,4 @@
- # Gear2D
+ === Gear2D
 
  Gear2D is a flexible component-based data-centric game engine,
  using a data repository as means of component intercomunication.
