@@ -12,7 +12,4 @@
  Game objects can be defined at the data level using YAML files. 
  Properties defined there are available to components to be used and shared.
  
- Links:
   - http://www.gear2d.com
-
- Leonardo
