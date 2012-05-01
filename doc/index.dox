@@ -1,9 +1,6 @@
 /**
 
   @mainpage Introduction
-  <a href="http://feed43.com/gear2d.xml" style="background-repeat: no-repeat;
-background-image: url('gear2d-feed.png'); background-position: left center;
-padding-left: 20px;" target="_blank" > News feed</a>
   
   Gear2D is a flexible component-based data-centric game
   engine, using a data repository as means of component
