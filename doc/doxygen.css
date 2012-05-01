@@ -9,12 +9,13 @@
  * #0066CC  (blue-like2)*/
 
 @import url(http://fonts.googleapis.com/css?family=VT323);
-@import url(http://fonts.googleapis.com/css?family=Nova+Mono);
-@import url(http://fonts.googleapis.com/css?family=Inder);
+@import url(http://fonts.googleapis.com/css?family=Lekton);
+@import url(http://fonts.googleapis.com/css?family=Signika);
 
 body {
-	font-family: 'Inder', sans-serif;
+	font-family: "Signika", serif;
 	font-size: 12px;
+	line-height: 20px;
 }
 
 /* @group Heading Levels */
@@ -45,12 +46,11 @@ dt {
 }
 
 p {
-	line-height: 1.5em;
 	text-align: justify;
 }
 
 h1, h2, h3, h4, h5 {
-	font-family: 'Inder', sans-serif;
+	font-family:  "Signika", sans-serif;
 	letter-spacing: 1px;
 }
 
@@ -130,7 +130,7 @@ div.navtab {
 
 a {
 	color: #616161;
-	font-weight: normal;
+/* 	font-weight: normal; */
 	text-decoration: none;
 }
 
@@ -183,9 +183,9 @@ dl.el {
 }
 
 .fragment {
-	font-family:  "Nova Mono", monospace, fixed;
-/* 	font-weight: bold; */
-	font-size: 12px;
+	font-family:  "Lekton", monospace, fixed;
+	font-weight: bold;
+/* 	font-size: 8px; */
 }
 
 pre.fragment {
@@ -195,7 +195,7 @@ pre.fragment {
 	margin: 4px 8px 4px 2px;
 	overflow: auto;
 	word-wrap: break-word;
-	font-size:  14px;
+/* 	font-size:  14px; */
 /* 	line-height: 125%; */
 }
 
@@ -501,7 +501,7 @@ table.memberdecls {
 }
 
 .textblock {
-  width: 80%;
+/*   width: 80%; */
   text-align: justify;
 }
 
@@ -537,15 +537,15 @@ table.memberdecls {
 }       
         
 .params .paramdir {
-        font-family: "Nova Mono", monospace;
+        font-family: "Lekton", monospace;
         vertical-align: top;
 }
 
 
 tt, code, kbd, samp {
-	font-weight: normal;
-	font-size: 12px;
-	font-family: "Nova Mono", monospace;
+	font-weight: bold;
+/* 	font-size: 12px; */
+	font-family: "Lekton", monospace;
 }
 
 
@@ -556,7 +556,7 @@ tt, code, kbd, samp {
 /* for the tree view */
 
 .ftvtree {
-	font-family: sans-serif;
+	font-family: "Signika", sans-serif;
 	margin: 0px;
 }
 
@@ -846,7 +846,7 @@ dl.bug
     
 #projectbrief
 {
-	font: 120% 'Inder',sans-serif;
+	font: 120% "Signika", sans-serif;
 	margin: 0px;
 	padding: 0px;
 }
