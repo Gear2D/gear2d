@@ -135,7 +135,7 @@ namespace gear2d {
 		}
 		
 		cfactory->compath = compath;
-		config->erase("compath");
+// 		config->erase("compath");
 		
 		/* pre-load some of the components */
 		/* TODO: travel the compath looking for family/component */
