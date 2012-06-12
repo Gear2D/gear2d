@@ -84,8 +84,8 @@ namespace gear2d {
 	 * @brief return the max value between x and y */
 	template <typename T>
 	int max(T & x, T & y) {
-		if (x < y) return x;
-		else return y;
+		if (x < y) return y;
+		else return x;
 	}
 	
 	/**
