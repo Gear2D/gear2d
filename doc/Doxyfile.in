@@ -914,13 +914,13 @@ HTML_FILE_EXTENSION    = .html
 # have to redo this when upgrading to a newer version of doxygen or when 
 # changing the value of configuration settings such as GENERATE_TREEVIEW!
 
-HTML_HEADER            = 
+HTML_HEADER            = @CMAKE_CURRENT_SOURCE_DIR@/header.html
 
 # The HTML_FOOTER tag can be used to specify a personal HTML footer for 
 # each generated HTML page. If it is left blank doxygen will generate a 
 # standard footer.
 
-HTML_FOOTER            = 
+HTML_FOOTER            = @CMAKE_CURRENT_SOURCE_DIR@/footer.html
 
 # The HTML_STYLESHEET tag can be used to specify a user-defined cascading 
 # style sheet that is used by each HTML page. It can be used to 
@@ -1238,7 +1238,7 @@ SEARCHENGINE           = YES
 # full text search. The disadvantages are that it is more difficult to setup 
 # and does not have live searching capabilities.
 
-SERVER_BASED_SEARCH    = NO
+SERVER_BASED_SEARCH    = YES
 
 #---------------------------------------------------------------------------
 # configuration options related to the LaTeX output

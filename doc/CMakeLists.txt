@@ -14,6 +14,7 @@ add_custom_command(TARGET doc
 	POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/navtree.css" "${CMAKE_CURRENT_BINARY_DIR}/html/navtree.css"
 	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/resize.js" "${CMAKE_CURRENT_BINARY_DIR}/html/resize.js"
+	COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/search.css" "${CMAKE_CURRENT_BINARY_DIR}/html/search/search.css"
 )
 
 

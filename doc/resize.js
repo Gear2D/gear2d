@@ -39,6 +39,7 @@ function resizeWidth()
   var windowWidth = $(window).width() + "px";
   var sidenavWidth = $(sidenav).width();
   content.css({marginLeft:parseInt(sidenavWidth)+6+"px"}); //account for 6px-wide handle-bar
+//   sidenav.css({marginLeft:parseInt($("#site").offset().left)});
   writeCookie('width',sidenavWidth, null);
 }
 
