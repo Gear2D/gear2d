@@ -78,15 +78,26 @@ namespace gear2d {
 	}
 	
 	/**
-	 * @fn int max(T & x, T & y)
+	 * @fn T max(T & x, T & y)
 	 * @param x First value to compare
 	 * @param y Second value to compare 
 	 * @brief return the max value between x and y */
 	template <typename T>
-	int max(T & x, T & y) {
+	T & max(T & x, T & y) {
 		if (x < y) return y;
 		else return x;
 	}
+	
+	/**
+	 * @fn T max(T & x, T & y)
+	 * @param x First value to compare
+	 * @param y Second value to compare 
+	 * @brief return the minimum value between x and y */
+	template <typename T>
+	T & min(T & x, T & y) {
+		if (x < y) return x;
+		else return y;
+	}	
 	
 	/**
 	 * @brief Evil class.
