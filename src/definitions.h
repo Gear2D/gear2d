@@ -11,6 +11,7 @@
 #include <sstream>
 #include <algorithm>
 #include <iterator>
+#include <ios>
 
 
 /** 
@@ -203,5 +204,38 @@ namespace gear2d {
     if (sstr.fail()) t = def;
     return t;
   }
+  
+  class log {
+
+    public:
+      log(const std::string & trace, int verbosity = 0);
+      ~log();
+      
+      // types with defined ostream<< operator
+      template <typename T>
+      inline log & operator()(const T&, int verbosity = -1);
+      template <typename T1, typename T2>
+      inline log & operator()(const T1&, const T2&, int verbosity = -1);
+      template <typename T1, typename T2, typename T3>
+      inline log & operator()(const T1&, const T2&, const T3&, int verbosity = -1);
+      template <typename T1, typename T2, typename T3, typename T4>
+      inline log & operator()(const T1&, const T2&, const T3&, const T4&, int verbosity = -1);
+      template <typename T1, typename T2, typename T3, typename T4, typename T5>
+      inline log & operator()(const T1&, const T2&, const T3&, const T4&, const T5&, int verbosity = -1);
+      template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
+      inline log & operator()(const T1&, const T2&, const T3&, const T4&, const T5&, const T6&, int verbosity = -1);
+      
+      // static methods to set the overall debug specs
+      static void output(const std::string & filename, bool append=false); // output file
+      static void output(std::ostream &);  // output stream, default clog
+      
+    public:
+      static int verbosity;
+      
+    private:
+      static int indent;
+      static std::ostream logstream;
+      
+  };
 }
 #endif

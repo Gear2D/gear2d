@@ -12,7 +12,7 @@ endif (NOT CMAKE_BUILD_TYPE)
 set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
 
 # gear2d shared library
-add_library(gear2d SHARED engine.cpp component.cc object.cc parameter.cc)
+add_library(gear2d SHARED engine.cc component.cc object.cc parameter.cc)
 target_link_libraries(gear2d yaml-cpp SDL)
 
 # get public headers
