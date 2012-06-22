@@ -270,6 +270,10 @@ tr.memlist {
 /* 	background-color: #EEF1F7; */
 }
 
+td {
+  line-height: 10px;
+}
+
 p.formulaDsp {
 	text-align: center;
 }
