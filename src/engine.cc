@@ -1,6 +1,8 @@
 #include "engine.h"
 #include "component.h"
 #include "object.h" 
+#include "log.h"
+
 #include "yaml-cpp/yaml.h"
 #include <fstream>
 #include <vector>
@@ -201,9 +203,6 @@ namespace gear2d {
       // clear the removed list
       removedcom->clear();
       
-      static char omg[200];
-      static std::string wm;
-      wm = "";
       /* now update pipeline accordingly */
       std::map<component::family, std::set<component::base *> >::iterator comtpit;
       for (comtpit = components->begin(); comtpit != components->end(); comtpit++) {
@@ -213,11 +212,8 @@ namespace gear2d {
         for (std::set<component::base*>::iterator comit = list.begin(); comit != list.end(); comit++) {
           (*comit)->update(delta);
         }
-//         sprintf(omg, "%s:%.4d ", comtpit->first.c_str(), SDL_GetTicks() - b);
-        wm += omg;
       }
-//       sprintf(omg, "total (last): %.3d", dt);
-      wm += omg;
+
       /* no components, quit the engine */
       if (components->empty()) started = false;
       
@@ -227,11 +223,7 @@ namespace gear2d {
         started = true;
       }
       
-      /* consumes all remaining events. next frame it must return empty. */
-//       while (SDL_PollEvent(&ev));
-      
       SDL_Delay(2);
-//        SDL_WM_SetCaption(wm.c_str(), 0);
       end = SDL_GetTicks();
     }
     
