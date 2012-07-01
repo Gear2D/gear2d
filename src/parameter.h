@@ -2,6 +2,7 @@
 #define gear2d_parameter_h
 
 #include "definitions.h"
+#include "log.h"
 #include <string>
 #include <map>
 #include <set>
@@ -276,9 +277,10 @@ namespace gear2d {
        * @warning There's no type checking or whatsoever.
        */
       virtual void set(const parameterbase * other) throw (evil) {
+        logverb;
         const parameter<datatype> * p = static_cast<const parameter<datatype> *>(other);
         if (pid != p->pid) {
-          std::cerr << "Parameter: " << "Something might be wrong: " << pid << " is being set with " << p->pid;
+          trace("Something is definetly wrong.", pid, " is being set with ", p->pid, log::error);
         }
         *raw = *(p->raw);
 //         set(*(p->raw));
