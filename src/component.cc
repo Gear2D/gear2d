@@ -1,5 +1,6 @@
 #include "component.h"
 #include "engine.h"
+#include "log.h"
 #include "SDL.h"
 
 #include <iostream>
@@ -133,6 +134,7 @@ namespace gear2d {
     }
     
     void factory::load(selector s, std::string file) throw (evil) {
+      logverb;
       component::family f; component::type t;
       f = s.family;
       t = s.type;
@@ -145,7 +147,7 @@ namespace gear2d {
         split(paths, compath, ',');
         for (int i = 0; i < paths.size(); i++) {
           file = paths[i] + '/' + f + "/lib" + t + SOSUFFIX;
-          std::cout << "trying " << file << std::endl;
+//           std::cout << "trying " << file << std::endl;
           comhandler = SDL_LoadObject(file.c_str());
           if (comhandler != 0) break;
 //           else if (t == f) {
@@ -174,7 +176,7 @@ namespace gear2d {
       }
       
       if (comhandler == 0) {
-        std::cerr << "(Component factory) Error loading component " << t << ": " << SDL_GetError() << std::endl;
+        trace(SDL_GetError(), log::error);
         throw evil(std::string("It was not possible to load ") + file + ". Make sure it is under one of these folders: " + compath);
         return;
       }
@@ -182,7 +184,7 @@ namespace gear2d {
       /* get the builder function */
       factory::builder combuilder = (factory::builder)SDL_LoadFunction(comhandler, "build");
       if (combuilder == 0) {
-        std::cerr << "(Component factory) Error loading component " << t << ": " << SDL_GetError() << std::endl;
+//         std::cerr << "(Component factory) Error loading component " << t << ": " << SDL_GetError() << std::endl;
         SDL_UnloadObject(comhandler);
         return;
       }
@@ -191,7 +193,7 @@ namespace gear2d {
       handlers[t] = comhandler;
       builders[f][t] = combuilder;
       
-      std::cerr << "(Component factory) Component type " << t << " loaded" << std::endl;
+//       std::cerr << "(Component factory) Component type " << t << " loaded" << std::endl;
       
       return;
     }
@@ -209,7 +211,7 @@ namespace gear2d {
       
       
       if (famit == builders.end()) {
-        std::cerr << "(Component factory) Component family " << f << " not found!" << std::endl;
+//         std::cerr << "(Component factory) Component family " << f << " not found!" << std::endl;
         return 0;
       }
       
@@ -218,7 +220,7 @@ namespace gear2d {
       else if (famit->second.size() > 0) { typit = famit->second.begin(); }
       
       if (typit == famit->second.end()) {
-        std::cerr << "(Component factory) Component type " << t << " of family " << f << " not found!" << std::endl;
+//         std::cerr << "(Component factory) Component type " << t << " of family " << f << " not found!" << std::endl;
         return 0;
       }
       
@@ -226,7 +228,7 @@ namespace gear2d {
       b = typit->second;
       base * component = b();
       component->cfactory = this;
-      cout << "(Component factory) Component type " << t << " built" << endl;
+//       cout << "(Component factory) Component type " << t << " built" << endl;
       return component;
     }
     

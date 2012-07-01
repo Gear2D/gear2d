@@ -51,7 +51,8 @@ namespace gear2d {
 
   void engine::add(component::base * c) {
     if (components == 0) {
-      std::cerr << "(Gear2D Engine) Initialize the engine before attaching a component to an object" << std::endl;
+      logwarn;
+      trace("Initialize the engine before attaching a component to an object");
     }
     if (c == 0) return;
     (*components)[c->family()].insert(c); 
@@ -70,12 +71,15 @@ namespace gear2d {
   }
   
   void engine::init(bool force) {
+    logverb;
     if (initialized == true && force == false) return;
     if (config != 0) delete config;
     srand(std::time(0));
     SDL_InitSubSystem(SDL_INIT_EVENTTHREAD | SDL_INIT_VIDEO);
     SDL_SetEventFilter((SDL_EventFilter)eventfilter);
     config = new std::map<std::string, std::string>;
+    
+//     log::globalverb = log::warning;
     
     // erase all the components
     if (components != 0) {
@@ -113,6 +117,7 @@ namespace gear2d {
   }
   
   void engine::load(std::string configfile) {
+    logverb;
     std::ifstream fin(configfile.c_str());
     
     /* initialize yaml parser */
@@ -127,17 +132,18 @@ namespace gear2d {
   }
 
   void engine::load(std::map<std::string, std::string> & cfg) {
+    logwarn;
     init(true);
     *config = cfg;
     
     /* get component-search path */
     std::string compath = (*config)["compath"];
     if (compath == "") {
-      std::cerr << "(Gear2D Engine) Error locating system-wide component path." << std::endl;
+      trace("Component path not defined at the scene file.");
     }
     
     cfactory->compath = compath;
-//     config->erase("compath");
+    config->erase("compath");
     
     /* pre-load some of the components */
     /* TODO: travel the compath looking for family/component */
@@ -170,6 +176,7 @@ namespace gear2d {
   bool engine::run() {
     // make sure we init
     init();
+    logverb;
     int begin = 0, end = 0, dt = 0;
     SDL_Event ev;
     started = true;
@@ -182,7 +189,7 @@ namespace gear2d {
       SDL_PumpEvents();
       
       for (std::set<object::id>::iterator i = destroyedobj->begin(); i != destroyedobj->end(); i++) {
-        // this will push object's components to removedcom, hopefully.
+        /* this will push object's components to removedcom, hopefully. */
         delete (*i);
       }
       

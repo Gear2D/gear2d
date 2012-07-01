@@ -1,16 +1,27 @@
 #include "gear2d.h"
+#include "log.h"
 #include <stdio.h>
+#include <string.h>
 
-int main(int argc, char **argv, char ** env) {
-  // account for scene file
-  if (argc > 1) {
-    if (argv[1][0] == '-' && argv[1][1] == 'v') {
+int main(int argc, char ** argv, char ** env) {
+  char * arg = 0;
+  const char * scene = "gear2d.yaml";
+  while (argc > 1) {
+    arg = argv[argc-1];
+    if (strlen(arg) == 2 && arg[0] == '-' && arg[1] == 'v') {
       printf("%s", gear2d::engine::version());
       exit(0);
-    } else {
-      gear2d::engine::load(argv[1]);
     }
+    else if (arg[0] == '-' && arg[1] == 'l') {
+      int level = atoi(arg+2);
+      if (level < gear2d::log::minimum) level = gear2d::log::minimum;
+      if (level > gear2d::log::maximum) level = gear2d::log::maximum;
+      gear2d::log::globalverb = (gear2d::log::verbosity)level;
+    }
+    else scene = arg;
+    argc--;
   }
-  else gear2d::engine::load();
-  gear2d::engine::run();
+
+  gear2d::engine::load(scene);
+  return gear2d::engine::run();
 }

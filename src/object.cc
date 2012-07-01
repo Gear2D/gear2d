@@ -2,6 +2,7 @@
 #include "object.h"
 #include "component.h"
 #include "engine.h"
+#include "log.h"
 #include "yaml-cpp/yaml.h"
 
 #include <exception>
@@ -38,7 +39,10 @@ namespace gear2d {
   std::string object::name() { return sig["name"]; }
   
   void object::attach(component::base * newc) throw (evil) {
+    logverb;
     if (newc == 0) return;
+    
+    trace("Attaching", newc->family(), newc->type());
     
     /* sees that dependencies are met */
     std::string depends = newc->depends();
@@ -135,10 +139,10 @@ namespace gear2d {
   void object::factory::load(object::type objtype, std::string filename) {
     /* open the file */
     if (filename == "") filename = commonsig["objpath"] + objtype + ".yaml";
-    cout << "debug: Loading " << filename << endl;
+//     cout << "debug: Loading " << filename << endl;
     std::ifstream fin(filename.c_str());
     if (!fin.is_open()) {
-      cout << "debug: Could not find " << filename << " to load!" << endl;
+//       cout << "debug: Could not find " << filename << " to load!" << endl;
       return;
     }
     
@@ -166,6 +170,8 @@ namespace gear2d {
   }
 
   void object::factory::innerbuild(object * o, std::string depends) {
+    logtrace(log::info);
+    trace("Object:", o->name(), "Depends:", depends);
     std::set<std::string> comlist;
     split(comlist, depends, ' ');
     while(comlist.begin() != comlist.end()) {
@@ -202,7 +208,9 @@ namespace gear2d {
       } catch (evil & e) {
 //         cout << "debug: handling dependencies for " << c->type() << endl;
         /* build dependencies... */
+        trace(e.what());
         innerbuild(o, c->depends());
+        
       
         /* if that build did'nt fixed, fuck it. */
         o->attach(c);
@@ -210,13 +218,14 @@ namespace gear2d {
       
       comlist.erase(comlist.begin());
      }
+     trace("Finished", o->name(), depends);
   }
   
   object::id object::factory::build(gear2d::object::type objtype) {
-    cout << "debug: building " << objtype << endl;
+//     cout << "debug: building " << objtype << endl;
     /* first determine if this object type is loaded... */
     if (signatures.find(objtype) == signatures.end()) {
-      std::cerr << "(Object factory) Object type " << objtype << " not found." << std::endl;
+//       std::cerr << "(Object factory) Object type " << objtype << " not found." << std::endl;
       return 0;
     }
     
