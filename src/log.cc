@@ -9,16 +9,25 @@ const char * log::logstring[] = { "", "[E] ", "[W] ", "[I] ", "[M] ", "" };
 
 log::log(const std::string & trace, log::verbosity level) 
   : trace(trace)
-  , level(level) {
+  , level(level)
+  , traced(false) {
   
   if (globalverb < level) return;
-  for (int i = 0; i < indent; i++) logstream << "  ";
-  logstream << "Entering " << trace << std::endl;
-  indent++;
+  mark();
 }
 
+void log::mark() {
+  if (traced) return;
+  for (int i = 0; i < indent; i++) logstream << "  ";
+  logstream << "In " << trace << std::endl;
+  indent++;
+  traced = true;
+}
+
+
 log::~log() {
-  if (globalverb < level) return;
+  if (globalverb < level && !traced) return;
+  /* we want to print the finishing trace */
   indent--;
   for (int i = 0; i < indent; i++) logstream << "  ";
   logstream << "Leaving " << trace << std::endl;
