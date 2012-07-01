@@ -46,7 +46,6 @@ namespace gear2d {
       template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
       inline log & operator()(const T1&, const T2&, const T3&, const T4&, const T5&, const T6&, verbosity level = verbose);
       
-      
     public:
       static verbosity globalverb;
       
@@ -67,58 +66,73 @@ namespace gear2d {
   
   template<typename T>
   log & log::operator() (const T & t, log::verbosity level) {
+#ifdef LOGTRACE 
     if (globalverb < level) return *this;
     mark();
     for (int i = 0; i < indent; i++) logstream << "  ";
     logstream << logstring[level] << t << std::endl;
+#endif
     return *this;
   }
   
   template <typename T1, typename T2>
   log & log::operator() (const T1 & t1, const T2 & t2, log::verbosity level) {
+#ifdef LOGTRACE
     if (globalverb < level) return *this;
     mark();
     for (int i = 0; i < indent; i++) logstream << "  ";
     logstream << logstring[level] << t1 << " " << t2 << std::endl;
+#endif
     return *this;
   }
   
   template <typename T1, typename T2, typename T3>
   log & log::operator() (const T1 & t1, const T2 & t2, const T3 & t3, log::verbosity level) {
+#ifdef LOGTRACE
     if (globalverb < level) return *this;
     mark();
     for (int i = 0; i < indent; i++) logstream << "  ";
     logstream << logstring[level] << t1 << " " << t2 << " " << t3 << std::endl;
+#endif
     return *this;
   }
   
   template <typename T1, typename T2, typename T3, typename T4>
   log & log::operator() (const T1 & t1, const T2 & t2, const T3 & t3, const T4 & t4, log::verbosity level) {
+#ifdef LOGTRACE
     if (globalverb < level) return *this;
     mark();
     for (int i = 0; i < indent; i++) logstream << "  ";
     logstream << logstring[level] << t1 << " " << t2 << " " << t3 << " " << t4 << std::endl;
+#endif
     return *this;
   }
   
   template <typename T1, typename T2, typename T3, typename T4, typename T5>
   log & log::operator() (const T1 & t1, const T2 & t2, const T3 & t3, const T4 & t4, const T5 & t5, log::verbosity level) {
+#ifdef LOGTRACE
     if (globalverb < level) return *this;
     mark();
     for (int i = 0; i < indent; i++) logstream << "  ";
     logstream << logstring[level] << t1 << " " << t2 << " " << t3 <<  " " << t4 << " " << t5 << std::endl;
+#endif
     return *this;
   }
   
   template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
   log & log::operator() (const T1 & t1, const T2 & t2, const T3 & t3, const T4 & t4, const T5 & t5, const T6 & t6, log::verbosity level) {
+#ifdef LOGTRACE
     if (globalverb < level) return *this;
     mark();
     for (int i = 0; i < indent; i++) logstream << "  ";
     logstream << logstring[level] << t1 << " " << t2 << " " << t3 <<  " " << t4 << " " << t5 << " " << t6 << std::endl;
+#endif
     return *this;
   }
 }
+
+
+#ifdef LOGTRACE
 
 #ifdef _WIN32
 
@@ -154,5 +168,24 @@ gear2d::log trace(__PRETTY_FUNCTION__, gear2d::log::error)
 #define logwarn \
 gear2d::log trace(__PRETTY_FUNCTION__, gear2d::log::warning)
 #endif
+
+#else //NO LOGTRACE
+
+#define logtrace(a) \
+  gear2d::log trace
+  
+#define loginfo \
+  gear2d::log trace
+  
+#define logverb \
+  gear2d::log trace
+  
+#define logerr \
+  gear2d::log trace
+  
+#define logwarn \
+  gear2d::log trace
+  
+#endif //LOGTRACE
 
 #endif // LOG_H

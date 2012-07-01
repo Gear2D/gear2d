@@ -12,7 +12,7 @@ log::log(const std::string & trace, log::verbosity level)
   , level(level)
   , traced(false) {
   
-  if (globalverb < level) return;
+  if (globalverb < level || trace.empty()) return;
   mark();
 }
 
@@ -26,8 +26,7 @@ void log::mark() {
 
 
 log::~log() {
-  if (globalverb < level && !traced) return;
-  /* we want to print the finishing trace */
+  if ((globalverb < level && !traced) || trace.empty()) return;
   indent--;
   for (int i = 0; i < indent; i++) logstream << "  ";
   logstream << "Leaving " << trace << std::endl;

@@ -8,6 +8,10 @@ if (NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE "Release")
 endif (NOT CMAKE_BUILD_TYPE)
 
+if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+  add_definitions(-DLOGTRACE)
+endif(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+
 # set RPATH to point to the library install destination
 set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
 
