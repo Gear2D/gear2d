@@ -9,7 +9,7 @@ int main(int argc, char ** argv, char ** env) {
   while (argc > 1) {
     arg = argv[argc-1];
     if (strlen(arg) == 2 && arg[0] == '-' && arg[1] == 'v') {
-      printf("%s", gear2d::engine::version());
+      printf("%s\n", gear2d::engine::version());
       exit(0);
     }
     else if (arg[0] == '-' && arg[1] == 'l') {
