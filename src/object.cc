@@ -170,7 +170,7 @@ namespace gear2d {
   }
 
   void object::factory::innerbuild(object * o, std::string depends) {
-    logtrace(log::info);
+    logverb;
     trace("Object:", o->name(), "Depends:", depends);
     std::set<std::string> comlist;
     split(comlist, depends, ' ');
