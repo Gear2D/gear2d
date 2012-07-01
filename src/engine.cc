@@ -151,7 +151,7 @@ namespace gear2d {
     if ((*config)["compreload"].size() != 0) {
       split(comlist, (*config)["compreload"], ' ');
       for (int i = 0; i < comlist.size(); i++) {
-        std::cerr << "(Gear2D Engine) Pre-loading " << comlist[i] << std::endl;
+        trace("Pre-loading", comlist[i], log::info);
         cfactory->load(comlist[i]);
       }
       config->erase("compreload");
