@@ -51,7 +51,7 @@ namespace gear2d {
 
   void engine::add(component::base * c) {
     if (components == 0) {
-      logwarn;
+      modwarn("engine");
       trace("Initialize the engine before attaching a component to an object");
     }
     if (c == 0) return;
@@ -71,7 +71,7 @@ namespace gear2d {
   }
   
   void engine::init(bool force) {
-    logverb;
+    modwarn("engine");
     if (initialized == true && force == false) return;
     if (config != 0) delete config;
     srand(std::time(0));
@@ -117,7 +117,7 @@ namespace gear2d {
   }
   
   void engine::load(std::string configfile) {
-    logverb;
+    modinfo("engine");
     std::ifstream fin(configfile.c_str());
     
     /* initialize yaml parser */
@@ -132,14 +132,14 @@ namespace gear2d {
   }
 
   void engine::load(std::map<std::string, std::string> & cfg) {
-    logwarn;
+    modinfo("engine");
     init(true);
     *config = cfg;
     
     /* get component-search path */
     std::string compath = (*config)["compath"];
     if (compath == "") {
-      trace("Component path not defined at the scene file.");
+      trace("Component path (compath:) not defined at the scene file.", log::error);
     }
     
     cfactory->compath = compath;
@@ -176,7 +176,7 @@ namespace gear2d {
   bool engine::run() {
     // make sure we init
     init();
-    logverb;
+    modinfo("engine");
     int begin = 0, end = 0, dt = 0;
     SDL_Event ev;
     started = true;

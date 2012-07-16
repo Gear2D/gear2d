@@ -20,6 +20,16 @@ using std::list;
 
 namespace gear2d {
   namespace component { class base; class factory; typedef std::string type; typedef std::string family; }
+  
+  /**
+   * @brief An exception to sinalize that this component dependencies are broken.
+   * @author Leonardo Guilherme de Freitas.
+   */
+  class evildepends : public evil {
+    public:
+      evildepends (std::string describe);
+  };
+  
   /**
    * @class object
    * @brief Gear2D game object component-container.
@@ -160,7 +170,7 @@ namespace gear2d {
        ** Hopefully you will need not to worry about it...
        ** @throws evil When there are any dependencies mismatch
        */
-      void attach(component::base * c) throw (evil);
+      void attach(component::base * c) throw (evildepends);
       
       /** @brief Deattach a component, returning it.
        ** @param type Type of component to be deattached

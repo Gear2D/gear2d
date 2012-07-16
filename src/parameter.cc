@@ -42,4 +42,7 @@ namespace gear2d {
       c(pid, lastwrite, owner);
     }
   }
+  
+  badlink::badlink() : evil("Someone is trying to access a link that is initialized!") { }
+  
 }

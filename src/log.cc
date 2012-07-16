@@ -5,10 +5,11 @@
 
 using namespace gear2d;
 
-const char * log::logstring[] = { "", "[E] ", "[W] ", "[I] ", "[M] ", "" };
+const char * log::logstring[] = { "", "E ", "W ", "I ", "" };
 
-log::log(const std::string & trace, log::verbosity level) 
+log::log(const std::string & trace, const std::string & module, log::verbosity level) 
   : trace(trace)
+  , tracemodule(module.empty() ? "" : module + ": ")
   , level(level)
   , traced(false) {
   
@@ -17,20 +18,25 @@ log::log(const std::string & trace, log::verbosity level)
 }
 
 void log::mark() {
-  if (traced) return;
+  if (traced || globalverb < info) return;
   for (int i = 0; i < indent; i++) logstream << "  ";
-  logstream << "In " << trace << std::endl;
+  logstream << "{ In " << tracemodule << trace << std::endl;
   indent++;
   traced = true;
 }
 
 
 log::~log() {
-  if ((globalverb < level && !traced) || trace.empty()) return;
+  if ((globalverb < info && !traced) || trace.empty()) return;
   indent--;
   for (int i = 0; i < indent; i++) logstream << "  ";
-  logstream << "Leaving " << trace << std::endl;
+  logstream << "} Leaving " << tracemodule << trace << std::endl;
 }
+
+void log::module (const std::string & mod) {
+  tracemodule = mod.empty() ? "" : mod + ": ";
+}
+
 
 
 std::ostream log::logstream(std::cout.rdbuf());

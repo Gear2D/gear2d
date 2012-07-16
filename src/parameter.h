@@ -148,6 +148,14 @@ namespace gear2d {
   template<typename basetype> class parameter;
 
   /**
+   * @brief Exception to signal a broken link.
+   */
+  class badlink : public evil {
+    public:
+      badlink();
+  };
+  
+  /**
    * @brief Link to a parameter.
    * @warning Prefer creating links to read() and write(),
    * because links store the parameter and will never lose them.
@@ -160,6 +168,7 @@ namespace gear2d {
       parameter<basetype> * target;
       
     public:
+      
       /**
        * @brief Build a link based on another link
        * @param other Other link
@@ -178,10 +187,10 @@ namespace gear2d {
       
       /**
        * @brief Writes into this parameter link.
-       * @throw evil When you try to read from a unlinked link
+       * @throw badlink When you try to write from a unlinked link
        */
-      link<basetype> & operator=(const basetype & source) throw (gear2d::evil) {
-        if (target == 0) throw(gear2d::evil("Someone tried to access an unitialized link."));
+      link<basetype> & operator=(const basetype & source) throw (gear2d::badlink) {
+        if (target == 0) throw(gear2d::badlink());
         target->set(source);
       }
       
@@ -191,10 +200,10 @@ namespace gear2d {
       
       /**
        * @brief Reads from this parameter link.
-       * @throw evil When you try to read from a unlinked link
+       * @throw badlink When you try to read from a unlinked link
        */
-      operator basetype() throw (gear2d::evil) {
-        if (target == 0) throw(gear2d::evil("Someone tried to access an unitialized link."));
+      operator basetype() throw (gear2d::badlink) {
+        if (target == 0) throw(gear2d::badlink());
         return target->get();
       }
       
@@ -204,7 +213,7 @@ namespace gear2d {
       }
       
       basetype & operator*() {
-        if (target == 0) throw(gear2d::evil("Someone tried to access an unitialized link."));
+        if (target == 0) throw(gear2d::badlink());
         return ((basetype) target);
       }
   };
@@ -277,7 +286,7 @@ namespace gear2d {
        * @warning There's no type checking or whatsoever.
        */
       virtual void set(const parameterbase * other) throw (evil) {
-        logverb;
+        modinfo("engine");
         const parameter<datatype> * p = static_cast<const parameter<datatype> *>(other);
         if (pid != p->pid) {
           trace("Something is definetly wrong.", pid, " is being set with ", p->pid, log::error);

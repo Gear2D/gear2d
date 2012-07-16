@@ -58,17 +58,17 @@ namespace gear2d {
     }
     
     void base::destroy() {
+      modinfo(family() + "/" + type() + "@" + owner->name());
       owner->destroy();
     }
     
     void base::handle(parameterbase::id pid, component::base * lastwrite, object::id owner) { ; }
     
     void base::load(std::string scene) {
+      modinfo(family() + "/" + type() + "@" + owner->name());
       if (scene.find(".yaml") == std::string::npos) scene += ".yaml";
       engine::next(scene);
     }
-    
-    
     
     /* selector stuff */
     selector::selector() { }
@@ -134,7 +134,7 @@ namespace gear2d {
     }
     
     void factory::load(selector s, std::string file) throw (evil) {
-      logverb;
+      modinfo("component-factory");
       component::family f; component::type t;
       f = s.family;
       t = s.type;
@@ -147,44 +147,28 @@ namespace gear2d {
         split(paths, compath, ',');
         for (int i = 0; i < paths.size(); i++) {
           file = paths[i] + '/' + f + "/lib" + t + SOSUFFIX;
-//           std::cout << "trying " << file << std::endl;
+          trace("Trying to load", file);
           comhandler = SDL_LoadObject(file.c_str());
+          if (!comhandler) {
+            trace("Error loading", file, log::warning);
+            trace("Error:",SDL_GetError(), log::warning);
+          }
           if (comhandler != 0) break;
-//           else if (t == f) {
-//             /* might be the case where a component like t doesn't exists
-//              * but there's another */
-//             path p(paths[i] + '/' + f + "/");
-//             std::set<path> founds;
-//             try {
-//               copy(directory_iterator(p), directory_iterator(), std::insert_iterator<std::set<path> >(founds, founds.begin()));
-//             } catch (...) {
-//               // do nothing actually, probably the path doesn't exists
-//             }
-//             // set makes sure the founds path is sorted
-//             
-//             if (founds.size() == 0) continue; // try the next... who know
-//             p = *founds.begin();
-//             file = p.string();
-//             // so load it again :D
-//             std::cout << "trying " << file << " (default search)" << std::endl;
-//             comhandler = SDL_LoadObject(p.string().c_str());
-//             if (comhandler != 0) break;
-//           }
         }
       } else {
         comhandler = SDL_LoadObject(file.c_str());
       }
       
       if (comhandler == 0) {
-        trace(SDL_GetError(), log::error);
-        throw evil(std::string("It was not possible to load ") + file + ". Make sure it is under one of these folders: " + compath);
+        throw evil(std::string("Unable to find a suitable library for the component ") + (std::string)s);
         return;
       }
       
       /* get the builder function */
       factory::builder combuilder = (factory::builder)SDL_LoadFunction(comhandler, "build");
       if (combuilder == 0) {
-//         std::cerr << "(Component factory) Error loading component " << t << ": " << SDL_GetError() << std::endl;
+        trace("I cannot recognize", file, "as an valid gear2d component. It will NOT be loaded", log::error);
+        trace("Error was:", SDL_GetError());
         SDL_UnloadObject(comhandler);
         return;
       }
@@ -193,12 +177,13 @@ namespace gear2d {
       handlers[t] = comhandler;
       builders[f][t] = combuilder;
       
-//       std::cerr << "(Component factory) Component type " << t << " loaded" << std::endl;
+      trace("Sucessfully loaded a builder for", t, "from", file, log::info);
       
       return;
     }
     
     base * factory::build(component::selector s) {
+      modinfo("component-factory");
       component::family f; component::type t;
       f = s.family;
       t = s.type;
@@ -211,7 +196,6 @@ namespace gear2d {
       
       
       if (famit == builders.end()) {
-//         std::cerr << "(Component factory) Component family " << f << " not found!" << std::endl;
         return 0;
       }
       
@@ -220,7 +204,6 @@ namespace gear2d {
       else if (famit->second.size() > 0) { typit = famit->second.begin(); }
       
       if (typit == famit->second.end()) {
-//         std::cerr << "(Component factory) Component type " << t << " of family " << f << " not found!" << std::endl;
         return 0;
       }
       
@@ -228,7 +211,7 @@ namespace gear2d {
       b = typit->second;
       base * component = b();
       component->cfactory = this;
-//       cout << "(Component factory) Component type " << t << " built" << endl;
+      trace("Component type", t, "sucessfuly built!", log::info);
       return component;
     }
     

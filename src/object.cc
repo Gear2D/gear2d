@@ -38,8 +38,8 @@ namespace gear2d {
   object::id object::oid() { return this; }
   std::string object::name() { return sig["name"]; }
   
-  void object::attach(component::base * newc) throw (evil) {
-    logverb;
+  void object::attach(component::base * newc) throw (evildepends) {
+    modinfo("object");
     if (newc == 0) return;
     
     trace("Attaching", newc->family(), newc->type());
@@ -77,15 +77,20 @@ namespace gear2d {
     if (passed == false) {
       std::string s;
       s = s + "Component " + newc->family() + "/" + newc->type() + " have unmet dependencies: " + d;
-      throw (evil(s));
+      throw (evildepends(s));
     }
     
     /* ok... dependency check has passed! */
     component::base * oldc = deattach(newc->family());
-    if (oldc != 0) { delete oldc; }
+    if (oldc != 0) {
+      trace("Detaching old component", oldc->type());
+      delete oldc;
+    }
+    
     newc->owner = this;
     components[newc->family()] = newc;
     
+    trace("Calling setup on", newc->type());
     newc->setup(sig);
     engine::add(newc);
   }
@@ -137,12 +142,13 @@ namespace gear2d {
   }
   
   void object::factory::load(object::type objtype, std::string filename) {
+    modinfo("object-factory");
     /* open the file */
     if (filename == "") filename = commonsig["objpath"] + objtype + ".yaml";
-//     cout << "debug: Loading " << filename << endl;
+    trace("Loading", objtype, "from", filename);
     std::ifstream fin(filename.c_str());
     if (!fin.is_open()) {
-//       cout << "debug: Could not find " << filename << " to load!" << endl;
+      trace("Unable to load", objtype, log::error);
       return;
     }
     
@@ -151,7 +157,10 @@ namespace gear2d {
     YAML::Node node;
     
     signature & sig = signatures[objtype];
-    while (parser.GetNextDocument(node)) node >> sig;
+    while (parser.GetNextDocument(node)) {
+      trace("node type:", node.Type());
+      node >> sig;
+    }
     sig["name"] = objtype;
     
     // add the global signature
@@ -170,7 +179,7 @@ namespace gear2d {
   }
 
   void object::factory::innerbuild(object * o, std::string depends) {
-    logverb;
+    modinfo("object-factory");
     trace("Object:", o->name(), "Depends:", depends);
     std::set<std::string> comlist;
     split(comlist, depends, ' ');
@@ -205,13 +214,10 @@ namespace gear2d {
        * and let it fail */
       try {
         o->attach(c);
-      } catch (evil & e) {
-//         cout << "debug: handling dependencies for " << c->type() << endl;
+      } catch (evildepends & e) {
         /* build dependencies... */
-        trace(e.what());
+        trace(e.what(), log::info);
         innerbuild(o, c->depends());
-        
-      
         /* if that build did'nt fixed, fuck it. */
         o->attach(c);
       }
@@ -250,4 +256,7 @@ namespace gear2d {
     loadedobjs[objtype].push_back(obj);
     return obj;
   }
+  
+  evildepends::evildepends (std::string describe) : evil (describe) { }
+
 }
