@@ -12,11 +12,15 @@ int main(int argc, char ** argv, char ** env) {
       printf("%s\n", gear2d::engine::version());
       exit(0);
     }
-    else if (arg[0] == '-' && arg[1] == 'l') {
-      int level = atoi(arg+2);
-      if (level < gear2d::log::minimum) level = gear2d::log::minimum;
-      if (level > gear2d::log::maximum) level = gear2d::log::maximum;
-      gear2d::log::globalverb = (gear2d::log::verbosity)level;
+    else if (arg[0] == '-') {
+      if (arg[1] == 'l') {
+        int level = atoi(arg+2);
+        if (level <= gear2d::log::minimum) level = gear2d::log::minimum+1;
+        if (level > gear2d::log::maximum) level = gear2d::log::maximum;
+        gear2d::log::globalverb = (gear2d::log::verbosity)level;
+      } else if (arg[1] == 'f') {
+        gear2d::log::filter = (arg+2);
+      }
     }
     else scene = arg;
     argc--;

@@ -13,12 +13,12 @@ log::log(const std::string & trace, const std::string & module, log::verbosity l
   , level(level)
   , traced(false) {
   
-  if (globalverb < level || trace.empty()) return;
+  if (globalverb < level || trace.empty() || (!filter.empty() && tracemodule.find(filter) != 0)) return;
   mark();
 }
 
 void log::mark() {
-  if (traced || globalverb < info) return;
+  if (traced || globalverb < maximum  || (!filter.empty() && tracemodule.find(filter) != 0)) return;
   for (int i = 0; i < indent; i++) logstream << "  ";
   logstream << "{ In " << tracemodule << trace << std::endl;
   indent++;
@@ -27,7 +27,7 @@ void log::mark() {
 
 
 log::~log() {
-  if ((globalverb < info && !traced) || trace.empty()) return;
+  if ((globalverb < maximum && !traced) || trace.empty() || (!filter.empty() && tracemodule.find(filter) != 0)) return;
   indent--;
   for (int i = 0; i < indent; i++) logstream << "  ";
   logstream << "} Leaving " << tracemodule << trace << std::endl;
@@ -42,3 +42,4 @@ void log::module (const std::string & mod) {
 std::ostream log::logstream(std::cout.rdbuf());
 int log::indent = 0;
 log::verbosity log::globalverb = log::error;
+std::string log::filter = std::string();
