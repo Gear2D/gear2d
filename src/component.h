@@ -192,7 +192,7 @@ namespace gear2d {
         template<typename basetype>
         link<basetype> fetch(parameterbase::id pid) {
           parameter<basetype> * p = access<basetype>(pid);
-          return link<basetype>(p);
+          return link<basetype>(p, this);
         }
         
         /**

@@ -166,6 +166,7 @@ namespace gear2d {
   class link {
     private:
       parameter<basetype> * target;
+      component::base * writer;
       
     public:
       
@@ -175,14 +176,16 @@ namespace gear2d {
        */
       link(const link<basetype> & other)
       : target(other.target)
+      , writer(other.writer)
       { }
       
       
       /**
        * @brief Default link constructor.
        */
-      link(parameter<basetype> * target = 0)
+      link(parameter<basetype> * target = 0, component::base * writer = 0)
       : target(target)
+      , writer(writer)
       { }
       
       /**
@@ -191,11 +194,13 @@ namespace gear2d {
        */
       link<basetype> & operator=(const basetype & source) throw (gear2d::badlink) {
         if (target == 0) throw(gear2d::badlink());
+        target->lastwrite = writer;
         target->set(source);
       }
       
       link<basetype> & operator=(const link<basetype> & other) {
         target = other.target;
+        writer = other.writer;
       }
       
       /**
@@ -208,6 +213,7 @@ namespace gear2d {
       }
       
       link<basetype> & operator +=(const basetype & source) {
+        target->lastwrite = writer;
         target->set(target->get() + source);
         return *this;
       }
