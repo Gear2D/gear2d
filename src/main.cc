@@ -3,6 +3,17 @@
 #include <stdio.h>
 #include <string.h>
 
+
+void help() {
+  printf("gear2d [options] [scene-file]\n");
+  printf("Options:\n"
+         "\t-v        : Prints Gear2D version\n"
+         "\t-h        : Prints this help\n"
+         "\t-l<level> : Verbosity level to the logging messages. 0 is the lowest,\n"
+         "\t            4 is the highest.\n"
+         "\t-f<filter>: Filter string to apply to the logging messages \n");
+}
+
 int main(int argc, char ** argv, char ** env) {
   char * arg = 0;
   const char * scene = "gear2d.yaml";
@@ -13,13 +24,30 @@ int main(int argc, char ** argv, char ** env) {
       exit(0);
     }
     else if (arg[0] == '-') {
-      if (arg[1] == 'l') {
-        int level = atoi(arg+2);
-        if (level <= gear2d::log::minimum) level = gear2d::log::minimum+1;
-        if (level > gear2d::log::maximum) level = gear2d::log::maximum;
-        gear2d::log::globalverb = (gear2d::log::verbosity)level;
-      } else if (arg[1] == 'f') {
-        gear2d::log::filter = (arg+2);
+      switch (arg[1]) {
+        case 'l': {
+          int level = atoi(arg+2);
+          if (level <= gear2d::log::minimum) level = gear2d::log::minimum+1;
+          if (level > gear2d::log::maximum) level = gear2d::log::maximum;
+          gear2d::log::globalverb = (gear2d::log::verbosity)level;
+          break;
+        }
+        
+        case 'f': {
+          gear2d::log::filter = (arg+2);
+          break;
+        }
+        
+        case 'h': {
+          help();
+          exit(0);
+        }
+        
+        default: {
+          printf("Unknown argument %s.\n", arg);
+          help();
+          exit(0);
+        }
       }
     }
     else scene = arg;
