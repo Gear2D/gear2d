@@ -20,6 +20,7 @@ add_custom_command(TARGET doc
 
 if (Gear2D_INSTALL_DOC)
 add_dependencies(gear2d doc)
+message(STATUS "Documentation will be generated and installed for Gear2D")
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html DESTINATION share/doc/${PROJECT_NAME})
 endif(Gear2D_INSTALL_DOC)
 

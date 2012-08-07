@@ -17,7 +17,7 @@
   recommended. <a href="http://www.mingw.org">MinGW</a> is also tested
   and able to compile Gear2D on Microsoft Windows platforms) and
   <a href="http://www.cmake.org">CMake</a>. Instructions
-  on these will be presented on the @ref platform-specific-instructions page.8
+  on these will be presented on the @ref platform-specific-instructions page.
   
   @section download-information Downloads
   You can reach the @ref downloads page for released versions, stable or not. In the page

@@ -5,12 +5,14 @@ find_package(SDL REQUIRED)
 
 # default build type should be release.
 if (NOT CMAKE_BUILD_TYPE)
-	set(CMAKE_BUILD_TYPE "Release")
+  set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 endif (NOT CMAKE_BUILD_TYPE)
-
-if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+  
+if (${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
   add_definitions(-DLOGTRACE)
-endif(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+endif(${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
+  
+message(STATUS "Building Gear2D as ${CMAKE_BUILD_TYPE}")
 
 # set RPATH to point to the library install destination
 set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
