@@ -72,7 +72,7 @@ ENDIF(Gear2D_INCLUDE_DIR AND Gear2D_LIBRARY)
 
 IF(Gear2D_FOUND)
 	get_filename_component(Gear2D_LINK_DIR ${Gear2D_LIBRARY} PATH)
-	execute_process(COMMAND gear2d -v OUTPUT_VARIABLE Gear2D_VERSION)
+    execute_process(COMMAND gear2d -v OUTPUT_VARIABLE Gear2D_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE)
 	SET(Gear2D_COMPONENT_PREFIX ${Gear2D_LINK_DIR}/../lib/gear2d/component)
 	IF (NOT Gear2D_FIND_QUIETLY)
 		MESSAGE(STATUS "Found Gear2D: ${Gear2D_LIBRARY} version ${Gear2D_VERSION}")
