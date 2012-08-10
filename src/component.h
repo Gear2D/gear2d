@@ -392,6 +392,22 @@ namespace gear2d {
         }
         
         /**
+		 * @brief Hook this component to a parameter on another component using a custom handle function.
+		 * @param c Component to hook in
+		 * @param pid Parameter id
+		 * @param handlerfp Pointer to the method that will be called
+		 * 
+		 * Add this component as a listener to the parameter in another
+		 * component. Owner will be passed in handle() as a way of
+		 * knowing if it is a parameter on your object or on another */
+		void hook(component::base * c, parameterbase::id pid, component::call handlerfp) {
+			if (c == 0) return;
+			parameterbase::value v = c->owner->get(pid);
+			if (v == 0) return;
+			v->hook(this, handlerfp);
+		}
+        
+        /**
          * @brief Query if the given parameter exists.
          * @param pid Parameter id
          * @return parameter address if it does exists, (null) 0 if not.
