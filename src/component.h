@@ -233,6 +233,13 @@ namespace gear2d {
           v->lastwrite = this;
         }
         
+        template<typename datatype>
+        void write(parameterbase::id pid, const link<datatype> & source) {
+            parameter<datatype> * v = access<datatype>(pid);
+            v->set((datatype)source);
+            v->lastwrite = this;
+		}
+        
       public:
         /**
          * @brief Writes in a shared parameter in another object
