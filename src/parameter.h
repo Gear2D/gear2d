@@ -117,6 +117,11 @@ namespace gear2d {
       void hook(component::base * c, component::call h);
       
       /**
+       * @brief Unhook a listener in this parameter
+       * @param c Component to be unhooked */
+      void unhook(component::base * c);
+      
+      /**
        * @brief Compare two parameters.
        * @param other Other parameter to compare.
        * 
@@ -193,6 +198,7 @@ namespace gear2d {
        * @throw badlink When you try to write from a unlinked link
        */
       link<basetype> & operator=(const basetype & source) throw (gear2d::badlink) {
+        moderr("link");
         if (target == 0) throw(gear2d::badlink());
         target->lastwrite = writer;
         target->set(source);
@@ -208,17 +214,20 @@ namespace gear2d {
        * @throw badlink When you try to read from a unlinked link
        */
       operator basetype() const throw (gear2d::badlink) {
+        moderr("link");
         if (target == 0) throw(gear2d::badlink());
         return target->get();
       }
       
       link<basetype> & operator +=(const basetype & source) {
+        moderr("link");
         target->lastwrite = writer;
         target->set(target->get() + source);
         return *this;
       }
       
       basetype & operator*() {
+        moderr("link");
         if (target == 0) throw(gear2d::badlink());
         return ((basetype) target);
       }

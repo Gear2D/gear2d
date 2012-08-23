@@ -25,6 +25,8 @@ namespace gear2d {
     private:
       component::base * com;
       component::call fp;
+      
+      friend class parameterbase;
   };
   
   void parameterbase::hook(component::base * c) {
@@ -34,6 +36,14 @@ namespace gear2d {
   void parameterbase::hook(component::base * c, component::call handlefp) {
     hooked.insert(new callback(c, handlefp));
   }
+  
+void parameterbase::unhook(component::base* c)
+{
+  for (std::set<callback*>::iterator i = hooked.begin(); i != hooked.end(); i++)
+    if ((*i)->com == c)
+      hooked.erase(i);
+}
+
   
   void parameterbase::pull() {
     for (std::set<callback *>::iterator i = hooked.begin(); i != hooked.end(); i++) {

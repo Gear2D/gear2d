@@ -356,6 +356,12 @@ namespace gear2d {
           hook(pid, 0);
         }
         
+        void unhook(parameterbase::id pid) {
+          parameterbase::value v = owner->get(pid);
+          if (v == 0) return;
+          v->unhook(this);
+        }
+        
         /**
          * @brief Hook this component as a listener in a parameter.
          * @param pid Parameter id
@@ -389,6 +395,18 @@ namespace gear2d {
           parameterbase::value v = c->owner->get(pid);
           if (v == 0) return;
           v->hook(this);
+        }
+        
+        
+        /**
+         * @brief Unhook this component in a parameter in another component
+         * @param c Component to unhook in
+         * @param pid Parameter id */
+        void unhook(component::base * c, parameterbase::id pid) {
+          if (c == 0) return;
+          parameterbase::value v = c->owner->get(pid);
+          if (v == 0) return;
+          v->unhook(this);
         }
         
         /**
