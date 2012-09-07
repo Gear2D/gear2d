@@ -86,7 +86,7 @@ namespace gear2d {
         * 
         * Enters in the main loop and only stops when there is
         * no game components to run */
-       static bool run();
+       static int run();
        
     private:
       engine() { };

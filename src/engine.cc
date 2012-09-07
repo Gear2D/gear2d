@@ -173,7 +173,7 @@ namespace gear2d {
     nextscene = new std::string("");
   }
   
-  bool engine::run() {
+  int engine::run() {
     // make sure we init
     init();
     modinfo("engine");
@@ -236,5 +236,6 @@ namespace gear2d {
     
     delete ofactory;
     delete cfactory;
+	return 0;
   }
 }
