@@ -132,6 +132,8 @@ namespace gear2d {
   
   void object::destroy() {
     destroyed = true;
+	for (componentcontainer::iterator it = components.begin(); it != components.end(); it++)
+		it->second->destroyed();
     engine::destroy(this);
     ofactory->loadedobjs[sig["name"]].remove(this);
   }

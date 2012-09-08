@@ -181,6 +181,14 @@ namespace gear2d {
          * @param dt Delta time relative to last frame */
         virtual void update(timediff dt) = 0;
         
+		
+		/**
+		 * @brief Signals when the object is marked for destruction.
+		 * 
+		 * All parameters are still valid in this phase.
+		 */
+        virtual void destroyed() { }
+        
         
         /**
          * @brief Returns a link to the parameter.
