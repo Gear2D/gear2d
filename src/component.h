@@ -32,12 +32,11 @@ namespace gear2d {
    * @namespace component
    * @brief Component namespace
    * 
-   ** Where all components shall live
+   ** Where all components shall live.
    ** Every component should be declared within
-   ** this namespace 
+   ** this namespace.
    **/
   namespace component {
-    
     
     /** @brief Component type identifier */
     typedef std::string type;
@@ -211,7 +210,7 @@ namespace gear2d {
          * 
          * Reads a parameter and store it on target. */
         template<typename datatype>
-        void read(parameterbase:: id pid, datatype & target) {
+        void read(parameterbase::id pid, datatype & target) {
           parameter<datatype> * v = access<datatype>(pid);
           target = v->get();
         }

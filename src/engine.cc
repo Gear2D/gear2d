@@ -18,6 +18,8 @@
 #warning GEAR2D_VERSION undefined! Gear2D should be compiled with -DGEAR2D_VERSION=<version>
 #endif
 
+
+/* this symbol must be visible to the gear2d executable */
 extern "C" {
   const char * libraryversion = GEAR2D_VERSION;
 }
