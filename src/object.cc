@@ -3,7 +3,7 @@
 #include "component.h"
 #include "engine.h"
 #include "log.h"
-#include "yaml-cpp/yaml.h"
+#include "sigfile.h"
 
 #include <exception>
 #include <algorithm>
@@ -155,7 +155,7 @@ namespace gear2d {
     }
     
     /* initialize yaml parser */
-    YAML::Parser parser(fin);
+    /* YAML::Parser parser(fin);
     YAML::Node node;
     
     signature & sig = signatures[objtype];
@@ -163,6 +163,11 @@ namespace gear2d {
       trace("node type:", node.Type());
       node >> sig;
     }
+    */
+    
+    object::signature & sig = signatures[objtype];
+    sigfile::load(filename, sig);
+    
     sig["name"] = objtype;
     
     // add the global signature

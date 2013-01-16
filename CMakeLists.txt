@@ -50,6 +50,7 @@ message(STATUS "Building Gear2D game engine version ${Gear2D_VERSION} as ${CMAKE
 
 add_subdirectory(src)
 add_subdirectory(doc)
+add_subdirectory(thirdparty)
 
 # win32 shared libraries for install dependencies
 if (WIN32)

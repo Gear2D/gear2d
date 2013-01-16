@@ -2,10 +2,13 @@ cmake_minimum_required(VERSION 2.6)
 project(gear2d)
 
 find_package(SDL REQUIRED)
+set(YAML_LIBRARY ${CMAKE_BINARY_DIR}/yaml-0.1.4/lib/libyaml.a)
+
 
 # gear2d shared library
-add_library(gear2d SHARED engine.cc component.cc object.cc parameter.cc log.cc)
-target_link_libraries(gear2d yaml-cpp SDL)
+add_library(gear2d SHARED engine.cc component.cc object.cc parameter.cc log.cc sigfile.cc)
+target_link_libraries(gear2d ${YAML_LIBRARY} ${SDL_LIBRARY})
+add_dependencies(gear2d yaml)
 
 # get public headers
 file(GLOB public_headers "*.h")
@@ -17,11 +20,7 @@ target_link_libraries(main gear2d)
 set_target_properties(main PROPERTIES OUTPUT_NAME gear2d BUILD_WITH_INSTALL_RPATH true)
 
 # include dirs so we can #include properly
-include_directories(thirdparty/yaml-cpp/include/ ${SDL_INCLUDE_DIR})
-link_directories(${SDL_LINK_DIR})
-
-add_subdirectory(thirdparty/yaml-cpp)
-# add_subdirectory(thirdparty/bullet-2.78)
+include_directories(${CMAKE_SOURCE_DIR}/thirdparty/yaml-0.1.4/include/ ${SDL_INCLUDE_DIR})
 
 # install rules for the executable
 install(TARGETS gear2d main
@@ -36,8 +35,3 @@ install(FILES ${public_headers}
 
 install(FILES ${CMAKE_SOURCE_DIR}/LICENSE ${CMAKE_SOURCE_DIR}/README
 	DESTINATION share/doc/${PROJECT_NAME})
-
-
-# control of what we need from yaml-cpp
-set(YAML_CPP_BUILD_TOOLS OFF)
-set(YAML_CPP_BUILD_CONTRIB OFF)

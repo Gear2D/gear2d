@@ -2,8 +2,9 @@
 #include "component.h"
 #include "object.h" 
 #include "log.h"
+#include "sigfile.h"
 
-#include "yaml-cpp/yaml.h"
+
 #include <fstream>
 #include <vector>
 #include <string>
@@ -120,17 +121,9 @@ namespace gear2d {
   
   void engine::load(std::string configfile) {
     modinfo("engine");
-    std::ifstream fin(configfile.c_str());
-    
-    /* initialize yaml parser */
-    YAML::Parser parser(fin);
-    YAML::Node node;
     map<std::string, std::string> cfg;
-    
-    /* TODO: add other yaml features */
-    while (parser.GetNextDocument(node)) node >> cfg;
+    sigfile::load(configfile, cfg);
     load(cfg);
-    fin.close();
   }
 
   void engine::load(std::map<std::string, std::string> & cfg) {
