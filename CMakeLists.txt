@@ -56,7 +56,7 @@ add_subdirectory(thirdparty)
 if (WIN32)
 	set(CPACK_SOURCE_GENERATOR ZIP)
 	set(CPACK_GENERATOR NSIS;ZIP)
-	add_subdirectory(src/thirdparty/win32)
+	add_subdirectory(thirdparty/win32)
 	set(CPACK_NSIS_MODIFY_PATH ON)
 	set(CPACK_PACKAGE_NAME "Gear2D")
 	
