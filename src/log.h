@@ -228,45 +228,8 @@ namespace gear2d {
  */
 #ifdef LOGTRACE
 
-#ifdef _WIN32
+#if defined(__GNUC__)
 
-/*! Create a trace object to log info messages and initializes
- * the trace string to the function name */
-#define logverb \
-gear2d::log trace(__FUNCDNAME__, "", gear2d::log::info)
-
-/*! Create a trace object to log error messages and initializes
- * the trace string to the function name */
-#define logerr \
-gear2d::log trace(__FUNCDNAME__, "", gear2d::log::error)
-
-/*! Create a trace object to log warning messages and initializes
- * the trace string to the function name */
-#define logwarn \
-gear2d::log trace(__FUNCDNAME__, "", gear2d::log::warning)
-
-
-
-
-/*! Create a trace object to log warning messages and initializes
- * the trace string to the function name and the module a
- * @param a Module name */
-#define modwarn(a) \
-gear2d::log trace(__FUNCDNAME__, a, gear2d::log::warning)
-
-/*! Create a trace object to log error messages and initializes
- * the trace string to the function name and the module a
- * @param a Module name */
-#define moderr(a) \
-gear2d::log trace(__FUNCDNAME__, a, gear2d::log::error)
-
-/*! Create a trace object to log informational messages and initializes
- * the trace string to the function name and the module a
- * @param a Module name */
-#define modinfo(a) \
-gear2d::log trace(__FUNCDNAME__, a, gear2d::log::info)
-
-#else // NOT _WIN32
 
 /*! Create a trace object to log informational messages and initializes
  * the trace string to the function name */
@@ -300,6 +263,41 @@ gear2d::log trace(__PRETTY_FUNCTION__, a, gear2d::log::error)
  * @param a Module name */
 #define modinfo(a) \
 gear2d::log trace(__PRETTY_FUNCTION__, a, gear2d::log::info)
+
+#elif defined (_WIN32)
+
+/*! Create a trace object to log info messages and initializes
+ * the trace string to the function name */
+#define logverb \
+gear2d::log trace(__FUNCDNAME__, "", gear2d::log::info)
+
+/*! Create a trace object to log error messages and initializes
+ * the trace string to the function name */
+#define logerr \
+gear2d::log trace(__FUNCDNAME__, "", gear2d::log::error)
+
+/*! Create a trace object to log warning messages and initializes
+ * the trace string to the function name */
+#define logwarn \
+gear2d::log trace(__FUNCDNAME__, "", gear2d::log::warning)
+
+/*! Create a trace object to log warning messages and initializes
+ * the trace string to the function name and the module a
+ * @param a Module name */
+#define modwarn(a) \
+gear2d::log trace(__FUNCDNAME__, a, gear2d::log::warning)
+
+/*! Create a trace object to log error messages and initializes
+ * the trace string to the function name and the module a
+ * @param a Module name */
+#define moderr(a) \
+gear2d::log trace(__FUNCDNAME__, a, gear2d::log::error)
+
+/*! Create a trace object to log informational messages and initializes
+ * the trace string to the function name and the module a
+ * @param a Module name */
+#define modinfo(a) \
+gear2d::log trace(__FUNCDNAME__, a, gear2d::log::info)
 
 #endif
 
