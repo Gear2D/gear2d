@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 project(gear2d)
 
 find_package(SDL REQUIRED)
-set(YAML_LIBRARY ${CMAKE_BINARY_DIR}/yaml-0.1.4/lib/libyaml.a)
+set(YAML_LIBRARY ${CMAKE_BINARY_DIR}/thirdparty/yaml-0.1.4/libyaml.a)
 
 
 # gear2d shared library
