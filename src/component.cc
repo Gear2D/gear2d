@@ -107,6 +107,7 @@ namespace gear2d {
     selector & selector::operator=(const selector & rhs) {
       family = rhs.family;
       type = rhs.type;
+	  return *this;
     }
     
     bool selector::operator==(const selector & rhs) {
