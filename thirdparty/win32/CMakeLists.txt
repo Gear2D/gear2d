@@ -5,3 +5,5 @@ file(GLOB win32dlls "*.dll")
 
 install(FILES ${win32dlls}
 		DESTINATION bin)
+
+message(STATUS "Using 32bits third party libs")
