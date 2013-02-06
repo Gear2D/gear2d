@@ -24,7 +24,7 @@ namespace gear2d {
    * that happens in Gear2D is controlled by this engine -
    * it commands registering and loading of components and
    * objects */
-  class engine {
+  class g2dapi engine {
     public:
       /**
        * @brief Returns the version of the engine.

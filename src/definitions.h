@@ -14,6 +14,7 @@
 #include <ios>
 
 
+
 /** 
  * @file definitions.h
  * @brief Common definitions and useful functions.
@@ -21,6 +22,18 @@
  * 
  * This header contains useful functions like split, some forward
  * declarations and common definitions used thoughout the engine */
+
+/* Adjust visibility modifiers depending on compiler */
+#if defined(_WIN32)
+#   if defined(gear2d_EXPORTS) /* defined by cmake, thanks god. */
+#       define  g2dapi  __declspec(dllexport) 
+#   else
+#       define  g2dapi  __declspec(dllimport) 
+#   endif
+#else
+#   define g2dapi
+#endif
+
 namespace gear2d {
   class object;
   namespace component { 
@@ -112,7 +125,7 @@ namespace gear2d {
    * like when a required component is not found.
    *
    */
-  class evil : public std::exception {
+  class g2dapi evil : public std::exception {
     private:
       std::string describe;
       

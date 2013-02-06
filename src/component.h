@@ -52,7 +52,7 @@ namespace gear2d {
      * Use this class whenever you want to be very specific
      * about component description. This helps converting
      * from string to family/type selector and vice-versa. */
-    struct selector {
+    struct g2dapi selector {
       /** @brief Family of this selector */
       component::family family;
       
@@ -123,7 +123,7 @@ namespace gear2d {
      * or anything when attached to a game object.
      * 
      */
-    class base {
+    class g2dapi base {
       friend class gear2d::object;
       friend class gear2d::engine;
       friend class gear2d::component::factory;

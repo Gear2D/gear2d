@@ -25,7 +25,7 @@ namespace gear2d {
    * @brief An exception to sinalize that this component dependencies are broken.
    * @author Leonardo Guilherme de Freitas.
    */
-  class evildepends : public evil {
+  class g2dapi evildepends : public evil {
     public:
       evildepends (std::string describe);
   };
@@ -40,7 +40,7 @@ namespace gear2d {
    * 
    * @warning Although this class API is well documented, you shouldn't use it
    * manually if you are just creating a game. */
-  class object {
+  class g2dapi object {
     public:
       /** @brief Type of objects identifier type. */
       typedef std::string type;

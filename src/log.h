@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <string>
+#include "definitions.h"
 
 namespace gear2d {
   
@@ -47,7 +48,7 @@ namespace gear2d {
    * @endcode
    * 
    */
-  class log {
+  class g2dapi log {
     public:
       
       /**
@@ -55,7 +56,7 @@ namespace gear2d {
        * @author Leonardo Guilherme de Freitas
        * @brief Verbosity level, the lowest, the less will be shown.
        */
-      enum verbosity {
+      enum g2dapi verbosity {
         minimum = 0, /*! minimum verbosity - silent. */
         error,       /*! only critical messages and errors */
         warning,     /*! error messages and warnings */
@@ -269,35 +270,35 @@ gear2d::log trace(__PRETTY_FUNCTION__, a, gear2d::log::info)
 /*! Create a trace object to log info messages and initializes
  * the trace string to the function name */
 #define logverb \
-gear2d::log trace(__FUNCDNAME__, "", gear2d::log::info)
+gear2d::log trace(__FUNCTION__, "", gear2d::log::info)
 
 /*! Create a trace object to log error messages and initializes
  * the trace string to the function name */
 #define logerr \
-gear2d::log trace(__FUNCDNAME__, "", gear2d::log::error)
+gear2d::log trace(__FUNCTION__, "", gear2d::log::error)
 
 /*! Create a trace object to log warning messages and initializes
  * the trace string to the function name */
 #define logwarn \
-gear2d::log trace(__FUNCDNAME__, "", gear2d::log::warning)
+gear2d::log trace(__FUNCTION__, "", gear2d::log::warning)
 
 /*! Create a trace object to log warning messages and initializes
  * the trace string to the function name and the module a
  * @param a Module name */
 #define modwarn(a) \
-gear2d::log trace(__FUNCDNAME__, a, gear2d::log::warning)
+gear2d::log trace(__FUNCTION__, a, gear2d::log::warning)
 
 /*! Create a trace object to log error messages and initializes
  * the trace string to the function name and the module a
  * @param a Module name */
 #define moderr(a) \
-gear2d::log trace(__FUNCDNAME__, a, gear2d::log::error)
+gear2d::log trace(__FUNCTION__, a, gear2d::log::error)
 
 /*! Create a trace object to log informational messages and initializes
  * the trace string to the function name and the module a
  * @param a Module name */
 #define modinfo(a) \
-gear2d::log trace(__FUNCDNAME__, a, gear2d::log::info)
+gear2d::log trace(__FUNCTION__, a, gear2d::log::info)
 
 #endif
 

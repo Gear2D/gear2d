@@ -34,7 +34,7 @@ namespace gear2d {
    * to its value (because values will be loaded
    * as strings from data files).
    */
-  class parameterbase {
+  class g2dapi parameterbase {
     public:
       /** @brief ID type for identying parameters */
        typedef std::string id;
@@ -155,7 +155,7 @@ namespace gear2d {
   /**
    * @brief Exception to signal a broken link.
    */
-  class badlink : public evil {
+  class g2dapi badlink : public evil {
     public:
       badlink();
   };
@@ -168,7 +168,7 @@ namespace gear2d {
    * It works as a wrapper so you need not to do
    * read() and write() */
   template<typename basetype>
-  class link {
+  class g2dapi link {
     private:
       parameter<basetype> * target;
       component::base * writer;
@@ -245,7 +245,7 @@ namespace gear2d {
    * It is the mother of the blackboard system.
    */
   template<typename datatype>
-  class parameter : public parameterbase {
+  class g2dapi parameter : public parameterbase {
     private:
       datatype * raw;
       bool locked;
