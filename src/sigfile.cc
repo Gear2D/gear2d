@@ -103,8 +103,6 @@ void parser::process(yaml_event_t & event) {
     case YAML_SEQUENCE_START_EVENT:
     case YAML_SEQUENCE_END_EVENT:
     case YAML_ALIAS_EVENT:
-      cout << "\nIgnoring event type " << event.type << 
-      " because we are not interested." << endl;
       break;
       
     case YAML_MAPPING_START_EVENT:
