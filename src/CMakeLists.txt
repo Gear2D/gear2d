@@ -9,6 +9,15 @@ else (MSVC)
 	set(YAML_LIBRARY ${CMAKE_BINARY_DIR}/thirdparty/yaml-0.1.4/libyaml.a)
 endif ()
 
+if (WIN32)
+	get_filename_component(SDL_LIBRARY_DIR ${SDL_LIBRARY} PATH)
+	set(SDL_DLL "${SDL_LIBRARY_DIR}/SDL.dll")
+	message(STATUS "Packaging SDL DLL: ${SDL_DLL}")
+	install(FILES ${SDL_DLL}
+		DESTINATION bin
+	)
+endif()
+
 message(STATUS "YAML Library: ${YAML_LIBRARY}")
 
 # gear2d shared library
@@ -38,7 +47,6 @@ install(TARGETS gear2d main
 
 install(FILES ${public_headers}
 		DESTINATION include/gear2d
-
 )
 
 install(FILES ${CMAKE_SOURCE_DIR}/LICENSE ${CMAKE_SOURCE_DIR}/README
