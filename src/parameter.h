@@ -168,7 +168,7 @@ namespace gear2d {
    * It works as a wrapper so you need not to do
    * read() and write() */
   template<typename basetype>
-  class g2dapi link {
+  class link {
     private:
       parameter<basetype> * target;
       component::base * writer;
@@ -207,6 +207,7 @@ namespace gear2d {
       link<basetype> & operator=(const link<basetype> & other) {
         target = other.target;
         writer = other.writer;
+		return *this;
       }
       
       /**
@@ -245,7 +246,7 @@ namespace gear2d {
    * It is the mother of the blackboard system.
    */
   template<typename datatype>
-  class g2dapi parameter : public parameterbase {
+  class parameter : public parameterbase {
     private:
       datatype * raw;
       bool locked;
