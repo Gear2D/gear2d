@@ -24,6 +24,14 @@ using std::endl;
  */
 
 
+/** Macros to ease the process of declaring a new component */
+#if defined (_WIN32) && defined (_MSC_VER)
+#  define g2dcomponent(x) extern "C" { __declspec(dllexport) component::base * build() { return new x; } }
+#else
+#  define g2dcomponent(x) extern "C" { component::base * build() { return new x; } }
+#endif
+
+
 namespace gear2d {
   class object;
   class engine;
