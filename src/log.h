@@ -269,7 +269,7 @@ gear2d::log trace(__PRETTY_FUNCTION__, a, gear2d::log::info)
 
 /*! Create a trace object to log info messages and initializes
  * the trace string to the function name */
-#define logverb \
+#define loginfo \
 gear2d::log trace(__FUNCTION__, "", gear2d::log::info)
 
 /*! Create a trace object to log error messages and initializes
