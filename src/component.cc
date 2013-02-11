@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-#define SOPREFIX "";
+#define SOPREFIX "lib";
 #ifdef _WIN32
 # define SOSUFFIX ".dll"
 # ifdef _MSC_VER
@@ -151,7 +151,7 @@ namespace gear2d {
         std::vector<std::string> paths;
         split(paths, compath, ',');
         for (int i = 0; i < paths.size(); i++) {
-          file = paths[i] + '/' + f + "/" SOPREFIX + t + SOSUFFIX;
+          file = paths[i] + "/" + f + "/"; file += SOPREFIX; file += t + SOSUFFIX;
           trace("Trying to load", file);
           comhandler = SDL_LoadObject(file.c_str());
           if (!comhandler) {
