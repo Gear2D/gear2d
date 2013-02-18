@@ -54,6 +54,8 @@ add_subdirectory(src)
 add_subdirectory(doc)
 add_subdirectory(thirdparty)
 
+include(InstallRequiredSystemLibraries)
+
 # win32 shared libraries for install dependencies
 if (WIN32)
 	set(CPACK_SOURCE_GENERATOR ZIP)
