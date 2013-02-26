@@ -11,14 +11,16 @@
 if (NOT Gear2D_FOUND)
 
 if (WIN32)
-  message(STATUS "Trying windoze $ENV{PROGRAMFILES}")
+  #message(STATUS "Trying windoze $ENV{PROGRAMFILES} and $ENV{PROGRAMFILES(X86)}")
   find_path(Gear2D_INCLUDE_DIR gear2d.h
     HINTS
     $ENV{GEAR2DDIR}
     PATHS
+	"$ENV{ProgramW6432}\\Gear2D\\include"
     "$ENV{PROGRAMFILES}\\Gear2D\\include"
     "$ENV{PROGRAMFILES(X86)}\\Gear2D\\include"
     "C:\\Gear2D\\include"
+	"$ENV{ProgramW6432}\\Gear2D\\include\\gear2d"
     "$ENV{PROGRAMFILES}\\Gear2D\\include\\gear2d"
     "$ENV{PROGRAMFILES(X86)}\\Gear2D\\include\\gear2d"
     "C:\\Gear2D\\include\\gear2d"
@@ -29,6 +31,7 @@ if (WIN32)
     HINTS
     $ENV{GEAR2DDIR}
     PATHS
+	"$ENV{ProgramW6432}\\Gear2D\\"
     "$ENV{PROGRAMFILES}\\Gear2D\\"
     "$ENV{PROGRAMFILES(X86)}\\Gear2D\\"
     "C:\\Gear2D\\"
@@ -40,6 +43,7 @@ if (WIN32)
     HINTS
     $ENV{GEAR2DDIR}
     PATHS
+	"$ENV{ProgramW6432}\\Gear2D\\bin"
     "$ENV{PROGRAMFILES}\\Gear2D\\bin"
     "$ENV{PROGRAMFILES(x86)}\\Gear2D\\bin"
     "C:\\Gear2D\\bin"
