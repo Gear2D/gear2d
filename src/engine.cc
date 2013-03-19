@@ -212,7 +212,7 @@ namespace gear2d {
         std::set<component::base *> & list = comtpit->second;
         int b = SDL_GetTicks();
         for (std::set<component::base*>::iterator comit = list.begin(); comit != list.end(); comit++) {
-          (*comit)->update(delta);
+          (*comit)->update(delta, begin);
         }
       }
 

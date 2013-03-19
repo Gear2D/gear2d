@@ -185,8 +185,17 @@ namespace gear2d {
         
         /**
          * @brief Updates the state of this component
-         * @param dt Delta time relative to last frame */
-        virtual void update(timediff dt) = 0;
+         * @param dt Delta time relative to last frame
+         */
+        virtual void update(timediff dt) { }
+        
+        /**
+         * @brief Updates the state of this component
+         * @param dt Delta time relative to last frame.
+         * @param begin Tick this frame began. */
+        virtual void update(timediff dt, int begin) {
+          this->update(dt);
+        }
         
 		
 		/**
