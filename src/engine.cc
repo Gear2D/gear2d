@@ -78,11 +78,16 @@ namespace gear2d {
     if (initialized == true && force == false) return;
     if (config != 0) delete config;
     srand(std::time(0));
-    SDL_InitSubSystem(SDL_INIT_EVENTTHREAD | SDL_INIT_VIDEO);
+	int flags = SDL_INIT_VIDEO;
+
+	  // multithreaded events not supported on Windows.
+#if !defined _MSC_VER
+    flags |= SDL_INIT_EVENTTHREAD;
+#endif
+
+	SDL_Init(flags);
     SDL_SetEventFilter((SDL_EventFilter)eventfilter);
     config = new std::map<std::string, std::string>;
-    
-//     log::globalverb = log::warning;
     
     // erase all the components
     if (components != 0) {
