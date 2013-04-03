@@ -37,4 +37,4 @@ class helloperson : public component::base {
 };
 
 // the build function
-extern "C" { component::base * build() { return new helloperson(); } }
+g2dcomponent(helloperson);
