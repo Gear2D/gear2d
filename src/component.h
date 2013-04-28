@@ -253,15 +253,15 @@ namespace gear2d {
         template<typename datatype>
         void write(parameterbase::id pid, const datatype & source) {
           parameter<datatype> * v = access<datatype>(pid);
-          v->set(source);
           v->lastwrite = this;
+          v->set(source);
         }
         
         template<typename datatype>
         void write(parameterbase::id pid, const link<datatype> & source) {
             parameter<datatype> * v = access<datatype>(pid);
-            v->set((datatype)source);
             v->lastwrite = this;
+            v->set((datatype)source);
 		}
         
       public:
@@ -280,8 +280,8 @@ namespace gear2d {
         void write(object::id oid, parameterbase::id pid, const datatype & source) {
           parameter<datatype> * v = (parameter<datatype> *) oid->get(pid);
           if (v == 0) return;
-          v->set(source);
           v->lastwrite = this;
+          v->set(source);
         }
         
         /**
