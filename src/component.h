@@ -523,7 +523,7 @@ namespace gear2d {
         object::id owner;
         
       private:
-        // component factory that build we
+        // component factory that build us
         component::factory * cfactory;
     };
     
