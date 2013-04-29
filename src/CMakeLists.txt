@@ -22,7 +22,7 @@ message(STATUS "YAML Library: ${YAML_LIBRARY}")
 
 # gear2d shared library
 add_definitions(-DYAML_DECLARE_STATIC)
-add_library(gear2d SHARED engine.cc component.cc object.cc parameter.cc log.cc sigfile.cc)
+add_library(gear2d SHARED engine.cc component.cc object.cc parameter.cc log.cc sigfile.cc context.cc)
 target_link_libraries(gear2d ${YAML_LIBRARY} ${SDL_LIBRARY})
 add_dependencies(gear2d yaml)
 
