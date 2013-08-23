@@ -38,7 +38,7 @@ namespace gear2d {
   
   const char * engine::version() { return libraryversion; }
   
-  int engine::eventfilter(const void * _ev) {
+  int engine::eventfilter(const void * _ev, const void * userdata) {
     const SDL_Event * ev = (const SDL_Event*)_ev;
     switch(ev->type) {
       case SDL_QUIT:
@@ -82,11 +82,11 @@ namespace gear2d {
 
 	  // multithreaded events not supported on Windows.
 #if !defined _MSC_VER
-    flags |= SDL_INIT_EVENTTHREAD;
+    //flags |= SDL_INIT_EVENTTHREAD;
 #endif
 
 	SDL_Init(flags);
-    SDL_SetEventFilter((SDL_EventFilter)eventfilter);
+    SDL_SetEventFilter((SDL_EventFilter)eventfilter, 0);
     config = new std::map<std::string, std::string>;
     
     // erase all the components

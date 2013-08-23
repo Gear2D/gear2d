@@ -67,6 +67,14 @@
 # (To distribute this file outside of CMake, substitute the full
 #  License text for the above reference.)
 
+if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+  set(SDL_ARCH_64 TRUE)
+  set(SDL_PROCESSOR_ARCH "x64")
+else()
+  set(SDL_ARCH_64 FALSE)
+  set(SDL_PROCESSOR_ARCH "x86")
+endif(CMAKE_SIZEOF_VOID_P EQUAL 8)
+
 find_path(SDL_INCLUDE_DIR SDL.h
   HINTS
     ENV SDLDIR
@@ -78,8 +86,8 @@ find_path(SDL_INCLUDE_DIR SDL.h
 find_library(SDL_LIBRARY_TEMP
   NAMES SDL SDL-1.1
   HINTS
-    ENV SDLDIR
-  PATH_SUFFIXES lib
+    $ENV{SDLDIR}
+  PATH_SUFFIXES lib lib64 lib/{SDL_PROCESSOR_ARCH}
 )
 
 if(NOT SDL_BUILDING_LIBRARY)
@@ -91,8 +99,8 @@ if(NOT SDL_BUILDING_LIBRARY)
     find_library(SDLMAIN_LIBRARY
       NAMES SDLmain SDLmain-1.1
       HINTS
-        ENV SDLDIR
-      PATH_SUFFIXES lib
+        $ENV{SDLDIR}
+      PATH_SUFFIXES lib lib64 lib/{SDL_PROCESSOR_ARCH}
       PATHS
       /sw
       /opt/local
