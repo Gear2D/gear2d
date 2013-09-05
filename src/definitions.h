@@ -177,10 +177,10 @@ namespace gear2d {
    * @return Instance of the container
    * @relates gear2d::component::base
    */
-  template <typename container_t>
+  template <typename container_t = std::list<std::string>>
   container_t split(const std::string & s, char delim) {
     container_t elems;
-    return split(s, delim, elems);
+    return split(elems, s, delim);
   }
   
   /**
