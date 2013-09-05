@@ -213,7 +213,7 @@ namespace gear2d {
          * setup() or after. Never at construction time.
          */
         template<typename basetype>
-        link<basetype> fetch(parameterbase::id pid) {
+        link<basetype> fetch(const parameterbase::id & pid) {
           parameter<basetype> * p = access<basetype>(pid);
           return link<basetype>(p, this);
         }
@@ -226,7 +226,7 @@ namespace gear2d {
          * 
          * Reads a parameter and store it on target. */
         template<typename datatype>
-        void read(parameterbase::id pid, datatype & target) {
+        void read(const parameterbase::id & pid, datatype & target) {
           parameter<datatype> * v = access<datatype>(pid);
           target = v->get();
         }
@@ -236,7 +236,7 @@ namespace gear2d {
          * @param pid Parameter id to be read
          * @warning The parameter will be created if it does not exists */
         template<typename datatype>
-        datatype read(parameterbase::id pid) {
+        datatype read(const parameterbase::id & pid) {
           parameter<datatype> * v = access<datatype>(pid);
           return v->get();
         }
@@ -250,7 +250,7 @@ namespace gear2d {
          * @warning Be careful about type promotion. Be explicit if necessary.
          * @warning The parameter will be created if it does not exists */
         template<typename datatype>
-        void write(parameterbase::id pid, const datatype & source) {
+        void write(const parameterbase::id & pid, const datatype & source) {
           parameter<datatype> * v = access<datatype>(pid);
           v->lastwrite = this;
           v->set(source);
@@ -276,7 +276,7 @@ namespace gear2d {
          * function.
          */
         template<typename datatype>
-        void write(object::id oid, parameterbase::id pid, const datatype & source) {
+        void write(object::id oid, const parameterbase::id & pid, const datatype & source) {
           parameter<datatype> * v = (parameter<datatype> *) oid->get(pid);
           if (v == 0) return;
           v->lastwrite = this;
@@ -307,7 +307,7 @@ namespace gear2d {
          * needs. Look at @ref eval for more info on how to do that.
          */
         template<typename datatype>
-        void init(parameterbase::id pid, std::string raw, datatype def) {
+        void init(const parameterbase::id & pid, std::string raw, datatype def) {
           if (owner->get(pid) != 0) throw evil(this->type() + "tried init(" + pid + ")" + " but its already set.");
           if (raw == "") write(pid, def);
           else write(pid, eval<datatype>(raw, def));
@@ -336,7 +336,7 @@ namespace gear2d {
          * if it do not exists, so be assured to use bind() before.
          */
         template <typename datatype>
-        void bind(parameterbase::id pid, datatype & raw) throw (evil) {
+        void bind(const parameterbase::id & pid, datatype & raw) throw (evil) {
           if (owner->get(pid) != 0) throw evil(this->type() + " tried bind(" + pid + ")" + " but its already set.");
           parameter<datatype> * p = new parameter<datatype>(&raw);
           p->dodestroy = false;
@@ -356,7 +356,7 @@ namespace gear2d {
          * if it does not exists.
          */
         template<typename datatype>
-        const datatype & raw(parameterbase::id pid) {
+        const datatype & raw(const parameterbase::id & pid) {
           parameter<datatype> * v = access<datatype>(pid);
           return *(*v);
         }
@@ -375,11 +375,11 @@ namespace gear2d {
          * parameter is coming from, its better to add it to the dependency
          * list, no?
          */
-        void hook(parameterbase::id pid) {
+        void hook(const parameterbase::id & pid) {
           hook(pid, 0);
         }
         
-        void unhook(parameterbase::id pid) {
+        void unhook(const parameterbase::id & pid) {
           parameterbase::value v = owner->get(pid);
           if (v == 0) return;
           v->unhook(this);
@@ -399,7 +399,7 @@ namespace gear2d {
          * will fail silently. Use <code>if (exists(pid)) hook(pid)</code> if you
          * want to know if/when it fails.
          */
-        void hook(parameterbase::id pid, component::call handlerfp) {
+        void hook(const parameterbase::id & pid, component::call handlerfp) {
           parameterbase::value v = owner->get(pid);
           if (v == 0) return;
           v->hook(this, handlerfp);
@@ -413,7 +413,7 @@ namespace gear2d {
          * Add this component as a listener to the parameter in another
          * component. Owner will be passed in handle() as a way of
          * knowing if it is a parameter on your object or on another */
-        void hook(component::base * c, parameterbase::id pid) {
+        void hook(component::base * c, const parameterbase::id & pid) {
           if (c == 0) return;
           parameterbase::value v = c->owner->get(pid);
           if (v == 0) return;
@@ -425,7 +425,7 @@ namespace gear2d {
          * @brief Unhook this component in a parameter in another component
          * @param c Component to unhook in
          * @param pid Parameter id */
-        void unhook(component::base * c, parameterbase::id pid) {
+        void unhook(component::base * c, const parameterbase::id & pid) {
           if (c == 0) return;
           parameterbase::value v = c->owner->get(pid);
           if (v == 0) return;
@@ -441,7 +441,7 @@ namespace gear2d {
         * Add this component as a listener to the parameter in another
         * component. Owner will be passed in handle() as a way of
         * knowing if it is a parameter on your object or on another */
-        void hook(component::base * c, parameterbase::id pid, component::call handlerfp) {
+        void hook(component::base * c, const parameterbase::id & pid, component::call handlerfp) {
           if (c == 0) return;
           parameterbase::value v = c->owner->get(pid);
           if (v == 0) return;
@@ -453,7 +453,7 @@ namespace gear2d {
          * @param pid Parameter id
          * @return parameter address if it does exists, (null) 0 if not.
          * This queries if the parameter exists. */
-        parameterbase * exists(parameterbase::id pid);
+        parameterbase * exists(const parameterbase::id & pid);
 
         /**
          * @brief Build another component based on selector.
@@ -509,7 +509,7 @@ namespace gear2d {
         
       private:
         template<typename datatype>
-        parameter<datatype> * access(parameterbase::id pid) {
+        parameter<datatype> * access(const parameterbase::id & pid) {
           parameterbase::value v = owner->get(pid);
           if (v == 0) {
             v = new parameter<datatype>;

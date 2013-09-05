@@ -191,7 +191,7 @@ namespace gear2d {
        * @param pid Parameter id inside the object
        * @return a @a parameterbase::value reference
        * Use this to access a parameter inside the component */
-      parameterbase::value get(parameterbase::id pid);
+      parameterbase::value get(const parameterbase::id & pid);
       
       /**
        * @brief Set a named parameter for the given value.
@@ -203,7 +203,7 @@ namespace gear2d {
        * If thats not what you mean, just call set() with v->clone().
        * If thats really what you meant, remember to set v->dodestroy to false
        * or you may have multiple delete's or missing references and thats an very ugly crash. Really. */
-      void set(parameterbase::id pid, parameterbase::value v);
+      void set(const parameterbase::id & pid, parameterbase::value v);
       
       /**
        * @brief Copy the parameters from other to this.
