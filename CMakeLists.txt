@@ -39,7 +39,7 @@ endif (NOT CMAKE_BUILD_TYPE)
 # Identify if logtrace should be defined
 if (${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
   add_definitions(-DLOGTRACE)
-  message(STATUS "YAY DEBUG MAAAAN")
+	message(STATUS "Build type enables logging facilities")
 endif(${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
   
 # set RPATH to point to the library install destination

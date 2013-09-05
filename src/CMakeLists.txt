@@ -32,7 +32,7 @@ file(GLOB public_headers "*.h")
 add_definitions(-DYAML_DECLARE_STATIC)
 add_library(gear2d SHARED engine.cc component.cc object.cc parameter.cc log.cc sigfile.cc ${public_headers})
 #source_group("Header Files" FILES ${public_headers})
-target_link_libraries(gear2d ${YAML_LIBRARY} ${SDL2_LIBRARY})
+target_link_libraries(gear2d ${YAML_LIBRARY} ${SDL2_LIBRARIES})
 add_dependencies(gear2d yaml)
 
 
