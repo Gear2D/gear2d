@@ -11,12 +11,16 @@ else (MSVC)
 endif ()
 
 if (WIN32)
-	get_filename_component(SDL2_LIBRARY_DIR ${SDL2_LIBRARY} PATH)
-	set(SDL2_DLL "${SDL2_LIBRARY_DIR}/SDL2.dll")
-	message(STATUS "Packaging SDL2 DLL: ${SDL2_DLL}")
-	install(FILES ${SDL2_DLL}
+	message(STATUS "Packaging SDL2 Libraries: ${SDL2_LIBRARY}")
+	install(FILES ${SDL2_LIBRARY}
 		DESTINATION bin
 	)
+	if (MINGW)
+		message(STATUS "Compiling with MINGW!")
+		set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -static -lpthread")
+		set(CMAKE_SHARED_LINKER_FLAGS "-static-libstdc++ -static-libgcc -static -lpthread")
+		set(CMAKE_MODULE_LINKER_FLAGS "-static-libstdc++ -static-libgcc -static -lpthread")
+	endif(MINGW)
 endif()
 
 message(STATUS "YAML Library: ${YAML_LIBRARY}")
@@ -28,7 +32,7 @@ file(GLOB public_headers "*.h")
 add_definitions(-DYAML_DECLARE_STATIC)
 add_library(gear2d SHARED engine.cc component.cc object.cc parameter.cc log.cc sigfile.cc ${public_headers})
 #source_group("Header Files" FILES ${public_headers})
-target_link_libraries(gear2d ${YAML_LIBRARY} ${SDL2_LIBRARY})
+target_link_libraries(gear2d ${YAML_LIBRARY} ${SDL2_LIBRARIES})
 add_dependencies(gear2d yaml)
 
 

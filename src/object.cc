@@ -103,11 +103,11 @@ namespace gear2d {
     return oldc;
   }
 
-  parameterbase::value object::get(parameterbase::id pid) {
+  parameterbase::value object::get(const parameterbase::id & pid) {
     return parameters[pid];
   }
   
-  void object::set(parameterbase::id pid, parameterbase::value v) {
+  void object::set(const parameterbase::id & pid, parameterbase::value v) {
     parameters[pid] = v;
     if (v != 0) {
       v->owner = this;

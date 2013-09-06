@@ -25,7 +25,7 @@ namespace gear2d {
     base::~base() {
     }
     
-    parameterbase * base::exists(parameterbase::id pid) {
+    parameterbase * base::exists(const parameterbase::id & pid) {
       return owner->get(pid);
     }
     
