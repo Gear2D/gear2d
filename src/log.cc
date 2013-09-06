@@ -20,7 +20,7 @@ log::log(const std::string & trace, const std::string & module, log::verbosity l
 void log::mark() {
   if (traced || globalverb < maximum  || (!filter.empty() && tracemodule.find(filter) != 0)) return;
   for (int i = 0; i < indent; i++) logstream << "  ";
-  logstream << "{ In " << tracemodule << trace << std::endl;
+  logstream << "[ In " << tracemodule << trace << std::endl;
   indent++;
   traced = true;
 }
@@ -30,7 +30,7 @@ log::~log() {
   if ((globalverb < maximum && !traced) || trace.empty() || (!filter.empty() && tracemodule.find(filter) != 0)) return;
   indent--;
   for (int i = 0; i < indent; i++) logstream << "  ";
-  logstream << "} Leaving " << tracemodule << trace << std::endl;
+  logstream << "] Leaving " << tracemodule << trace << std::endl;
 }
 
 void log::module (const std::string & mod) {
