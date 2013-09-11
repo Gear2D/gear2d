@@ -203,17 +203,18 @@ namespace gear2d {
         * All parameters are still valid in this phase.
         */
         virtual void destroyed() { }
-        
-        
+       
         /**
          * @brief Returns a link to the parameter.
          * @param pid Parameter id
+         * @param init Value to init the parameter if it is not initialized
          * 
          * @warning You should call this only inside
          * setup() or after. Never at construction time.
          */
         template<typename basetype>
-        link<basetype> fetch(const parameterbase::id & pid) {
+        link<basetype> fetch(const parameterbase::id & pid, const basetype & init = basetype()) {
+          if (!exists(pid)) write(pid, init);
           parameter<basetype> * p = access<basetype>(pid);
           return link<basetype>(p, this);
         }
