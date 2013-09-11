@@ -94,7 +94,7 @@ namespace gear2d {
     private:
       
       /* so we can filter the quit event and quit properly */
-      static int eventfilter(const void * userdata, const void * ev);
+      static int eventfilter(void * userdata, void * _ev);
       
     private:
       
