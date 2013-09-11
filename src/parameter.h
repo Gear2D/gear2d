@@ -182,7 +182,7 @@ namespace gear2d {
       link(const link<basetype> & other)
       : target(other.target)
       , writer(other.writer)
-      { }
+      { modinfo("link"); }
       
       
       /**
@@ -191,7 +191,7 @@ namespace gear2d {
       link(parameter<basetype> * target = 0, component::base * writer = 0)
       : target(target)
       , writer(writer)
-      { }
+      { modinfo("link"); }
       
       /**
        * @brief Writes into this parameter link.
@@ -202,12 +202,14 @@ namespace gear2d {
         if (target == 0) throw(gear2d::badlink());
         target->lastwrite = writer;
         target->set(source);
+        return *this;
       }
       
       link<basetype> & operator=(const link<basetype> & other) {
+        modinfo("link");
         target = other.target;
         writer = other.writer;
-		return *this;
+        return *this;
       }
       
       /**
@@ -227,7 +229,7 @@ namespace gear2d {
         return *this;
       }
       
-      basetype & operator*() {
+      basetype operator*() {
         moderr("link");
         if (target == 0) throw(gear2d::badlink());
         return ((basetype) target);

@@ -29,7 +29,7 @@ message(STATUS "YAML Library: ${YAML_LIBRARY}")
 file(GLOB public_headers "*.h")
 
 # gear2d shared library
-add_definitions(-DYAML_DECLARE_STATIC)
+add_definitions(-DYAML_DECLARE_STATIC -Wall)
 add_library(gear2d SHARED engine.cc component.cc object.cc parameter.cc log.cc sigfile.cc ${public_headers})
 #source_group("Header Files" FILES ${public_headers})
 target_link_libraries(gear2d ${YAML_LIBRARY} ${SDL2_LIBRARIES})
