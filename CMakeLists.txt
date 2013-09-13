@@ -36,10 +36,12 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "RelWithDebInfo")
 endif (NOT CMAKE_BUILD_TYPE)
 
+set(CMAKE_CXX_FLAGS_DEBUG "-ggdb -Wall")
+
 # Identify if logtrace should be defined
 if (${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
   add_definitions(-DLOGTRACE)
-	message(STATUS "Build type enables logging facilities")
+  message(STATUS "Build type enables logging facilities")
 endif(${CMAKE_BUILD_TYPE} STREQUAL "Debug" OR ${CMAKE_BUILD_TYPE} STREQUAL "RelWithDebInfo")
   
 # set RPATH to point to the library install destination
