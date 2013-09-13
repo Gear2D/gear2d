@@ -150,7 +150,7 @@ namespace gear2d {
       if (file == "") {
         std::vector<std::string> paths;
         split(paths, compath, ',');
-        for (int i = 0; i < paths.size(); i++) {
+        for (size_t i = 0; i < paths.size(); i++) {
           file = paths[i] + "/" + f + "/"; file += SOPREFIX; file += t + SOSUFFIX;
           trace("Trying to load", file);
           comhandler = SDL_LoadObject(file.c_str());
@@ -222,8 +222,8 @@ namespace gear2d {
     
     factory::~factory() {
       while (!handlers.empty()) {
-        factory::handler handler = handlers.begin()->second;
-//         SDL_UnloadObject(handler); TODO this crashes. why?
+//      factory::handler handler = handlers.begin()->second;
+//      SDL_UnloadObject(handler); TODO this crashes. why?
         handlers.erase(handlers.begin());
       }
     }

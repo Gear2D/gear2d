@@ -56,7 +56,7 @@ namespace gear2d {
        * @author Leonardo Guilherme de Freitas
        * @brief Verbosity level, the lowest, the less will be shown.
        */
-      enum g2dapi verbosity {
+      enum verbosity {
         minimum = 0, /*! minimum verbosity - silent. */
         error,       /*! only critical messages and errors */
         warning,     /*! error messages and warnings */

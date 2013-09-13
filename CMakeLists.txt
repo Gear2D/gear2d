@@ -49,9 +49,6 @@ set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
 add_definitions(-DGEAR2D_VERSION="${Gear2D_VERSION}")
 message(STATUS "Building Gear2D game engine version ${Gear2D_VERSION} as ${CMAKE_BUILD_TYPE}")
 
-# TODO: Fix for other compilers
-add_definitions(-std=c++11)
-
 add_subdirectory(src)
 add_subdirectory(doc)
 add_subdirectory(thirdparty)

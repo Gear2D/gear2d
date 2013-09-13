@@ -18,7 +18,7 @@ namespace gear2d {
     // delete all components
     for (componentcontainer::iterator i = components.begin(); i != components.end(); i++) {
       component::base * c = i->second;
-      c->owner == 0;
+      c->owner = 0;
       engine::remove(c);
       // lets the engine delete c;
     }

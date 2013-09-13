@@ -150,7 +150,7 @@ namespace gear2d {
     std::vector<std::string> comlist;
     if ((*config)["compreload"].size() != 0) {
       split(comlist, (*config)["compreload"], ' ');
-      for (int i = 0; i < comlist.size(); i++) {
+      for (size_t i = 0; i < comlist.size(); i++) {
         trace("Pre-loading", comlist[i], log::info);
         cfactory->load(comlist[i]);
       }
@@ -165,7 +165,7 @@ namespace gear2d {
     ofactory->commonsig = *config;
     
     /* and now build the pointed objects */
-    for (int i = 0; i < objectlist.size(); i++) {
+    for (size_t i = 0; i < objectlist.size(); i++) {
       ofactory->load(objectlist[i]);
       ofactory->build(objectlist[i]);
     }
@@ -178,7 +178,6 @@ namespace gear2d {
     init();
     modinfo("engine");
     int begin = 0, end = 0, dt = 0;
-    SDL_Event ev;
     started = true;
     while (started) {
       dt = end - begin;
@@ -215,7 +214,6 @@ namespace gear2d {
       for (comtpit = components->begin(); comtpit != components->end(); comtpit++) {
         component::family f = comtpit->first;
         std::set<component::base *> & list = comtpit->second;
-        int b = SDL_GetTicks();
         for (std::set<component::base*>::iterator comit = list.begin(); comit != list.end(); comit++) {
           (*comit)->update(delta, begin);
         }
