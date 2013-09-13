@@ -217,5 +217,32 @@ namespace gear2d {
     if (sstr.fail()) t = def;
     return t;
   }
+
+
+ /**
+  * @brief Left trim a std::string
+  * @param s the string to trim
+  * @return s left trimmed */
+  static inline std::string &ltrim(std::string &s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+    return s;
+  }
+
+  /**
+  * @brief Right trim a std::string
+  * @param s the string to trim
+  * @return s right trimmed */
+  static inline std::string &rtrim(std::string &s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+    return s;
+  }
+
+ /**
+  * @brief Trim a std::string left and right
+  * @param s the string to trim
+  * @return s trimmed */
+  static inline std::string &trim(std::string &s) {
+    return ltrim(rtrim(s));
+  }
 }
 #endif

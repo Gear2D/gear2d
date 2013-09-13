@@ -66,6 +66,11 @@ namespace gear2d {
              * that means that if one component changes it, all components will
              * affect all components, so its REALLY global. */
             object::signature commonsig;
+
+            /**
+             * @brief Path where to load objects from */
+            std::string objpath;
+
           public:
             /**
              * @brief Creates a new object factory.

@@ -182,7 +182,7 @@ namespace gear2d {
       link(const link<basetype> & other)
       : target(other.target)
       , writer(other.writer)
-      { modinfo("link"); }
+      { }
       
       
       /**
@@ -191,14 +191,13 @@ namespace gear2d {
       link(parameter<basetype> * target = 0, component::base * writer = 0)
       : target(target)
       , writer(writer)
-      { modinfo("link"); }
+      { }
       
       /**
        * @brief Writes into this parameter link.
        * @throw badlink When you try to write from a unlinked link
        */
       link<basetype> & operator=(const basetype & source) throw (gear2d::badlink) {
-        moderr("link");
         if (target == 0) throw(gear2d::badlink());
         target->lastwrite = writer;
         target->set(source);
@@ -206,7 +205,6 @@ namespace gear2d {
       }
       
       link<basetype> & operator=(const link<basetype> & other) {
-        modinfo("link");
         target = other.target;
         writer = other.writer;
         return *this;
@@ -217,20 +215,17 @@ namespace gear2d {
        * @throw badlink When you try to read from a unlinked link
        */
       operator basetype() const throw (gear2d::badlink) {
-        moderr("link");
         if (target == 0) throw(gear2d::badlink());
         return target->get();
       }
       
       link<basetype> & operator +=(const basetype & source) {
-        moderr("link");
         target->lastwrite = writer;
         target->set(target->get() + source);
         return *this;
       }
       
       basetype operator*() {
-        moderr("link");
         if (target == 0) throw(gear2d::badlink());
         return ((basetype) target);
       }

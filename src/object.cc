@@ -84,7 +84,6 @@ namespace gear2d {
     component::base * oldc = deattach(newc->family());
     if (oldc != 0) {
       trace("Detaching old component", oldc->type());
-      delete oldc;
     }
     
     newc->owner = this;
@@ -146,7 +145,7 @@ namespace gear2d {
   void object::factory::load(object::type objtype, std::string filename) {
     modinfo("object-factory");
     /* open the file */
-    if (filename == "") filename = commonsig["objpath"] + objtype + ".yaml";
+    if (filename == "") filename = objpath + objtype + ".yaml";
     trace("Loading", objtype, "from", filename);
     std::ifstream fin(filename.c_str());
     if (!fin.is_open()) {

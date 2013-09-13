@@ -151,7 +151,8 @@ namespace gear2d {
         std::vector<std::string> paths;
         split(paths, compath, ',');
         for (size_t i = 0; i < paths.size(); i++) {
-          file = paths[i] + "/" + f + "/"; file += SOPREFIX; file += t + SOSUFFIX;
+          std::string & path = paths[i];
+          file = trim(path) + "/" + f + "/"; file += SOPREFIX; file += t + SOSUFFIX;
           trace("Trying to load", file);
           comhandler = SDL_LoadObject(file.c_str());
           if (!comhandler) {

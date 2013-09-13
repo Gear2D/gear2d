@@ -160,7 +160,12 @@ namespace gear2d {
     std::vector<object::type> objectlist;
     split(objectlist, (*config)["objects"], ' ');
     config->erase("objects");
-    
+
+    ofactory->objpath = (*config)["objpath"];
+    std::string & o = ofactory->objpath;
+    if (o[o.length()-1] != '/') o += '/';
+    config->erase("objpath");
+
     /* The rest is added to the object factory global parameters */
     ofactory->commonsig = *config;
     
@@ -180,6 +185,7 @@ namespace gear2d {
     int begin = 0, end = 0, dt = 0;
     started = true;
     while (started) {
+      trace("Loop.");
       dt = end - begin;
       begin = SDL_GetTicks();
       timediff delta = dt/1000.0f;
