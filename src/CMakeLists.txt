@@ -51,7 +51,7 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdparty/yaml-0.1.4/include/ ${SDL2_IN
 install(TARGETS gear2d main
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION lib
-		ARCHIVE DESTINATION lib
+		#ARCHIVE DESTINATION lib
 )
 
 install(FILES ${public_headers}
