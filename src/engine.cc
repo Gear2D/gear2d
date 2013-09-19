@@ -185,7 +185,7 @@ namespace gear2d {
     int begin = 0, end = 0, dt = 0;
     started = true;
     while (started) {
-      trace("Loop.");
+      //trace("Loop.");
       dt = end - begin;
       begin = SDL_GetTicks();
       timediff delta = dt/1000.0f;
