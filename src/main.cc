@@ -34,7 +34,12 @@ int main(int argc, char ** argv, char ** env) {
         }
         
         case 'f': {
-          gear2d::log::filter = (arg+2);
+          gear2d::log::filter.insert(arg+2);
+          break;
+        }
+
+        case 'i': {
+          gear2d::log::ignore.insert(arg+2);
           break;
         }
         
