@@ -144,7 +144,7 @@ namespace gear2d {
       
     private:
       static int indent;
-      static std::ostream logstream;
+      static std::ostream * logstream;
       static const char * logstring[];
 	  
       
@@ -165,8 +165,8 @@ namespace gear2d {
 #ifdef LOGTRACE 
     if (!check()) return *this;
     mark();
-    for (int i = 0; i < indent; i++) logstream << "  ";
-    logstream << logstring[level] << tracemodule << ": " << t << std::endl;
+    for (int i = 0; i < indent; i++) *logstream << "  ";
+    *logstream << logstring[level] << tracemodule << ": " << t << std::endl;
 #endif
     return *this;
   }
@@ -176,8 +176,8 @@ namespace gear2d {
 #ifdef LOGTRACE
     if (!check()) return *this;
     mark();
-    for (int i = 0; i < indent; i++) logstream << "  ";
-    logstream << logstring[level] << tracemodule << ": " << t1 << " " << t2 << std::endl;
+    for (int i = 0; i < indent; i++) *logstream << "  ";
+    *logstream << logstring[level] << tracemodule << ": " << t1 << " " << t2 << std::endl;
 #endif
     return *this;
   }
@@ -187,8 +187,8 @@ namespace gear2d {
 #ifdef LOGTRACE
     if (!check()) return *this;
     mark();
-    for (int i = 0; i < indent; i++) logstream << "  ";
-    logstream << logstring[level] << tracemodule << ": " << t1 << " " << t2 << " " << t3 << std::endl;
+    for (int i = 0; i < indent; i++) *logstream << "  ";
+    *logstream << logstring[level] << tracemodule << ": " << t1 << " " << t2 << " " << t3 << std::endl;
 #endif
     return *this;
   }
@@ -198,8 +198,8 @@ namespace gear2d {
 #ifdef LOGTRACE
     if (!check()) return *this;
     mark();
-    for (int i = 0; i < indent; i++) logstream << "  ";
-    logstream << logstring[level] << tracemodule << ": " << t1 << " " << t2 << " " << t3 << " " << t4 << std::endl;
+    for (int i = 0; i < indent; i++) *logstream << "  ";
+    *logstream << logstring[level] << tracemodule << ": " << t1 << " " << t2 << " " << t3 << " " << t4 << std::endl;
 #endif
     return *this;
   }
@@ -209,8 +209,8 @@ namespace gear2d {
 #ifdef LOGTRACE
     if (!check()) return *this;
     mark();
-    for (int i = 0; i < indent; i++) logstream << "  ";
-    logstream << logstring[level] << tracemodule << ": " << t1 << " " << t2 << " " << t3 <<  " " << t4 << " " << t5 << std::endl;
+    for (int i = 0; i < indent; i++) *logstream << "  ";
+    *logstream << logstring[level] << tracemodule << ": " << t1 << " " << t2 << " " << t3 <<  " " << t4 << " " << t5 << std::endl;
 #endif
     return *this;
   }
@@ -220,8 +220,8 @@ namespace gear2d {
 #ifdef LOGTRACE
     if (!check()) return *this;
     mark();
-    for (int i = 0; i < indent; i++) logstream << "  ";
-    logstream << logstring[level] << tracemodule << ": " << t1 << " " << t2 << " " << t3 <<  " " << t4 << " " << t5 << " " << t6 << std::endl;
+    for (int i = 0; i < indent; i++) *logstream << "  ";
+    *logstream << logstring[level] << tracemodule << ": " << t1 << " " << t2 << " " << t3 <<  " " << t4 << " " << t5 << " " << t6 << std::endl;
 #endif
     return *this;
   }

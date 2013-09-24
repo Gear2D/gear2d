@@ -9,8 +9,9 @@ using namespace gear2d;
 const char * log::logstring[] = { "", "E ", "W ", "I ", "" };
 
 void log::open(const std::string & filename) {
-  std::ofstream filestream(filename);
-  logstream.rdbuf(filestream.rdbuf());
+  std::ofstream * filestream = new std::ofstream(filename, std::ofstream::out | std::ofstream::trunc);
+  if (logstream != &std::cout) { logstream->flush(); delete logstream; }
+  logstream = filestream;
 }
 
 
@@ -26,8 +27,8 @@ log::log(const std::string & trace, const std::string & module, log::verbosity l
 
 void log::mark() {
   if (traced || !check() || globalverb < maximum) return;
-  for (int i = 0; i < indent; i++) logstream << "  ";
-  logstream << "[ In " << tracemodule << ": " << trace << std::endl;
+  for (int i = 0; i < indent; i++) *logstream << "  ";
+  *logstream << "[ In " << tracemodule << ": " << trace << std::endl;
   indent++;
   traced = true;
 }
@@ -50,8 +51,8 @@ bool log::check() {
 log::~log() {
   if ((globalverb < maximum && !traced) || trace.empty() || (!check())) return;
   indent--;
-  for (int i = 0; i < indent; i++) logstream << "  ";
-  logstream << "] Leaving " << tracemodule << ": " << trace << std::endl;
+  for (int i = 0; i < indent; i++) *logstream << "  ";
+  *logstream << "] Leaving " << tracemodule << ": " << trace << std::endl;
 }
 
 void log::module (const std::string & mod) {
@@ -60,7 +61,7 @@ void log::module (const std::string & mod) {
 
 
 
-std::ostream log::logstream(std::cout.rdbuf());
+std::ostream * log::logstream = &std::cout;
 int log::indent = 0;
 log::verbosity log::globalverb = log::error;
 std::set<std::string> log::filter;
