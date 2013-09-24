@@ -2,10 +2,17 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
 
 using namespace gear2d;
 
 const char * log::logstring[] = { "", "E ", "W ", "I ", "" };
+
+void log::open(const std::string & filename) {
+  std::ofstream filestream(filename);
+  logstream.rdbuf(filestream.rdbuf());
+}
+
 
 log::log(const std::string & trace, const std::string & module, log::verbosity level) 
   : trace(trace)

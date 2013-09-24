@@ -138,6 +138,9 @@ namespace gear2d {
       static verbosity globalverb; /*! global verbosity level of the logstream */
       static std::set<std::string> filter; /*! set of filter strings for module names */
       static std::set<std::string> ignore; /*! set of ignore filter strings for module names */
+    
+    public:
+      static void open(const std::string & filename);
       
     private:
       static int indent;

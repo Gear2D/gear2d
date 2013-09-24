@@ -48,6 +48,11 @@ int main(int argc, char ** argv, char ** env) {
           exit(0);
         }
         
+        case 'o': {
+          gear2d::log::open(arg+2);
+          break;
+        }
+        
         default: {
           printf("Unknown argument %s.\n", arg);
           help();
