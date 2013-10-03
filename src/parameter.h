@@ -214,9 +214,9 @@ namespace gear2d {
        * @brief Reads from this parameter link.
        * @throw badlink When you try to read from a unlinked link
        */
-      operator basetype() const throw (gear2d::badlink) {
+      operator const basetype & () const throw (gear2d::badlink) {
         if (target == 0) throw(gear2d::badlink());
-        return target->get();
+        return *(*target);
       }
       
       link<basetype> & operator +=(const basetype & source) {
