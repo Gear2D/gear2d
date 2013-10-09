@@ -204,9 +204,29 @@ namespace gear2d {
         return *this;
       }
       
-      link<basetype> & operator=(const link<basetype> & other) {
+      link<basetype> & operator=(link<basetype> && other) {
         target = other.target;
         writer = other.writer;
+        other.target = nullptr;
+        other.writer = nullptr;
+        return *this;
+      }
+      
+      link<basetype> & operator=(link<basetype> & other) {
+        if (target == 0) throw(gear2d::badlink());
+        target->lastwrite = writer;
+        target->set(other.target);
+        return *this;
+      }
+      
+      link<basetype> & operator=(const link<basetype> & other) {
+        if (target == 0) {
+          target = other.target;
+          writer = other.writer;
+        } else {
+          target->lastwrite = writer;
+          target->set(other.target);
+        }
         return *this;
       }
       

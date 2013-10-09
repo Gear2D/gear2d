@@ -213,13 +213,19 @@ namespace gear2d {
    * or int if raw is empty. Check your arguments.
    */
   template<typename datatype>
-  datatype eval(std::string raw, datatype def = datatype()) {
+  datatype eval(const std::string & raw, const datatype & def = datatype()) {
     std::stringstream sstr;
     datatype t;
     sstr << raw;
     sstr >> t;
     if (sstr.fail()) t = def;
     return t;
+  }
+  
+  template<>
+  inline std::string eval<std::string>(const std::string & raw, const std::string & def) {
+    if (raw.empty()) return def;
+    else return raw;
   }
 
 
