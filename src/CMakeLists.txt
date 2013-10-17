@@ -11,8 +11,9 @@ else (MSVC)
 endif ()
 
 if (WIN32)
-	message(STATUS "Packaging SDL2 Libraries: ${SDL2_LIBRARY}")
-	install(FILES ${SDL2_LIBRARY}
+	message(STATUS "Packaging SDL2 Libraries: ${SDL2_LIBRARY_DIR}/SDL2.dll")
+	message(STATUS "SDL2 Library dir: ${SDL2_LIBRARY_DIR}")
+	install(FILES ${SDL2_LIBRARY_DIR}/SDL2.dll
 		DESTINATION bin
 	)
 	if (MINGW)
@@ -51,7 +52,7 @@ include_directories(${CMAKE_SOURCE_DIR}/thirdparty/yaml-0.1.4/include/ ${SDL2_IN
 install(TARGETS gear2d main
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION lib
-		#ARCHIVE DESTINATION lib
+		ARCHIVE DESTINATION lib
 )
 
 install(FILES ${public_headers}

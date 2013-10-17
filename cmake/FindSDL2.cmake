@@ -3,6 +3,7 @@
 # SDL2_LIBRARY, the name of the library to link against
 # SDL2_FOUND, if false, do not try to link to SDL2
 # SDL2_INCLUDE_DIR, where to find SDL.h
+# SDL2_LIBRARY_DIR, where to find SDL2.lib
 #
 # This module responds to the the flag:
 # SDL2_BUILDING_LIBRARY
@@ -132,6 +133,7 @@ ENDIF(MINGW)
 
 IF(SDL2_LIBRARY_TEMP)
 	SET(SDL2_ORIGINAL_LIBRARY ${SDL2_LIBRARY_TEMP})
+	get_filename_component(SDL2_LIBRARY_DIR ${SDL2_ORIGINAL_LIBRARY} PATH)
 
 	# For SDL2main
 	IF(NOT SDL2_BUILDING_LIBRARY)
@@ -165,6 +167,7 @@ IF(SDL2_LIBRARY_TEMP)
 	# Set the final string here so the GUI reflects the final state.
 	SET(SDL2_LIBRARY ${SDL2_ORIGINAL_LIBRARY} CACHE STRING "Where the SDL2 Library can be found")
 	SET(SDL2_LIBRARIES ${SDL2_LIBRARY_TEMP} CACHE STRING "All libraries to link against when using SDL2")
+	MESSAGE(STATUS "Found SDL2: ${SDL2_LIBRARY} (${SDL2_LIBRARIES})")
 	# Set the temp variable to INTERNAL so it is not seen in the CMake GUI
 	SET(SDL2_LIBRARY_TEMP "${SDL2_LIBRARY_TEMP}" CACHE INTERNAL "")
 	SET(SDL2_LIBRARY_TEMP "${SDL2_ORIGINAL_LIBRARY}" CACHE INTERNAL "")
