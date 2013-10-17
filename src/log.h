@@ -52,7 +52,7 @@ namespace gear2d {
     public:
       
       /**
-       * @enum log::verbosity
+       * @enum verbosity
        * @author Leonardo Guilherme de Freitas
        * @brief Verbosity level, the lowest, the less will be shown.
        */
@@ -227,11 +227,6 @@ namespace gear2d {
   }
 }
 
-/**
- * \def LOGTRACE
- * Macro used to activate or deactivate generation of logging code. Define it
- * to activate logging facilities.
- */
 #ifdef LOGTRACE
 
 #if defined(__GNUC__)
