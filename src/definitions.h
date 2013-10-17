@@ -26,9 +26,11 @@
 
 /* Adjust visibility modifiers depending on compiler */
 #if defined(_WIN32)
+# if !defined(__GNUC__)
 #   pragma warning(1 : 4519) /* VC++, please... */
 #   pragma warning(disable : 4514)
 #   pragma warning(disable : 4820);
+# endif
 #   if defined(gear2d_EXPORTS) /* defined by cmake, thanks god. */
 #       define  g2dapi  __declspec(dllexport) 
 #   else
