@@ -19,7 +19,8 @@ log::log(const std::string & trace, const std::string & module, log::verbosity l
   : trace(trace)
   , tracemodule(module)
   , level(level)
-  , traced(false) {
+  , traced(false)
+  , done(true) {
   
   if (!check()) return;
   mark();
@@ -31,6 +32,7 @@ void log::mark() {
   *logstream << "[ In " << tracemodule << ": " << trace << std::endl;
   indent++;
   traced = true;
+  done = true;
 }
 
 bool log::check() {

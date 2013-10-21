@@ -10,6 +10,21 @@
 #include <string>
 #include "definitions.h"
 
+#if defined(_WIN32)
+# if !defined(__GNUC__)
+#   pragma warning(1 : 4519) /* VC++, please... */
+#   pragma warning(disable : 4514)
+#   pragma warning(disable : 4820);
+# endif
+#   if defined(gear2d_EXPORTS) /* defined by cmake, thanks god. */
+#       define  logtraceapi  __declspec(dllexport) 
+#   else
+#       define  logtraceapi  __declspec(dllimport) 
+#   endif
+#else
+#   define logtraceapi
+#endif
+
 namespace gear2d {
   
   /**
@@ -48,7 +63,7 @@ namespace gear2d {
    * @endcode
    * 
    */
-  class g2dapi log {
+  class logtraceapi log {
     public:
       
       /**
@@ -92,6 +107,15 @@ namespace gear2d {
       
       void module(const std::string & module);
       
+      inline log & operator()(void);
+       
+      template <typename... Ts>
+      inline log & operator() (const Ts&... vs);
+      
+      template <typename T, typename... Ts>
+      inline log & operator()(const T & t1, const Ts&... vs);
+      
+#if 0
       /**
        * @brief Put on the output stream a message with one argument.
        * @param level Verbosity level of this message 
@@ -133,7 +157,8 @@ namespace gear2d {
        */
       template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
       inline log & operator()(const T1& t1, const T2& t2, const T3& t3, const T4& t4, const T5& t5, const T6& t6, verbosity level = info);
-      
+# endif
+
     public:
       static verbosity globalverb; /*! global verbosity level of the logstream */
       static std::set<std::string> filter; /*! set of filter strings for module names */
@@ -146,20 +171,46 @@ namespace gear2d {
       static int indent;
       static std::ostream * logstream;
       static const char * logstring[];
-	  
       
     private:
       std::string trace; /* trace string */
       std::string tracemodule; /* module string */
       verbosity level; /* level of this trace */
       bool traced; /* true if this log has been printed/traced */
+      bool done; /* true if line has ended */
       
     private:
       bool check(); /* check if it can log */
       void mark(); /* put the "entering in" when needed */
       
   };
+
+  log & log::operator()(void) {
+#ifdef LOGTRACE
+    *logstream << std::endl;
+    done = true;
+#endif
+    return *this;
+  }  
+
+  template<typename T, typename... Ts>
+  log & log::operator() (const T & t, const Ts&... vs) {
+#ifdef LOGTRACE 
+    if (!check()) return *this;
+    mark();
+    if (done) {
+      for (int i = 0; i < indent; i++) *logstream << "  ";
+      *logstream << logstring[level] << tracemodule << ": ";
+      done = false;
+    }
+    *logstream << t << " ";
+    operator()(vs...);
+    
+#endif
+    return *this;
+  }
   
+#if 0 
   template<typename T>
   log & log::operator() (const T & t, log::verbosity level) {
 #ifdef LOGTRACE 
@@ -225,7 +276,11 @@ namespace gear2d {
 #endif
     return *this;
   }
+  
+#endif
 }
+
+
 
 #ifdef LOGTRACE
 
