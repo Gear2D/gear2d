@@ -89,12 +89,14 @@ namespace gear2d {
    * @param value Value to be clamped
    * @param min Minimum value. If <code>value</code> is less than it, it will be set to <code>min</code>
    * @param max Maximum value. If <code>value</code> is greater than it, it will be set to <code>max</code>
+   * @return Clamped value
    * @relates gear2d::component::base
    */
   template <typename T>
-  void clamp(T & value, const T min, const T max) {
+  T & clamp(T & value, const T & min, const T & max) {
     if (value > max) value = max;
     if (value < min) value = min;
+    return value;
   }
   
   /**
