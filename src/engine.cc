@@ -11,6 +11,7 @@
 #include <cstdio>
 #include <ctime>
 #include "SDL.h"
+#include "SDL2_framerate.h"
 
 #include <algorithm>
 
@@ -85,7 +86,7 @@ namespace gear2d {
     //flags |= SDL_INIT_EVENTTHREAD;
 #endif
 
-	SDL_Init(flags);
+    SDL_Init(flags);
     SDL_SetEventFilter((SDL_EventFilter)eventfilter, 0);
     config = new std::map<std::string, std::string>;
     
@@ -181,16 +182,18 @@ namespace gear2d {
   int engine::run() {
     // make sure we init
     init();
-    modinfo("engine");
+    modinfo("engine-run");
     int begin = 0, end = 0, dt = 0;
     started = true;
+    FPSmanager fps;
+    SDL_initFramerate(&fps);
     while (started) {
       //trace("Loop.");
       dt = end - begin;
       begin = SDL_GetTicks();
       timediff delta = dt/1000.0f;
-      
-      if (dt < 60/1000.0f) SDL_Delay(60/1000.0f - dt);
+      SDL_framerateDelay(&fps);
+      SDL_setFramerate(&fps, 60);
       SDL_PumpEvents();
       
       for (std::set<object::id>::iterator i = destroyedobj->begin(); i != destroyedobj->end(); i++) {
@@ -217,14 +220,17 @@ namespace gear2d {
       
       /* now update pipeline accordingly */
       std::map<component::family, std::set<component::base *> >::iterator comtpit;
+      int i = 0;
       for (comtpit = components->begin(); comtpit != components->end(); comtpit++) {
         component::family f = comtpit->first;
         std::set<component::base *> & list = comtpit->second;
         for (std::set<component::base*>::iterator comit = list.begin(); comit != list.end(); comit++) {
+          i++;
           (*comit)->update(delta, begin);
         }
       }
-
+      
+      //trace("I have updated", i, "components");
       /* no components, quit the engine */
       if (components->empty()) started = false;
       
@@ -234,7 +240,6 @@ namespace gear2d {
         started = true;
       }
       
-      SDL_Delay(2);
       end = SDL_GetTicks();
     }
     

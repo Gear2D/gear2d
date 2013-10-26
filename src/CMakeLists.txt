@@ -36,7 +36,7 @@ add_definitions(-std=c++11)
 add_definitions(-DYAML_DECLARE_STATIC -Wall)
 add_library(gear2d SHARED engine.cc component.cc object.cc parameter.cc log.cc sigfile.cc ${public_headers})
 #source_group("Header Files" FILES ${public_headers})
-target_link_libraries(gear2d ${YAML_LIBRARY} ${SDL2_LIBRARIES})
+target_link_libraries(gear2d ${YAML_LIBRARY} ${SDL2_LIBRARIES} SDL2_framerate)
 add_dependencies(gear2d yaml)
 
 # engine executable
@@ -46,7 +46,7 @@ target_link_libraries(main gear2d)
 set_target_properties(main PROPERTIES OUTPUT_NAME gear2d BUILD_WITH_INSTALL_RPATH true)
 
 # include dirs so we can #include properly
-include_directories(${CMAKE_SOURCE_DIR}/thirdparty/yaml-0.1.4/include/ ${SDL2_INCLUDE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/thirdparty/yaml-0.1.4/include/  ${CMAKE_SOURCE_DIR}/thirdparty/SDL2_framerate/ ${SDL2_INCLUDE_DIR})
 
 # install rules for the executable
 install(TARGETS gear2d main
