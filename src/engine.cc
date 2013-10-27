@@ -187,13 +187,14 @@ namespace gear2d {
     started = true;
     FPSmanager fps;
     SDL_initFramerate(&fps);
+    SDL_setFramerate(&fps, 90);
     while (started) {
       //trace("Loop.");
       dt = end - begin;
       begin = SDL_GetTicks();
       timediff delta = dt/1000.0f;
       SDL_framerateDelay(&fps);
-      SDL_setFramerate(&fps, 60);
+      
       SDL_PumpEvents();
       
       for (std::set<object::id>::iterator i = destroyedobj->begin(); i != destroyedobj->end(); i++) {

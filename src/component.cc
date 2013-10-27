@@ -171,7 +171,8 @@ namespace gear2d {
       }
       
       /* get the builder function */
-      factory::builder combuilder = (factory::builder)SDL_LoadFunction(comhandler, "build");
+      std::string buildername = s.family + "_" + s.type + "_build";
+      factory::builder combuilder = (factory::builder)SDL_LoadFunction(comhandler, buildername.c_str());
       if (combuilder == 0) {
         trace("I cannot recognize", file, "as an valid gear2d component. It will NOT be loaded", log::error);
         trace("Error was:", SDL_GetError());
