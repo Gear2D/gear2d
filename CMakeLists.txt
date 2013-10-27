@@ -53,7 +53,6 @@ message(STATUS "Building Gear2D game engine version ${Gear2D_VERSION} as ${CMAKE
 
 add_subdirectory(src)
 add_subdirectory(doc)
-add_subdirectory(thirdparty)
 
 include(InstallRequiredSystemLibraries)
 
