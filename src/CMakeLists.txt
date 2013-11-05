@@ -33,10 +33,13 @@ set(SDL2_framerate_source "${CMAKE_SOURCE_DIR}/thirdparty/SDL2_framerate/SDL2_fr
 
 if(CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_CXX_FLAGS -std=c++11)
+	if (UNIX)
+		add_definitions(-fPIC)
+	 endif()
 endif()
 
 # gear2d library
-add_definitions(-Wall -fPIC)
+add_definitions(-Wall)
 
 add_library(yaml OBJECT ${yaml_sources})
 set_target_properties(yaml PROPERTIES COMPILE_FLAGS "-w -fPIC -DYAML_DECLARE_STATIC -DYAML_VERSION_MAJOR=0 -DYAML_VERSION_MINOR=1 -DYAML_VERSION_PATCH=4 -DYAML_VERSION_STRING=\\\"0.1.4\\\"")
@@ -52,6 +55,8 @@ add_library(gear2d-static
   $<TARGET_OBJECTS:gear2d-objects>
   $<TARGET_OBJECTS:yaml> ${SDL2_framerate_source} ${public_headers}
 )
+
+set_target_properties(gear2d-objects PROPERTIES COMPILE_FLAGS "-Dgear2d_EXPORTS")
 
 target_link_libraries(gear2d ${SDL2_LIBRARIES})
 
