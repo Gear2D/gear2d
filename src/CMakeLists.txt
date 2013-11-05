@@ -69,7 +69,7 @@ include_directories(
 )
 
 # install rules for the executable
-install(TARGETS gear2d main
+install(TARGETS gear2d main gear2d-static
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
