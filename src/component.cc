@@ -144,7 +144,19 @@ namespace gear2d {
       f = s.family;
       t = s.type;
       if (t == "") t = f;
+      std::string buildername = s.family + "_" + s.type + "_build";
       
+      factory::builder combuilder = (factory::builder)SDL_LoadFunction(NULL, buildername.c_str());
+      if (combuilder == nullptr) {
+        trace("Could not find ", buildername, "internally. Will need to load libraries");
+      } else {
+        trace("Found", buildername, "internally at address", combuilder);
+        handlers[t] = nullptr;
+        builders[f][t] = combuilder;
+        return;
+      }
+        
+        
       factory::handler comhandler = 0;
       /* TODO: check if we're in windows or linux */
       if (file == "") {
@@ -171,8 +183,8 @@ namespace gear2d {
       }
       
       /* get the builder function */
-      std::string buildername = s.family + "_" + s.type + "_build";
-      factory::builder combuilder = (factory::builder)SDL_LoadFunction(comhandler, buildername.c_str());
+      
+      combuilder = (factory::builder)SDL_LoadFunction(comhandler, buildername.c_str());
       if (combuilder == 0) {
         trace("I cannot recognize", file, "as an valid gear2d component. It will NOT be loaded", log::error);
         trace("Error was:", SDL_GetError());

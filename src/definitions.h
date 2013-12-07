@@ -192,6 +192,17 @@ namespace gear2d {
   }
   
   /**
+   * @brief Transform a string to its lower-case version.
+   * @param target String that will be transformed
+   * @warning This funcion is not locale-safe!
+   */
+  static inline std::string & strtolower(std::string & target) {
+    std::transform(target.begin(), target.end(), target.begin(), ::tolower);
+    return target;
+  }
+  
+  
+  /**
    * @fn datatype eval(std::string raw, datatype def)
    * @brief Evaluate a string to a type
    * @param raw Raw string to be evaluated
@@ -231,10 +242,17 @@ namespace gear2d {
     if (raw.empty()) return def;
     else return raw;
   }
-
+  
+  template<>
+  inline bool eval<bool>(const std::string & raw, const bool & def) {
+    if (raw.empty()) return def;
+    std::string e = raw; strtolower(e);
+    if (e.compare("true") == 0 || raw[0] == '1') return true;
+    else return false;
+  }
 
  /**
-  * @brief Left trim a std::string
+  * @brief Left trim a std::string.
   * @param s the string to trim
   * @return s left trimmed */
   static inline std::string &ltrim(std::string &s) {

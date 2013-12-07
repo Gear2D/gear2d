@@ -136,6 +136,43 @@ namespace gear2d {
       friend class gear2d::engine;
       friend class gear2d::component::factory;
       
+      public:
+        /**
+         * @brief Class that helps parsing signatures.
+         * Mainly used in the setup() phase of a component,
+         * this class uses the object signature, the parameter
+         * name and its default value to initialize a gear2d::link.
+         * 
+         * @example
+         * @code
+         * sigparser p(sig, this);
+         * link<int> x = p.init("x", 0);
+         * @endcode
+         */
+        class sigparser {
+          private:
+            object::signature & sig;
+            component::base & com;
+
+          public:
+            sigparser(object::signature & sig, component::base * com)
+              : sig(sig)
+              , com(*com)
+            { }
+
+            template <typename datatype>
+            link<datatype> init(std::string pid, const datatype & def = datatype()) {
+              return com.fetch<datatype>(pid, eval<datatype>(sig[pid], def));
+            }
+
+            link<std::string> init(std::string pid, std::string def = std::string("")) {
+              auto it = sig.find(pid);
+              if (it != sig.end()) def = it->second;
+              return com.fetch<std::string>(pid, def);
+            }
+        };
+
+      
       protected:
         base();
         
