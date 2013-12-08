@@ -164,7 +164,7 @@ namespace gear2d {
 
     ofactory->objpath = (*config)["objpath"];
     std::string & o = ofactory->objpath;
-    if (o[o.length()-1] != '/') o += '/';
+    if (o.size() > 0 && o[o.length()-1] != '/') o += '/';
     config->erase("objpath");
 
     /* The rest is added to the object factory global parameters */

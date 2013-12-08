@@ -7,13 +7,51 @@
 using namespace gear2d;
 
 const char * log::logstring[] = { "", "E ", "W ", "I ", "" };
+#ifdef ANDROID
+// Based on http://stackoverflow.com/questions/8870174/is-stdcout-usable-in-android-ndk
+#include <android/log.h>
+class androidbuf: public std::streambuf {
+public:
+    enum { bufsize = 128 };
+    androidbuf() { this->setp(buffer, buffer + bufsize - 1); }
+private:
+    int overflow(int c) {
+        if (c == traits_type::eof()) {
+            *this->pptr() = traits_type::to_char_type(c);
+            this->sbumpc();
+        }
+        return this->sync()? traits_type::eof(): traits_type::not_eof(c);
+    }
+    int sync() {
+        int rc = 0;
+        if (this->pbase() != this->pptr()) {
+            __android_log_print(ANDROID_LOG_INFO,
+                               "Native",
+                               "%s",
+                               std::string(this->pbase(),
+                                           this->pptr() - this->pbase()).c_str());
+            rc = 0;
+            this->setp(buffer, buffer + bufsize - 1);
+        }
+        return rc;
+    }
+    char buffer[bufsize];
+};
+
+static void initandroidlog() {
+  static bool initialized = false;
+  if (!initialized) {
+    std::cout.rdbuf(new androidbuf);
+    initialized = true;
+  }
+}
+#endif
 
 void log::open(const std::string & filename) {
   std::ofstream * filestream = new std::ofstream(filename, std::ofstream::out | std::ofstream::trunc);
   if (logstream != &std::cout) { logstream->flush(); delete logstream; }
   logstream = filestream;
 }
-
 
 log::log(const std::string & trace, const std::string & module, log::verbosity level) 
   : trace(trace)
@@ -44,6 +82,10 @@ bool log::check() {
   /* check to see if module is on the ignore list */
   if (ignore.find(tracemodule) != ignore.end())
     return false;
+
+#ifdef ANDROID
+   initandroidlog();
+#endif
 
   return true;
 }

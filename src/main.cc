@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef __ANDROID__
+#define main SDL_main
+#endif
+
 
 void help() {
   printf("gear2d [options] [scene-file]\n");
@@ -14,6 +18,9 @@ void help() {
          "\t-f<filter>: Filter string to apply to the logging messages \n");
 }
 
+#ifdef __cplusplus
+extern "C" 
+#endif
 int main(int argc, char ** argv, char ** env) {
   char * arg = 0;
   const char * scene = "gear2d.yaml";
@@ -63,6 +70,11 @@ int main(int argc, char ** argv, char ** env) {
     else scene = arg;
     argc--;
   }
+
+// Harder to use commandline on android to control logging.
+#if defined(LOGTRACE) && defined(ANDROID)
+  gear2d::log::globalverb = gear2d::log::maximum;
+#endif
 
   gear2d::engine::load(scene);
   return gear2d::engine::run();

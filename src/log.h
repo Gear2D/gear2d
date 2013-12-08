@@ -26,7 +26,7 @@
 #endif
 
 namespace gear2d {
-  
+
   /**
    * @class gear2d::log
    * @author Leonardo Guilherme de Freitas.

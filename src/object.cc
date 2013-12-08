@@ -146,11 +146,6 @@ namespace gear2d {
     /* open the file */
     if (filename == "") filename = objpath + objtype + ".yaml";
     trace("Loading", objtype, "from", filename);
-    std::ifstream fin(filename.c_str());
-    if (!fin.is_open()) {
-      trace("Unable to load", objtype, log::error);
-      return;
-    }
     
     /* initialize yaml parser */
     /* YAML::Parser parser(fin);
@@ -162,15 +157,17 @@ namespace gear2d {
       node >> sig;
     }
     */
-    
+    // TODO: figure out a better way to fail from sigfile::load
     object::signature & sig = signatures[objtype];
-    sigfile::load(filename, sig);
+    bool sigloaded = sigfile::load(filename, sig);
+    if (!sigloaded) {
+      return;
+    }
     
     sig["name"] = objtype;
     
     // add the global signature
     sig.insert(commonsig.begin(), commonsig.end());
-    fin.close();
   }
   
   object::id object::factory::locate(object::type objtype) {
@@ -233,10 +230,9 @@ namespace gear2d {
   }
   
   object::id object::factory::build(gear2d::object::type objtype) {
-//     cout << "debug: building " << objtype << endl;
-    /* first determine if this object type is loaded... */
+    moderr("object-factory");
     if (signatures.find(objtype) == signatures.end()) {
-//       std::cerr << "(Object factory) Object type " << objtype << " not found." << std::endl;
+      trace("Could not load object", objtype);
       return 0;
     }
     

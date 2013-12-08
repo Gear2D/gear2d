@@ -1,12 +1,15 @@
 #include <stdio.h>
+#include <SDL_rwops.h>
 #include <string>
 #include <iostream>
+#include <sstream>
 #include <list>
 #include "yaml.h"
 
 
 #include "sigfile.h"
-
+#include "SDL.h"
+#include "log.h"
 
 
 using namespace std;
@@ -40,7 +43,7 @@ class parser {
     };
       
   public:
-    static void load(const string & filename, map<string, string> & target);
+    static bool load(const string & filename, map<string, string> & target);
     
   private /* methods */:
     void process(yaml_event_t & event);
@@ -54,43 +57,70 @@ class parser {
 };
 
 
-void parser::load(const string & filename, map< string, string >& target) {
-  parser p(filename, target);
+bool parser::load(const string & filename, map< string, string >& target) {
+  try {
+    parser p(filename, target);
+  } catch (int i) {
+    return false;
+  }
 }
 
+int rwgetc(SDL_RWops * rw) {
+  unsigned char c;
+  return (SDL_RWread(rw, &c, sizeof(char), 1) == 1) ? (int) c : EOF;
+}
+
+// slighly modified K&R implementation of fgets with rwops
+char * rwgets(char * s, size_t n, SDL_RWops * rw) {
+  int c;
+  char * cs = s;
+  while (--n > 0 && (c = rwgetc(rw)) != EOF) {
+    if ((*cs++ = c) == '\n')
+      break;
+  }
+  
+  *cs = '\0';
+  return (c == EOF && cs == s ? NULL : s);
+}
 
 parser::parser(const string & filename, map<string, string> & target)
 : target(target)
 , level()
 , previous(parser::submap)
 , state(parser::unknown) {
+  modinfo("sigfile-parser");
   yaml_parser_t p;
   yaml_event_t event;
   
   /* Initialize parser */
   if(!yaml_parser_initialize(&p))
-    fputs("Failed to initialize parser!\n", stderr);
-  
-  FILE * fh = fopen(filename.c_str(), "r");
-  if(fh == NULL)
-    fputs("Failed to open file!\n", stderr);
-  
-  yaml_parser_set_input_file(&p, fh);
+    trace("Failed to initialize parser!");
+
+  static char buf[1024];
+  SDL_RWops * rw;
+  rw = SDL_RWFromFile(filename.c_str(), "r");
+  stringstream sstr;
+  sstr.str();
+  while (rwgets(buf, sizeof(buf), rw) != NULL) {
+    sstr << buf;
+  }
+  SDL_RWclose(rw);
+  string inputstring = sstr.str();
+
+  yaml_parser_set_input_string(&p, (unsigned char *)inputstring.c_str(), inputstring.size());
   
   do {
     if (!yaml_parser_parse(&p, &event)) {
-      printf("Parser error %d\n", p.error);
+      trace("YAML Parser error:", p.problem, "value (as int):", p.problem_value, "offset in file:", p.problem_offset);
       yaml_event_delete(&event);
       yaml_parser_delete(&p);
-      fclose(fh);
-      exit(EXIT_FAILURE); // throw things at people here.
+      throw(p.problem_value);
     }
     process(event);
   } while (event.type != YAML_STREAM_END_EVENT);
   
   yaml_event_delete(&event);
   yaml_parser_delete(&p);
-  fclose(fh);
 }
 
 void parser::process(yaml_event_t & event) {
@@ -150,12 +180,12 @@ parser::~parser() {
   
 }
 
-void sigfile::load(const string & file, map<string, string> & target) {
-  parser::load(file, target);
+bool sigfile::load(const string & file, map<string, string> & target) {
+  return parser::load(file, target);
 }
 
-void sigfile::save(const string & target, const map< string, string >& source) {
-
+bool sigfile::save(const string & target, const map< string, string >& source) {
+  return false;
 }
 
 
