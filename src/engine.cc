@@ -246,6 +246,12 @@ namespace gear2d {
     
     delete ofactory;
     delete cfactory;
-	return 0;
+    SDL_Quit();
+    return 0;
   }
+
+  int engine::quit() {
+    started = false;
+  }
+
 }

@@ -12,7 +12,7 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/thirdparty/yaml-0.1.4/include \
   
 
 
-LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
+LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/src
 
 LOCAL_SRC_FILES := \
 	$(subst $(LOCAL_PATH)/,, \

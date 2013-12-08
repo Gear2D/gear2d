@@ -145,10 +145,17 @@ namespace gear2d {
       t = s.type;
       if (t == "") t = f;
       std::string buildername = s.family + "_" + s.type + "_build";
-      
-      factory::builder combuilder = (factory::builder)SDL_LoadFunction(NULL, buildername.c_str());
+
+#ifdef ANDROID
+      void * handle = SDL_LoadObject("libmain.so");
+#else
+      void * handle = NULL;
+#endif
+
+      factory::builder combuilder = (factory::builder)SDL_LoadFunction(handle, buildername.c_str());
       if (combuilder == nullptr) {
         trace("Could not find ", buildername, "internally. Will need to load libraries");
+        trace("Error was:", SDL_GetError());
       } else {
         trace("Found", buildername, "internally at address", combuilder);
         handlers[t] = nullptr;

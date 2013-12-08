@@ -63,6 +63,7 @@ bool parser::load(const string & filename, map< string, string >& target) {
   } catch (int i) {
     return false;
   }
+  return true;
 }
 
 int rwgetc(SDL_RWops * rw) {

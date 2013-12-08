@@ -88,6 +88,13 @@ namespace gear2d {
         * no game components to run */
        static int run();
        
+       /**
+        * @brief Quits the engine.
+        * 
+        * Whenever possible, the engine will quit itself.
+        */
+       static int quit();
+       
     private:
       engine() { };
       
