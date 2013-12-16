@@ -151,24 +151,41 @@ namespace gear2d {
          */
         class sigparser {
           private:
-            object::signature & sig;
-            component::base & com;
+            object::signature * sig;
+            component::base * com;
 
           public:
             sigparser(object::signature & sig, component::base * com)
-              : sig(sig)
-              , com(*com)
+              : sig(&sig)
+              , com(com)
+            { }
+            
+            sigparser()
+              : sig(nullptr)
+              , com(nullptr)
             { }
 
+            std::string & operator[](const std::string & k) {
+              return (*sig)[k];
+            }
+            
             template <typename datatype>
             link<datatype> init(std::string pid, const datatype & def = datatype()) {
-              return com.fetch<datatype>(pid, eval<datatype>(sig[pid], def));
+              if (sig == nullptr || com == nullptr) throw evil("sigparser not initialized!");
+              
+              auto it = (*sig).find(pid);
+              if (it != (*sig).end()) {
+                return (*com).fetch<datatype>(pid, eval<datatype>(it->second, def));
+              } else {
+                return (*com).fetch<datatype>(pid, def);
+              }
             }
 
             link<std::string> init(std::string pid, std::string def = std::string("")) {
-              auto it = sig.find(pid);
-              if (it != sig.end()) def = it->second;
-              return com.fetch<std::string>(pid, def);
+              if (sig == nullptr || com == nullptr) throw evil("sigparser not initialized!");
+              auto it = (*sig).find(pid);
+              if (it != (*sig).end()) def = it->second;
+              return (*com).fetch<std::string>(pid, def);
             }
         };
 
