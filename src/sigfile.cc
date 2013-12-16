@@ -89,7 +89,7 @@ parser::parser(const string & filename, map<string, string> & target)
 , level()
 , previous(parser::submap)
 , state(parser::unknown) {
-  modinfo("sigfile-parser");
+  moderr("sigfile-parser");
   yaml_parser_t p;
   yaml_event_t event;
   
@@ -112,7 +112,7 @@ parser::parser(const string & filename, map<string, string> & target)
   
   do {
     if (!yaml_parser_parse(&p, &event)) {
-      trace("YAML Parser error:", p.problem, "value (as int):", p.problem_value, "offset in file:", p.problem_offset);
+      trace(filename, "line:", p.problem_mark.line, "column:", p.problem_mark.column, p.problem, p.context);
       yaml_event_delete(&event);
       yaml_parser_delete(&p);
       throw(p.problem_value);
