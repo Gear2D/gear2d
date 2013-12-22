@@ -26,9 +26,9 @@ using std::endl;
 
 /** Macros to ease the process of declaring a new component */
 #if defined (_WIN32) && defined (_MSC_VER)
-#  define g2dcomponent(x, g2dfamily, g2dtype) extern "C" { __declspec(dllexport) component::base * g2dfamily##_##g2dtype##_##build() { return new x; } }
+#  define g2dcomponent(x, g2dfamily, g2dtype) extern "C" { __declspec(dllexport) gear2d::component::base * g2dfamily##_##g2dtype##_##build() { return new x; } }
 #else
-#  define g2dcomponent(x, g2dfamily, g2dtype) extern "C" { component::base * g2dfamily##_##g2dtype##_##build() { return new x; } }
+#  define g2dcomponent(x, g2dfamily, g2dtype) extern "C" { gear2d::component::base * g2dfamily##_##g2dtype##_##build() { return new x; } }
 #endif
 
 
