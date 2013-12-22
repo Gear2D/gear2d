@@ -4,11 +4,11 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 message(FATAL_ERROR "CMake generation for gear2d not allowed within the source directory! 
 Remove the CMakeCache.txt file and try again from another folder, e.g.: 
 
-	rm CMakeCache.txt 
-	cd ..
-	mkdir build
-	cd build
-	cmake -G \"Unix Makefiles\" ../gear2d
+  rm CMakeCache.txt 
+  cd ..
+  mkdir build
+  cd build
+  cmake -G \"Unix Makefiles\" ../gear2d
 ")
 endif()
 
@@ -87,3 +87,28 @@ else()
 endif()
 
 include(CPack)
+
+# configure the gear2d-config stuff
+if (UNIX)
+  set(CMAKECONFIG_INSTALL_DIR "lib/${PROJECT_NAME}/cmake" CACHE STRING "Where ${PROJECT_NAME}-config.cmake and companions will be installed")
+elseif(WIN32)
+  set(CMAKECONFIG_INSTALL_DIR "cmake"  CACHE STRING "Where ${PROJECT_NAME}-config.cmake and companions will be installed")
+elseif(APPLE)
+  set(CMAKECONFIG_INSTALL_DIR "cmake" CACHE STRING "Where ${PROJECT_NAME}-config.cmake and companions will be installed")
+endif()
+
+set(INCLUDE_INSTALL_DIR include/gear2d)
+set(LIB_INSTALL_DIR lib)
+
+include(CMakePackageConfigHelpers)
+configure_package_config_file(cmake/gear2d-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/gear2d-config.cmake
+                              INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+                              PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR)
+write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/gear2d-config-version.cmake
+                                 VERSION ${Gear2D_VERSION}
+                                 COMPATIBILITY SameMajorVersion)
+install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/gear2d-config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/gear2d-config-version.cmake
+        ${CMAKE_SOURCE_DIR}/cmake/gear2d-macros.cmake
+        DESTINATION ${CMAKECONFIG_INSTALL_DIR} )
