@@ -4,7 +4,7 @@ set(Gear2D_VERSION "@Gear2D_VERSION@")
 
 set_and_check(Gear2D_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
 set_and_check(Gear2D_LIBRARY_DIR "@PACKAGE_LIB_INSTALL_DIR@")
-set_and_check(Gear2D_COMPONENT_PREFIX "@PACKAGE_LIB_INSTALL_DIR@/gear2d")
+set(Gear2D_COMPONENT_PREFIX "@PACKAGE_LIB_INSTALL_DIR@/gear2d/component/")
 
 check_required_components(Gear2D)
 
