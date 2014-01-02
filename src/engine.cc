@@ -252,6 +252,7 @@ namespace gear2d {
 
   int engine::quit() {
     started = false;
+    return 0;
   }
 
 }
