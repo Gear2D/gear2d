@@ -107,6 +107,15 @@ namespace gear2d {
       
       void module(const std::string & module);
       
+      template <typename... Ts>
+      inline log & i(const Ts&... vs);
+      
+      template <typename... Ts>
+      inline log & e(const Ts&... vs);
+      
+      template <typename... Ts>
+      inline log & w(const Ts&... vs);
+      
       inline log & operator()(void);
        
       template <typename... Ts>
@@ -184,7 +193,40 @@ namespace gear2d {
       void mark(); /* put the "entering in" when needed */
       
   };
-
+  
+  template <typename... Ts>
+  inline log & log::i(const Ts&... vs) {
+#ifdef LOGTRACE
+    auto previous = level;
+    level = gear2d::log::info;
+    (*this)(vs...);
+    level = previous;
+#endif
+    return *this;
+  }
+  
+  template <typename... Ts>
+  inline log & log::w(const Ts&... vs) {
+#ifdef LOGTRACE
+    auto previous = level;
+    level = gear2d::log::warning;
+    (*this)(vs...);
+    level = previous;
+#endif
+    return *this;
+  }
+  
+  template <typename... Ts>
+  inline log & log::e(const Ts&... vs) {
+#ifdef LOGTRACE
+    auto previous = level;
+    level = gear2d::log::error;
+    (*this)(vs...);
+    level = previous;
+#endif
+    return *this;
+  }
+  
   log & log::operator()(void) {
 #ifdef LOGTRACE
     *logstream << std::endl;
