@@ -78,5 +78,5 @@ int main(int argc, char ** argv, char ** env) {
 
   gear2d::engine::load(scene);
   int running = gear2d::engine::run();
-  exit(0);
+  exit(running);
 }
