@@ -249,9 +249,9 @@ namespace gear2d {
       }
       
       basetype operator*() {
-        if (target == 0) 
+        if (target == nullptr) 
           throw(gear2d::badlink());
-        return ((basetype) target);
+        return ((basetype) *target);
       }
   };
   
@@ -323,13 +323,8 @@ namespace gear2d {
        * @warning There's no type checking or whatsoever.
        */
       virtual void set(const parameterbase * other) throw (evil) {
-        modinfo("engine");
         const parameter<datatype> * p = static_cast<const parameter<datatype> *>(other);
-        if (pid != p->pid) {
-          trace("Something is definetly wrong.", pid, " is being set with ", p->pid, log::error);
-        }
         *raw = *(p->raw);
-//         set(*(p->raw));
       }
       /**
        * @brief Clone a parameter.
