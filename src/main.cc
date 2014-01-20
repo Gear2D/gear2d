@@ -73,7 +73,7 @@ int main(int argc, char ** argv, char ** env) {
 
 // Harder to use commandline on android to control logging.
 #if defined(LOGTRACE) && defined(ANDROID)
-  gear2d::log::globalverb = gear2d::log::maximum;
+  gear2d::log::globalverb = gear2d::log::minimum;
 #endif
 
   gear2d::engine::load(scene);
