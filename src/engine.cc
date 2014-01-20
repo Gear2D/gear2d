@@ -135,6 +135,12 @@ namespace gear2d {
   void engine::load(std::map<std::string, std::string> & cfg) {
     modinfo("engine");
     init(true);
+    for (auto p : cfg) {
+      if (p.second[0] == '$') {
+        string ref = p.second.substr(1, string::npos);
+        p.second = cfg[ref];
+      }
+    }
     *config = cfg;
     
     /* get component-search path */
@@ -172,7 +178,7 @@ namespace gear2d {
     
     /* and now build the pointed objects */
     for (size_t i = 0; i < objectlist.size(); i++) {
-      ofactory->load(objectlist[i]);
+      ofactory->load(objectlist[i], false);
       ofactory->build(objectlist[i]);
     }
     if (nextscene) delete nextscene;
