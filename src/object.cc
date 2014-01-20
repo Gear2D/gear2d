@@ -141,22 +141,17 @@ namespace gear2d {
 
   }
   
-  void object::factory::load(object::type objtype, std::string filename) {
+  void object::factory::load(object::type objtype, bool reload) {
     modinfo("object-factory");
-    /* open the file */
-    if (filename == "") filename = objpath + objtype + ".yaml";
-    trace("Loading", objtype, "from", filename);
-    
-    /* initialize yaml parser */
-    /* YAML::Parser parser(fin);
-    YAML::Node node;
-    
-    signature & sig = signatures[objtype];
-    while (parser.GetNextDocument(node)) {
-      trace("node type:", node.Type());
-      node >> sig;
+    if (signatures.find(objtype) != signatures.end() && !reload) {
+      trace(objtype, "Already loaded.");
+      return;
     }
-    */
+    
+    /* open the file */
+    string filename = objpath + objtype + ".yaml";
+    trace("Loading", objtype, "from", filename);
+
     // TODO: figure out a better way to fail from sigfile::load
     object::signature & sig = signatures[objtype];
     bool sigloaded = sigfile::load(filename, sig);
@@ -165,6 +160,23 @@ namespace gear2d {
     }
     
     sig["name"] = objtype;
+    
+    /* parse possible references */
+    for (auto p : sig) {
+      if (p.second[0] == '$') {
+        string ref = p.second.substr(1, string::npos);
+
+        // find reference first in local file
+        auto it = sig.find(ref);
+        if (it != sig.end()) {
+          sig[p.first] = it->second;
+        } else {
+          // local reference not found, load from commonsig.
+          sig[p.first] = commonsig[ref];
+        }
+        trace("Replacing", p.first, "with", ref, "=>", sig[p.first], ".");
+      }
+    }
     
     // add the global signature
     sig.insert(commonsig.begin(), commonsig.end());

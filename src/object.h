@@ -90,7 +90,7 @@ namespace gear2d {
              * Note that if the file is not specified, a file
              * named \<objtype\>.yaml is searched. If that file
              * is not found, nothing is done. */
-            void load(object::type objtype, std::string filename = "");
+            void load(object::type objtype, bool reload = false);
             
             /**
              * @brief Locate an object that has been loaded by this engine.
