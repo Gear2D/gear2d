@@ -62,7 +62,6 @@ namespace gear2d {
     }
     
     void base::destroy() {
-      modinfo(family() + "/" + type() + "@" + owner->name());
       owner->destroy();
     }
     
