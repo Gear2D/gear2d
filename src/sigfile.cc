@@ -73,6 +73,7 @@ int rwgetc(SDL_RWops * rw) {
 
 // slighly modified K&R implementation of fgets with rwops
 char * rwgets(char * s, size_t n, SDL_RWops * rw) {
+  if (rw == NULL) return NULL;
   int c;
   char * cs = s;
   while (--n > 0 && (c = rwgetc(rw)) != EOF) {
@@ -100,6 +101,11 @@ parser::parser(const string & filename, map<string, string> & target)
   static char buf[1024];
   SDL_RWops * rw;
   rw = SDL_RWFromFile(filename.c_str(), "r");
+  if (rw == NULL) {
+    trace("Failed to open file", filename);
+    throw(evil(std::string("Unable to open file") + filename));
+  }
+
   stringstream sstr;
   sstr.str();
   while (rwgets(buf, sizeof(buf), rw) != NULL) {
@@ -183,6 +189,7 @@ parser::~parser() {
 
 bool sigfile::load(const string & file, map<string, string> & target) {
   bool error = parser::load(file, target);
+  return error;
 }
 
 bool sigfile::save(const string & target, const map< string, string >& source) {
