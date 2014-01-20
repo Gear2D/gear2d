@@ -103,7 +103,7 @@ parser::parser(const string & filename, map<string, string> & target)
   rw = SDL_RWFromFile(filename.c_str(), "r");
   if (rw == NULL) {
     trace("Failed to open file", filename);
-    throw(evil(std::string("Unable to open file") + filename));
+    throw(gear2d::evil(std::string("Unable to open file") + filename));
   }
 
   stringstream sstr;
