@@ -182,7 +182,7 @@ parser::~parser() {
 }
 
 bool sigfile::load(const string & file, map<string, string> & target) {
-  return parser::load(file, target);
+  bool error = parser::load(file, target);
 }
 
 bool sigfile::save(const string & target, const map< string, string >& source) {
