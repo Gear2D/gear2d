@@ -9,3 +9,10 @@ set(Gear2D_COMPONENT_PREFIX "@PACKAGE_LIB_INSTALL_DIR@/gear2d/component/")
 check_required_components(Gear2D)
 
 include(${CMAKE_CURRENT_LIST_DIR}/gear2d-macros.cmake)
+
+if (NOT TARGET gear2d)
+  include(${CMAKE_CURRENT_LIST_DIR}/gear2d-targets.cmake)
+endif()
+
+set(GEAR2D_LIBRARY gear2d)
+set(GEAR2D_STATIC_LIBRARY gear2d-static)

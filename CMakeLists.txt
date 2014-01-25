@@ -51,6 +51,8 @@ set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/lib)
 add_definitions(-DGEAR2D_VERSION="${Gear2D_VERSION}")
 message(STATUS "Building Gear2D game engine version ${Gear2D_VERSION} as ${CMAKE_BUILD_TYPE}")
 
+export(PACKAGE Gear2D)
+
 add_subdirectory(src)
 add_subdirectory(doc)
 
@@ -100,6 +102,7 @@ endif()
 set(INCLUDE_INSTALL_DIR include/gear2d)
 set(LIB_INSTALL_DIR lib)
 
+# Generate gear2d-config.cmake and friends
 include(CMakePackageConfigHelpers)
 configure_package_config_file(cmake/gear2d-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/gear2d-config.cmake
                               INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
@@ -107,8 +110,14 @@ configure_package_config_file(cmake/gear2d-config.cmake.in ${CMAKE_CURRENT_BINAR
 write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/gear2d-config-version.cmake
                                  VERSION ${Gear2D_VERSION}
                                  COMPATIBILITY SameMajorVersion)
+
+
 install(FILES
         ${CMAKE_CURRENT_BINARY_DIR}/gear2d-config.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/gear2d-config-version.cmake
         ${CMAKE_SOURCE_DIR}/cmake/gear2d-macros.cmake
         DESTINATION ${CMAKECONFIG_INSTALL_DIR} )
+
+
+# install gear2d-targets.cmake
+install(EXPORT gear2d-targets DESTINATION ${CMAKECONFIG_INSTALL_DIR})
