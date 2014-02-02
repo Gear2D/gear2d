@@ -39,7 +39,7 @@ namespace gear2d {
   
   const char * engine::version() { return libraryversion; }
   
-  int engine::eventfilter(void * userdata, void * _ev) {
+  int engine::eventfilter(void * _ev, void * userdata) {
     SDL_Event * ev = (SDL_Event*)_ev;
     switch(ev->type) {
       case SDL_QUIT:
