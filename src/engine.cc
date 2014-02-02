@@ -26,6 +26,15 @@ extern "C" {
   const char * libraryversion = GEAR2D_VERSION;
 }
 
+int quitwatcher(void * userdata, SDL_Event * ev) {
+  if (ev->type == SDL_QUIT) {
+    gear2d::engine::quit();
+    return 0;
+  }
+  return 1;
+}
+
+
 namespace gear2d {
   std::map<std::string, std::string> * engine::config;
   component::factory * engine::cfactory;
@@ -39,20 +48,6 @@ namespace gear2d {
   
   const char * engine::version() { return libraryversion; }
   
-  int engine::eventfilter(void * _ev, void * userdata) {
-    SDL_Event * ev = (SDL_Event*)_ev;
-    switch(ev->type) {
-      case SDL_QUIT:
-        started = !(ev->type == SDL_QUIT);
-        return 1;
-        break;
-      default:
-        break;
-        
-    }
-    return 1;
-  }
-
   void engine::add(component::base * c) {
     if (components == 0) {
       modwarn("engine");
@@ -87,7 +82,7 @@ namespace gear2d {
 #endif
 
     SDL_Init(flags);
-    SDL_SetEventFilter((SDL_EventFilter)eventfilter, 0);
+    SDL_AddEventWatch((SDL_EventFilter)quitwatcher, 0);
     config = new std::map<std::string, std::string>;
     
     // erase all the components

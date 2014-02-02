@@ -100,11 +100,6 @@ namespace gear2d {
       
     private:
       
-      /* so we can filter the quit event and quit properly */
-      static int eventfilter(void * _ev, void * userdata);
-      
-    private:
-      
       /* config map */
       static std::map<std::string, std::string> * config;
       
