@@ -1,7 +1,10 @@
 #include "component.h"
 #include "engine.h"
 #include "log.h"
+#include "object.h"
+
 #include "SDL.h"
+
 
 #include <iostream>
 
@@ -19,7 +22,42 @@
 
 namespace gear2d {
   namespace component {
-    base::base() : cfactory(0) {
+    
+    class globalcomponent : public base {
+      private:
+        
+        /* build separate object and component factory
+         * so that we don't mess up users' factories while
+         * being protected from their mess */
+        component::factory cfactory;
+        object::factory ofactory;
+        
+      public:
+        virtual void setup(object::signature & sig) { }
+        virtual component::type type() { return "globalcomponent"; }
+        globalcomponent()
+        : ofactory(cfactory)
+        { 
+          ofactory.set("globalcomponent", object::signature());
+          owner = ofactory.build("globalcomponent");
+          
+          /* prevent spawning from this object */
+          owner->ofactory = nullptr;
+        }
+        
+      public:
+        static globalcomponent * instance() {
+          static globalcomponent * com = nullptr;
+          if (com == nullptr) com = new globalcomponent();
+          return com;
+        }
+    };
+    
+    component::base & component::base::globals = *globalcomponent::instance();
+    
+    base::base()
+    : cfactory(0)
+    {
     }
     
     base::~base() {

@@ -189,9 +189,11 @@ namespace gear2d {
             }
         };
 
-      
       protected:
         base();
+        
+      public:
+        static component::base & globals;
         
       public:
         virtual ~base();
