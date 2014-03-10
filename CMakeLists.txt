@@ -121,3 +121,5 @@ install(FILES
 
 # install gear2d-targets.cmake
 install(EXPORT gear2d-targets DESTINATION ${CMAKECONFIG_INSTALL_DIR})
+
+message(STATUS "Gear2D will be installed at ${CMAKE_INSTALL_PREFIX}")
