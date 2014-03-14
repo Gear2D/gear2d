@@ -124,50 +124,6 @@ namespace gear2d {
       template <typename T, typename... Ts>
       inline log & operator()(const T & t1, const Ts&... vs);
       
-#if 0
-      /**
-       * @brief Put on the output stream a message with one argument.
-       * @param level Verbosity level of this message 
-       */
-      template <typename T>
-      inline log & operator()(const T& t1, verbosity level = info);
-      
-      /**
-       * @brief Put on the output stream a message with two arguments.
-       * @param level Verbosity level of this message 
-       */
-      template <typename T1, typename T2>
-      inline log & operator()(const T1& t1, const T2& t2, verbosity level = info);
-      
-      /**
-       * @brief Put on the output stream a message with three arguments.
-       * @param level Verbosity level of this message 
-       */
-      template <typename T1, typename T2, typename T3>
-      inline log & operator()(const T1& t1, const T2& t2, const T3& t3, verbosity level = info);
-      
-      /**
-       * @brief Put on the output stream a message with four arguments.
-       * @param level Verbosity level of this message 
-       */
-      template <typename T1, typename T2, typename T3, typename T4>
-      inline log & operator()(const T1& t1, const T2& t2, const T3& t3, const T4& t4, verbosity level = info);
-      
-      /**
-       * @brief Put on the output stream a message with five arguments.
-       * @param level Verbosity level of this message 
-       */
-      template <typename T1, typename T2, typename T3, typename T4, typename T5>
-      inline log & operator()(const T1& t1, const T2& t2, const T3& t3, const T4& t4, const T5& t5, verbosity level = info);
-      
-      /**
-       * @brief Put on the output stream a message with six arguments.
-       * @param level Verbosity level of this message 
-       */
-      template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
-      inline log & operator()(const T1& t1, const T2& t2, const T3& t3, const T4& t4, const T5& t5, const T6& t6, verbosity level = info);
-# endif
-
     public:
       static verbosity globalverb; /*! global verbosity level of the logstream */
       static std::set<std::string> filter; /*! set of filter strings for module names */
@@ -251,78 +207,6 @@ namespace gear2d {
 #endif
     return *this;
   }
-  
-#if 0 
-  template<typename T>
-  log & log::operator() (const T & t, log::verbosity level) {
-#ifdef LOGTRACE 
-    if (!check()) return *this;
-    mark();
-    for (int i = 0; i < indent; i++) *logstream << "  ";
-    *logstream << logstring[level] << tracemodule << ": " << t << std::endl;
-#endif
-    return *this;
-  }
-  
-  template <typename T1, typename T2>
-  log & log::operator() (const T1 & t1, const T2 & t2, log::verbosity level) {
-#ifdef LOGTRACE
-    if (!check()) return *this;
-    mark();
-    for (int i = 0; i < indent; i++) *logstream << "  ";
-    *logstream << logstring[level] << tracemodule << ": " << t1 << " " << t2 << std::endl;
-#endif
-    return *this;
-  }
-  
-  template <typename T1, typename T2, typename T3>
-  log & log::operator() (const T1 & t1, const T2 & t2, const T3 & t3, log::verbosity level) {
-#ifdef LOGTRACE
-    if (!check()) return *this;
-    mark();
-    for (int i = 0; i < indent; i++) *logstream << "  ";
-    *logstream << logstring[level] << tracemodule << ": " << t1 << " " << t2 << " " << t3 << std::endl;
-#endif
-    return *this;
-  }
-  
-  template <typename T1, typename T2, typename T3, typename T4>
-  log & log::operator() (const T1 & t1, const T2 & t2, const T3 & t3, const T4 & t4, log::verbosity level) {
-#ifdef LOGTRACE
-    if (!check()) return *this;
-    mark();
-    for (int i = 0; i < indent; i++) *logstream << "  ";
-    *logstream << logstring[level] << tracemodule << ": " << t1 << " " << t2 << " " << t3 << " " << t4 << std::endl;
-#endif
-    return *this;
-  }
-  
-  template <typename T1, typename T2, typename T3, typename T4, typename T5>
-  log & log::operator() (const T1 & t1, const T2 & t2, const T3 & t3, const T4 & t4, const T5 & t5, log::verbosity level) {
-#ifdef LOGTRACE
-    if (!check()) return *this;
-    mark();
-    for (int i = 0; i < indent; i++) *logstream << "  ";
-    *logstream << logstring[level] << tracemodule << ": " << t1 << " " << t2 << " " << t3 <<  " " << t4 << " " << t5 << std::endl;
-#endif
-    return *this;
-  }
-  
-  template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
-  log & log::operator() (const T1 & t1, const T2 & t2, const T3 & t3, const T4 & t4, const T5 & t5, const T6 & t6, log::verbosity level) {
-#ifdef LOGTRACE
-    if (!check()) return *this;
-    mark();
-    for (int i = 0; i < indent; i++) *logstream << "  ";
-    *logstream << logstring[level] << tracemodule << ": " << t1 << " " << t2 << " " << t3 <<  " " << t4 << " " << t5 << " " << t6 << std::endl;
-#endif
-    return *this;
-  }
-  
-#endif
-}
-
-
 
 #ifdef LOGTRACE
 
