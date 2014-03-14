@@ -141,7 +141,7 @@ namespace gear2d {
     /* get component-search path */
     std::string compath = (*config)["compath"];
     if (compath == "") {
-      trace("Component path (compath:) not defined at the scene file.", log::error);
+      trace.e("Component path (compath:) not defined at the scene file.");
     }
     
     cfactory->compath = compath;
@@ -153,7 +153,7 @@ namespace gear2d {
     if ((*config)["compreload"].size() != 0) {
       split(comlist, (*config)["compreload"], ' ');
       for (size_t i = 0; i < comlist.size(); i++) {
-        trace("Pre-loading", comlist[i], log::info);
+        trace.i("Pre-loading", comlist[i]);
         cfactory->load(comlist[i]);
       }
       config->erase("compreload");

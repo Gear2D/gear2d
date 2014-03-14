@@ -212,8 +212,8 @@ namespace gear2d {
           trace("Trying to load", file);
           comhandler = SDL_LoadObject(file.c_str());
           if (!comhandler) {
-            trace("Error loading", file, log::warning);
-            trace("Error:",SDL_GetError(), log::warning);
+            trace.w("Error loading", file);
+            trace.w("Error:",SDL_GetError());
           }
           if (comhandler != 0) break;
         }
@@ -230,8 +230,8 @@ namespace gear2d {
       
       combuilder = (factory::builder)SDL_LoadFunction(comhandler, buildername.c_str());
       if (combuilder == 0) {
-        trace("I cannot recognize", file, "as an valid gear2d component. It will NOT be loaded", log::error);
-        trace("Error was:", SDL_GetError());
+        trace.e("I cannot recognize", file, "as an valid gear2d component. It will NOT be loaded");
+        trace.e("Error was:", SDL_GetError());
         SDL_UnloadObject(comhandler);
         return;
       }
@@ -240,7 +240,7 @@ namespace gear2d {
       handlers[t] = comhandler;
       builders[f][t] = combuilder;
       
-      trace("Sucessfully loaded a builder for", t, "from", file, log::info);
+      trace("Sucessfully loaded a builder for", t, "from", file);
       
       return;
     }
@@ -274,7 +274,7 @@ namespace gear2d {
       b = typit->second;
       base * component = b();
       component->cfactory = this;
-      trace("Component type", t, "sucessfuly built!", log::info);
+      trace.i("Component type", t, "sucessfuly built!");
       return component;
     }
     

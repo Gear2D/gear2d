@@ -230,7 +230,7 @@ namespace gear2d {
         o->attach(c);
       } catch (evildepends & e) {
         /* build dependencies... */
-        trace(e.what(), log::info);
+        trace(e.what());
         innerbuild(o, c->depends());
         /* if that build did'nt fixed, fuck it. */
         o->attach(c);

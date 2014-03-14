@@ -4,9 +4,7 @@
 #include <string>
 #include <fstream>
 
-using namespace gear2d;
-
-const char * log::logstring[] = { "", "E ", "W ", "I ", "" };
+const char * logtrace::logstring[] = { "", "E ", "W ", "I ", "" };
 #ifdef ANDROID
 // Based on http://stackoverflow.com/questions/8870174/is-stdcout-usable-in-android-ndk
 #include <android/log.h>
@@ -47,13 +45,13 @@ static void initandroidlog() {
 }
 #endif
 
-void log::open(const std::string & filename) {
+void logtrace::open(const std::string & filename) {
   std::ofstream * filestream = new std::ofstream(filename, std::ofstream::out | std::ofstream::trunc);
   if (logstream != &std::cout) { logstream->flush(); delete logstream; }
   logstream = filestream;
 }
 
-log::log(const std::string & trace, const std::string & module, log::verbosity level) 
+logtrace::logtrace(const std::string & trace, const std::string & module, logtrace::verbosity level) 
   : trace(trace)
   , tracemodule(module)
   , level(level)
@@ -64,7 +62,7 @@ log::log(const std::string & trace, const std::string & module, log::verbosity l
   mark();
 }
 
-void log::mark() {
+void logtrace::mark() {
   if (traced || !check() || globalverb < maximum) return;
   for (int i = 0; i < indent; i++) *logstream << "  ";
   *logstream << "[ In " << tracemodule << ": " << trace << std::endl;
@@ -73,7 +71,7 @@ void log::mark() {
   done = true;
 }
 
-bool log::check() {
+bool logtrace::check() {
   if (globalverb < level) return false; /* check if verbosity level allows */
 
   /* check to see if there's a filter and if this is string is in there */
@@ -92,21 +90,21 @@ bool log::check() {
 
 
 
-log::~log() {
+logtrace::~logtrace() {
   if ((globalverb < maximum && !traced) || trace.empty() || (!check())) return;
   indent--;
   for (int i = 0; i < indent; i++) *logstream << "  ";
   *logstream << "] Leaving " << tracemodule << ": " << trace << std::endl;
 }
 
-void log::module (const std::string & mod) {
+void logtrace::module (const std::string & mod) {
   tracemodule = mod;
 }
 
 
 
-std::ostream * log::logstream = &std::cout;
-int log::indent = 0;
-log::verbosity log::globalverb = log::error;
-std::set<std::string> log::filter;
-std::set<std::string> log::ignore;
+std::ostream * logtrace::logstream = &std::cout;
+int logtrace::indent = 0;
+logtrace::verbosity logtrace::globalverb = logtrace::error;
+std::set<std::string> logtrace::filter;
+std::set<std::string> logtrace::ignore;

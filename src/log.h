@@ -16,7 +16,7 @@
 #   pragma warning(disable : 4514)
 #   pragma warning(disable : 4820);
 # endif
-#   if defined(gear2d_EXPORTS) /* defined by cmake, thanks god. */
+#   if defined(logtrace_EXPORTS) /* defined by cmake, thanks god. */
 #       define  logtraceapi  __declspec(dllexport) 
 #   else
 #       define  logtraceapi  __declspec(dllimport) 
@@ -25,10 +25,8 @@
 #   define logtraceapi
 #endif
 
-namespace gear2d {
-
   /**
-   * @class gear2d::log
+   * @class logtrace
    * @author Leonardo Guilherme de Freitas.
    * 
    * @brief Class for logging facilities.
@@ -40,13 +38,13 @@ namespace gear2d {
    * of a block you want to trace and give it a trace string and a module name.
    * After that you can use the () operator to log messages and variables.
    * 
-   * There are macros defined to make the object creation less painful.
+   * There are macros defined to make the object creation easy
    * 
    * Example:
    * 
    * @code
    * int main(int argc, char ** argv) {
-   *    gear2d::log trace("main") // creates an object called 'trace' to trace the main() function
+   *    logtrace trace("main") // creates an object called 'trace' to trace the main() function
    *    trace("Inside main. Number of arguments:", argc);
    *    return 0;
    * }
@@ -63,12 +61,11 @@ namespace gear2d {
    * @endcode
    * 
    */
-  class logtraceapi log {
+  class logtraceapi logtrace {
     public:
       
       /**
        * @enum verbosity
-       * @author Leonardo Guilherme de Freitas
        * @brief Verbosity level, the lowest, the less will be shown.
        */
       enum verbosity {
@@ -80,14 +77,13 @@ namespace gear2d {
       };
       
       /**
-       * @brief Constructor for a log object.
+       * @brief Constructor for a logtrace object.
        * 
        * When the object gets constructed, it will show in the output stream a
-       * message like "(module) entering in &lt;trace%gt;", if the level of this
+       * message like "(module) entering in &lt;trace&gt;", if the level of this
        * message is below the global verbosity level. 
        * 
        * Every message shown after will be indented.
-       * 
        * 
        * @param trace Trace string to shown in <i>"entering in"</i> messages
        * @param module Module that this block pertains to.
@@ -95,34 +91,56 @@ namespace gear2d {
        * you can adjust these in a per-message base.
        * 
        */
-      log(const std::string & trace = std::string(), const std::string & module = std::string(), verbosity level = info);
+      logtrace(const std::string & trace = std::string(), const std::string & module = std::string(), verbosity level = info);
       
       /**
-       * @brief Destructor for a log object.
+       * @brief Destructor for a logtrace object.
        * 
-       * When a log object gets destroyed, it will show a message like "leaving
+       * When a logtrace object gets destroyed, it will show a message like "leaving
        * &lt;trace&gt;".
        */
-      ~log();
+      ~logtrace();
       
+      /**
+       * @brief Defines the current module of this trace object.
+       * 
+       * Call this if you want to change the module that is shown in messages
+       * 
+       * @param module Module name for this block
+       */
       void module(const std::string & module);
       
+      /**
+       * @brief Logs a message in the information verbosity level.
+       * 
+       * This is useful if you created your trace object with another loglevel
+       * and want to change it just for this message in particular */
       template <typename... Ts>
-      inline log & i(const Ts&... vs);
-      
+      inline logtrace & i(const Ts&... vs);
+
+      /**
+       * @brief Logs a message in the error verbosity level.
+       * 
+       * This is useful if you created your trace object with another loglevel
+       * and want to change it just for this message in particular */
       template <typename... Ts>
-      inline log & e(const Ts&... vs);
+      inline logtrace & e(const Ts&... vs);
       
+      /**
+       * @brief Logs a message in the warning verbosity level.
+       * 
+       * This is useful if you created your trace object with another loglevel
+       * and want to change it just for this message in particular */      
       template <typename... Ts>
-      inline log & w(const Ts&... vs);
-      
-      inline log & operator()(void);
+      inline logtrace & w(const Ts&... vs);
+
+      inline logtrace & operator()(void);
        
       template <typename... Ts>
-      inline log & operator() (const Ts&... vs);
+      inline logtrace & operator() (const Ts&... vs);
       
       template <typename T, typename... Ts>
-      inline log & operator()(const T & t1, const Ts&... vs);
+      inline logtrace & operator()(const T & t1, const Ts&... vs);
       
     public:
       static verbosity globalverb; /*! global verbosity level of the logstream */
@@ -130,31 +148,38 @@ namespace gear2d {
       static std::set<std::string> ignore; /*! set of ignore filter strings for module names */
     
     public:
+      /**
+       * @brief Open a file to save the log messages to.
+       * 
+       * You may log messages to a file by passing the file address as a
+       * parameter. Note that the file will be truncated if it exists.
+       * 
+       * @param filename The name of the file to save messages to.
+       */
       static void open(const std::string & filename);
       
     private:
-      static int indent;
-      static std::ostream * logstream;
-      static const char * logstring[];
+      static int indent; /* indent level */
+      static std::ostream * logstream; /* associated logstream */
+      static const char * logstring[]; /* array to translate loglevels to logstrings */
       
     private:
       std::string trace; /* trace string */
       std::string tracemodule; /* module string */
       verbosity level; /* level of this trace */
-      bool traced; /* true if this log has been printed/traced */
+      bool traced; /* true if this logtrace has been printed/traced */
       bool done; /* true if line has ended */
       
     private:
-      bool check(); /* check if it can log */
+      bool check(); /* check if it can logtrace */
       void mark(); /* put the "entering in" when needed */
-      
   };
   
   template <typename... Ts>
-  inline log & log::i(const Ts&... vs) {
+  inline logtrace & logtrace::i(const Ts&... vs) {
 #ifdef LOGTRACE
     auto previous = level;
-    level = gear2d::log::info;
+    level = logtrace::info;
     (*this)(vs...);
     level = previous;
 #endif
@@ -162,10 +187,10 @@ namespace gear2d {
   }
   
   template <typename... Ts>
-  inline log & log::w(const Ts&... vs) {
+  inline logtrace & logtrace::w(const Ts&... vs) {
 #ifdef LOGTRACE
     auto previous = level;
-    level = gear2d::log::warning;
+    level = logtrace::warning;
     (*this)(vs...);
     level = previous;
 #endif
@@ -173,17 +198,17 @@ namespace gear2d {
   }
   
   template <typename... Ts>
-  inline log & log::e(const Ts&... vs) {
+  inline logtrace & logtrace::e(const Ts&... vs) {
 #ifdef LOGTRACE
     auto previous = level;
-    level = gear2d::log::error;
+    level = logtrace::error;
     (*this)(vs...);
     level = previous;
 #endif
     return *this;
   }
   
-  log & log::operator()(void) {
+  logtrace & logtrace::operator()(void) {
 #ifdef LOGTRACE
     *logstream << std::endl;
     done = true;
@@ -192,7 +217,7 @@ namespace gear2d {
   }  
 
   template<typename T, typename... Ts>
-  log & log::operator() (const T & t, const Ts&... vs) {
+  logtrace & logtrace::operator() (const T & t, const Ts&... vs) {
 #ifdef LOGTRACE 
     if (!check()) return *this;
     mark();
@@ -212,105 +237,104 @@ namespace gear2d {
 
 #if defined(__GNUC__)
 
-
 /*! Create a trace object to log informational messages and initializes
  * the trace string to the function name */
 #define loginfo \
-gear2d::log trace(__PRETTY_FUNCTION__, "", gear2d::log::info)
+logtrace trace(__PRETTY_FUNCTION__, "", logtrace::info)
 
 /*! Create a trace object to log error messages and initializes
  * the trace string to the function name */
 #define logerr \
-gear2d::log trace(__PRETTY_FUNCTION__, "", gear2d::log::error)
+logtrace trace(__PRETTY_FUNCTION__, "", logtrace::error)
 
 /*! Create a trace object to log warning messages and initializes
  * the trace string to the function name */
 #define logwarn \
-gear2d::log trace(__PRETTY_FUNCTION__, "", gear2d::log::warning)
+logtrace trace(__PRETTY_FUNCTION__, "", logtrace::warning)
 
 /*! Create a trace object to log warning messages and initializes
  * the trace string to the function name and the module a
  * @param a Module name */
 #define modwarn(a) \
-gear2d::log trace(__PRETTY_FUNCTION__, a, gear2d::log::warning)
+logtrace trace(__PRETTY_FUNCTION__, a, logtrace::warning)
 
 /*! Create a trace object to log error messages and initializes
  * the trace string to the function name and the module a
  * @param a Module name */
 #define moderr(a) \
-gear2d::log trace(__PRETTY_FUNCTION__, a, gear2d::log::error)
+logtrace trace(__PRETTY_FUNCTION__, a, logtrace::error)
 
 /*! Create a trace object to log informational messages and initializes
  * the trace string to the function name and the module a
  * @param a Module name */
 #define modinfo(a) \
-gear2d::log trace(__PRETTY_FUNCTION__, a, gear2d::log::info)
+logtrace trace(__PRETTY_FUNCTION__, a, logtrace::info)
 
 #elif defined (_WIN32)
 
 /*! Create a trace object to log info messages and initializes
  * the trace string to the function name */
 #define loginfo \
-gear2d::log trace(__FUNCTION__, "", gear2d::log::info)
+logtrace trace(__FUNCTION__, "", logtrace::info)
 
 /*! Create a trace object to log error messages and initializes
  * the trace string to the function name */
 #define logerr \
-gear2d::log trace(__FUNCTION__, "", gear2d::log::error)
+logtrace trace(__FUNCTION__, "", logtrace::error)
 
 /*! Create a trace object to log warning messages and initializes
  * the trace string to the function name */
 #define logwarn \
-gear2d::log trace(__FUNCTION__, "", gear2d::log::warning)
+logtrace trace(__FUNCTION__, "", logtrace::warning)
 
 /*! Create a trace object to log warning messages and initializes
  * the trace string to the function name and the module a
  * @param a Module name */
 #define modwarn(a) \
-gear2d::log trace(__FUNCTION__, a, gear2d::log::warning)
+logtrace trace(__FUNCTION__, a, logtrace::warning)
 
 /*! Create a trace object to log error messages and initializes
  * the trace string to the function name and the module a
  * @param a Module name */
 #define moderr(a) \
-gear2d::log trace(__FUNCTION__, a, gear2d::log::error)
+logtrace trace(__FUNCTION__, a, logtrace::error)
 
 /*! Create a trace object to log informational messages and initializes
  * the trace string to the function name and the module a
  * @param a Module name */
 #define modinfo(a) \
-gear2d::log trace(__FUNCTION__, a, gear2d::log::info)
+logtrace trace(__FUNCTION__, a, logtrace::info)
 
 #endif
 
 #else //NO LOGTRACE
 
 #define logtrace(a) \
-  gear2d::log trace
+  logtrace trace
   
 #define loginfo \
-  gear2d::log trace
+  logtrace trace
   
 #define logverb \
-  gear2d::log trace
+  logtrace trace
   
 #define logerr \
-  gear2d::log trace
+  logtrace trace
   
 #define logwarn \
-  gear2d::log trace
+  logtrace trace
     
 #define modwarn \
-  gear2d::log trace
+  logtrace trace
   
 #define moderr \
-  gear2d::log trace
+  logtrace trace
   
 #define modinfo \
-gear2d::log trace  
+logtrace trace  
 
 #define modwarn \
-gear2d::log trace
+logtrace trace
   
   
 #endif //LOGTRACE

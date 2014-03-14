@@ -34,19 +34,19 @@ int main(int argc, char ** argv, char ** env) {
       switch (arg[1]) {
         case 'l': {
           int level = atoi(arg+2);
-          if (level <= gear2d::log::minimum) level = gear2d::log::minimum+1;
-          if (level > gear2d::log::maximum) level = gear2d::log::maximum;
-          gear2d::log::globalverb = (gear2d::log::verbosity)level;
+          if (level <= logtrace::minimum) level = logtrace::minimum+1;
+          if (level > logtrace::maximum) level = logtrace::maximum;
+          logtrace::globalverb = (logtrace::verbosity)level;
           break;
         }
         
         case 'f': {
-          gear2d::log::filter.insert(arg+2);
+          logtrace::filter.insert(arg+2);
           break;
         }
 
         case 'i': {
-          gear2d::log::ignore.insert(arg+2);
+          logtrace::ignore.insert(arg+2);
           break;
         }
         
@@ -56,7 +56,7 @@ int main(int argc, char ** argv, char ** env) {
         }
         
         case 'o': {
-          gear2d::log::open(arg+2);
+          logtrace::open(arg+2);
           break;
         }
         
@@ -73,7 +73,7 @@ int main(int argc, char ** argv, char ** env) {
 
 // Harder to use commandline on android to control logging.
 #if defined(LOGTRACE) && defined(ANDROID)
-  gear2d::log::globalverb = gear2d::log::minimum;
+  logtrace::globalverb = logtrace::maximum;
 #endif
 
   gear2d::engine::load(scene);
