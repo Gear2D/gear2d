@@ -1,4 +1,5 @@
 set(Gear2D_VERSION "@Gear2D_VERSION@")
+set(GEAR2D_VERSION "@Gear2D_VERSION@")
 
 @PACKAGE_INIT@
 

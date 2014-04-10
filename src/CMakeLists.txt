@@ -86,9 +86,5 @@ install(TARGETS main
 # install rules for the headers
 install(FILES ${public_headers} DESTINATION include/gear2d)
 
-# install rules for documentation
-install(FILES ${CMAKE_SOURCE_DIR}/LICENSE ${CMAKE_SOURCE_DIR}/README
-        DESTINATION share/doc/${PROJECT_NAME})
-
 # install main.cc source file in case of static linking
 install(FILES ${CMAKE_SOURCE_DIR}/src/main.cc DESTINATION share/${PROJECT_NAME})
