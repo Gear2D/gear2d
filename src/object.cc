@@ -2,7 +2,7 @@
 #include "object.h"
 #include "component.h"
 #include "engine.h"
-#include "log.h"
+#include "logtrace.h"
 #include "sigfile.h"
 
 #include <exception>

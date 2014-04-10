@@ -2,7 +2,7 @@
 #define gear2d_parameter_h
 
 #include "definitions.h"
-#include "log.h"
+#include "logtrace.h"
 #include <string>
 #include <map>
 #include <set>

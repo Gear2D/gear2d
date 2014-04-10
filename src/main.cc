@@ -1,5 +1,5 @@
 #include "gear2d.h"
-#include "log.h"
+#include "logtrace.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -36,17 +36,17 @@ int main(int argc, char ** argv, char ** env) {
           int level = atoi(arg+2);
           if (level <= logtrace::minimum) level = logtrace::minimum+1;
           if (level > logtrace::maximum) level = logtrace::maximum;
-          logtrace::globalverb = (logtrace::verbosity)level;
+          logtrace::globalverb((logtrace::verbosity)level);
           break;
         }
         
         case 'f': {
-          logtrace::filter.insert(arg+2);
+          logtrace::filter().insert(arg+2);
           break;
         }
 
         case 'i': {
-          logtrace::ignore.insert(arg+2);
+          logtrace::ignore().insert(arg+2);
           break;
         }
         

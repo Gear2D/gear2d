@@ -1,6 +1,6 @@
 #include "component.h"
 #include "engine.h"
-#include "log.h"
+#include "logtrace.h"
 #include "object.h"
 
 #include "SDL.h"

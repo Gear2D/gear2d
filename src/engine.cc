@@ -1,7 +1,7 @@
 #include "engine.h"
 #include "component.h"
 #include "object.h" 
-#include "log.h"
+#include "logtrace.h"
 #include "sigfile.h"
 
 

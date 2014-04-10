@@ -2,13 +2,20 @@
 #define LOG_H
 
 /**
- * @file log.h
+ * @file logtrace.h
  * @author Leonardo Guilherme de Freitas
  */
 
 #include <iostream>
 #include <string>
-#include "definitions.h"
+#include <set>
+#include <string>
+#include <fstream>
+
+#ifdef ANDROID
+#include <android/log.h>
+#endif
+
 
 #if defined(_WIN32)
 # if !defined(__GNUC__)
@@ -16,13 +23,6 @@
 #   pragma warning(disable : 4514)
 #   pragma warning(disable : 4820);
 # endif
-#   if defined(logtrace_EXPORTS) /* defined by cmake, thanks god. */
-#       define  logtraceapi  __declspec(dllexport) 
-#   else
-#       define  logtraceapi  __declspec(dllimport) 
-#   endif
-#else
-#   define logtraceapi
 #endif
 
   /**
@@ -61,7 +61,47 @@
    * @endcode
    * 
    */
-  class logtraceapi logtrace {
+  class logtrace {
+    private:
+      #ifdef ANDROID
+      // Based on http://stackoverflow.com/questions/8870174/is-stdcout-usable-in-android-ndk
+      class androidbuf: public std::streambuf {
+      public:
+        enum { bufsize = 128 };
+        androidbuf() { this->setp(buffer, buffer + bufsize - 1); }
+      private:
+        int overflow(int c) {
+          if (c == traits_type::eof()) {
+            *this->pptr() = traits_type::to_char_type(c);
+            this->sbumpc();
+          }
+          return this->sync()? traits_type::eof(): traits_type::not_eof(c);
+        }
+        int sync() {
+          int rc = 0;
+          if (this->pbase() != this->pptr()) {
+            __android_log_print(ANDROID_LOG_INFO,
+                                "Native",
+                                "%s",
+                                std::string(this->pbase(),
+                                            this->pptr() - this->pbase()).c_str());
+            rc = 0;
+            this->setp(buffer, buffer + bufsize - 1);
+          }
+          return rc;
+        }
+        char buffer[bufsize];
+      };
+      
+      static void initandroidlog() {
+        static bool initialized = false;
+        if (!initialized) {
+          std::cout.rdbuf(new androidbuf);
+          initialized = true;
+        }
+      }
+      #endif
+    
     public:
       
       /**
@@ -80,18 +120,35 @@
        * @brief Constructor for a logtrace object.
        * 
        * When the object gets constructed, it will show in the output stream a
-       * message like "(module) entering in &lt;trace&gt;", if the level of this
+       * message like "[ In module: trace", if the level of this
        * message is below the global verbosity level. 
        * 
        * Every message shown after will be indented.
        * 
+       * @param module Module that this block pertains to.
        * @param trace Trace string to shown in <i>"entering in"</i> messages
+       * @param level Verbosity level of messages using this instance. Note that
+       * you can adjust these in a per-message base.
+       * 
+       */
+      logtrace(const std::string & module = std::string(), const std::string & trace = std::string(), verbosity level = info);
+      
+      /**
+       * @brief Constructor for a logtrace object without a trace function.
+       * 
+       * When the object gets constructed, it will show in the output stream a
+       * message like "[ In module", if the level of this
+       * message is below the global verbosity level. 
+       * 
+       * Every message shown after will be indented.
+       * 
        * @param module Module that this block pertains to.
        * @param level Verbosity level of messages using this instance. Note that
        * you can adjust these in a per-message base.
        * 
        */
-      logtrace(const std::string & trace = std::string(), const std::string & module = std::string(), verbosity level = info);
+      logtrace(const std::string & module, verbosity level);
+      logtrace(logtrace::verbosity level);
       
       /**
        * @brief Destructor for a logtrace object.
@@ -143,9 +200,10 @@
       inline logtrace & operator()(const T & t1, const Ts&... vs);
       
     public:
-      static verbosity globalverb; /*! global verbosity level of the logstream */
-      static std::set<std::string> filter; /*! set of filter strings for module names */
-      static std::set<std::string> ignore; /*! set of ignore filter strings for module names */
+      static verbosity & globalverb(); /*! global verbosity level of the logstream */
+      static verbosity & globalverb(const verbosity &newverb); /*! global verbosity level of the logstream */
+      static std::set<std::string> & filter(); /*! set of filter strings for module names */
+      static std::set<std::string> & ignore(); /*! set of ignore filter strings for module names */
     
     public:
       /**
@@ -159,9 +217,9 @@
       static void open(const std::string & filename);
       
     private:
-      static int indent; /* indent level */
-      static std::ostream * logstream; /* associated logstream */
-      static const char * logstring[]; /* array to translate loglevels to logstrings */
+      static int & indent(); /* indent level */
+      static std::ostream *& logstream(); /* associated logstream */
+      char logchar[5] = { 'E', 'E', 'W', 'I', 'I' }; /* array to translate loglevels to logchars */
       
     private:
       std::string trace; /* trace string */
@@ -174,6 +232,58 @@
       bool check(); /* check if it can logtrace */
       void mark(); /* put the "entering in" when needed */
   };
+  
+  inline logtrace::logtrace(const std::string & module, logtrace::verbosity level) : logtrace(module, "", level) { }
+  inline logtrace::logtrace(logtrace::verbosity level) : logtrace("", "", level) { }
+  inline logtrace::logtrace(const std::string & module, const std::string & trace, logtrace::verbosity level)
+  : trace(trace)
+  , tracemodule(module)
+  , level(level)
+  , traced(false)
+  , done(true) {
+    
+    if (!check()) return;
+    mark();
+  }
+  
+  inline void logtrace::mark() {
+    if (traced || !check() || globalverb() < maximum || tracemodule.empty()) return;
+    for (int i = 0; i < indent(); i++) *logstream() << "  ";
+    *logstream() << "[ In " << tracemodule << (trace.empty() ? "" : ": ") << trace << std::endl;
+    indent()++;
+    traced = true;
+    done = true;
+  }
+  
+  inline bool logtrace::check() {
+    if (globalverb() < level) return false; /* check if verbosity level allows */
+      
+      /* check to see if there's a filter and if this is string is in there */
+      if (!filter().empty() && filter().find(tracemodule) == filter().end()) return false;
+      
+      /* check to see if module is on the ignore list */
+      if (ignore().find(tracemodule) != ignore().end())
+        return false;
+      
+    #ifdef ANDROID
+      initandroidlog();
+    #endif
+    
+    return true;
+  }
+  
+  
+  
+  inline logtrace::~logtrace() {
+    if ((globalverb() < maximum && !traced) || tracemodule.empty() || (!check())) return;
+    indent()--;
+    for (int i = 0; i < indent(); i++) *logstream() << "  ";
+    *logstream() << "] Leaving " << tracemodule << (trace.empty() ? "" : ": ") << trace << std::endl;
+  }
+  
+  inline void logtrace::module (const std::string & mod) {
+    tracemodule = mod;
+  }
   
   template <typename... Ts>
   inline logtrace & logtrace::i(const Ts&... vs) {
@@ -210,7 +320,7 @@
   
   logtrace & logtrace::operator()(void) {
 #ifdef LOGTRACE
-    *logstream << std::endl;
+    *logstream() << std::endl;
     done = true;
 #endif
     return *this;
@@ -222,11 +332,11 @@
     if (!check()) return *this;
     mark();
     if (done) {
-      for (int i = 0; i < indent; i++) *logstream << "  ";
-      *logstream << logstring[level] << tracemodule << ": ";
+      for (int i = 0; i < indent(); i++) *logstream() << "  ";
+      *logstream() << logchar[level] << ' ' << tracemodule << ": ";
       done = false;
     }
-    *logstream << t << " ";
+    *logstream() << t << " ";
     operator()(vs...);
     
 #endif
@@ -240,70 +350,70 @@
 /*! Create a trace object to log informational messages and initializes
  * the trace string to the function name */
 #define loginfo \
-logtrace trace(__PRETTY_FUNCTION__, "", logtrace::info)
+logtrace trace("", __PRETTY_FUNCTION__, logtrace::info)
 
 /*! Create a trace object to log error messages and initializes
  * the trace string to the function name */
 #define logerr \
-logtrace trace(__PRETTY_FUNCTION__, "", logtrace::error)
+logtrace trace("", __PRETTY_FUNCTION__, logtrace::error)
 
 /*! Create a trace object to log warning messages and initializes
  * the trace string to the function name */
 #define logwarn \
-logtrace trace(__PRETTY_FUNCTION__, "", logtrace::warning)
+logtrace trace("", __PRETTY_FUNCTION__, logtrace::warning)
 
 /*! Create a trace object to log warning messages and initializes
  * the trace string to the function name and the module a
  * @param a Module name */
 #define modwarn(a) \
-logtrace trace(__PRETTY_FUNCTION__, a, logtrace::warning)
+logtrace trace(a, __PRETTY_FUNCTION__, logtrace::warning)
 
 /*! Create a trace object to log error messages and initializes
  * the trace string to the function name and the module a
  * @param a Module name */
 #define moderr(a) \
-logtrace trace(__PRETTY_FUNCTION__, a, logtrace::error)
+logtrace trace(a, __PRETTY_FUNCTION__, logtrace::error)
 
 /*! Create a trace object to log informational messages and initializes
  * the trace string to the function name and the module a
  * @param a Module name */
 #define modinfo(a) \
-logtrace trace(__PRETTY_FUNCTION__, a, logtrace::info)
+logtrace trace(a, __PRETTY_FUNCTION__, logtrace::info)
 
 #elif defined (_WIN32)
 
 /*! Create a trace object to log info messages and initializes
  * the trace string to the function name */
 #define loginfo \
-logtrace trace(__FUNCTION__, "", logtrace::info)
+logtrace trace("", __FUNCTION__, logtrace::info)
 
 /*! Create a trace object to log error messages and initializes
  * the trace string to the function name */
 #define logerr \
-logtrace trace(__FUNCTION__, "", logtrace::error)
+logtrace trace("", __FUNCTION__, logtrace::error)
 
 /*! Create a trace object to log warning messages and initializes
  * the trace string to the function name */
 #define logwarn \
-logtrace trace(__FUNCTION__, "", logtrace::warning)
+logtrace trace("", __FUNCTION__, logtrace::warning)
 
 /*! Create a trace object to log warning messages and initializes
  * the trace string to the function name and the module a
  * @param a Module name */
 #define modwarn(a) \
-logtrace trace(__FUNCTION__, a, logtrace::warning)
+logtrace trace(a, __FUNCTION__, logtrace::warning)
 
 /*! Create a trace object to log error messages and initializes
  * the trace string to the function name and the module a
  * @param a Module name */
 #define moderr(a) \
-logtrace trace(__FUNCTION__, a, logtrace::error)
+logtrace trace(a, __FUNCTION__, logtrace::error)
 
 /*! Create a trace object to log informational messages and initializes
  * the trace string to the function name and the module a
  * @param a Module name */
 #define modinfo(a) \
-logtrace trace(__FUNCTION__, a, logtrace::info)
+logtrace trace(a, __FUNCTION__, logtrace::info)
 
 #endif
 
@@ -312,30 +422,26 @@ logtrace trace(__FUNCTION__, a, logtrace::info)
 #define logtrace(a) \
   logtrace trace
   
-#define loginfo \
+#define loginfo(a) \
   logtrace trace
   
-#define logverb \
+#define logverb(a) \
   logtrace trace
   
-#define logerr \
+#define logerr(a) \
   logtrace trace
   
-#define logwarn \
+#define logwarn(a) \
   logtrace trace
     
-#define modwarn \
+#define modwarn(a) \
   logtrace trace
   
-#define moderr \
+#define moderr(a) \
   logtrace trace
   
-#define modinfo \
+#define modinfo(a) \
 logtrace trace  
-
-#define modwarn \
-logtrace trace
-  
   
 #endif //LOGTRACE
 

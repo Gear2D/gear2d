@@ -9,7 +9,8 @@
 
 #include "sigfile.h"
 #include "SDL.h"
-#include "log.h"
+#include "logtrace.h"
+#include "definitions.h"
 
 
 using namespace std;

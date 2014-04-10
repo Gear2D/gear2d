@@ -40,7 +40,7 @@ add_library(yaml OBJECT ${yaml_sources})
 set_target_properties(yaml PROPERTIES COMPILE_FLAGS "-w -fPIC -DYAML_DECLARE_STATIC -DYAML_VERSION_MAJOR=0 -DYAML_VERSION_MINOR=1 -DYAML_VERSION_PATCH=4 -DYAML_VERSION_STRING=\\\"0.1.4\\\"")
 
 # generate an object library to avoid compiling these files twice
-add_library(gear2d-objects OBJECT engine.cc component.cc object.cc parameter.cc log.cc sigfile.cc)
+add_library(gear2d-objects OBJECT engine.cc component.cc object.cc parameter.cc sigfile.cc logtrace.cc)
 add_library(gear2d
   SHARED 
   $<TARGET_OBJECTS:gear2d-objects>

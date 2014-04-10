@@ -14,7 +14,7 @@
 #include "component.h"
 #include "definitions.h"
 #include "engine.h"
-#include "log.h"
+#include "logtrace.h"
 
 /**
  * @namespace gear2d
