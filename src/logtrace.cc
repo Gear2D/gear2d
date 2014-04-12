@@ -47,3 +47,34 @@ void logtrace::open(const std::string & filename) {
   if (logstream() != &std::cout) { logstream()->flush(); delete logstream(); }
   logstream() = filestream;
 }
+
+logtrace::logtrace(const std::string & module, logtrace::verbosity level) : logtrace(module, "", level) { }
+logtrace::logtrace(logtrace::verbosity level) : logtrace("", "", level) { }
+logtrace::logtrace(const std::string & module, const std::string & trace, logtrace::verbosity level)
+  : trace(trace)
+  , tracemodule(module)
+  , level(level)
+  , traced(false)
+  , done(true) {
+    
+    if (!check()) return;
+    mark();
+}
+
+ bool logtrace::check() {
+  if (globalverb() < level) return false; /* check if verbosity level allows */
+    
+    /* check to see if there's a filter and if this is string is in there */
+    if (!filter().empty() && filter().find(tracemodule) == filter().end()) return false;
+    
+    /* check to see if module is on the ignore list */
+    if (ignore().find(tracemodule) != ignore().end())
+      return false;
+    
+  #ifdef ANDROID
+    initandroidlog();
+  #endif
+  
+  return true;
+}
+

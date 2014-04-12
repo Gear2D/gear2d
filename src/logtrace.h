@@ -228,20 +228,7 @@
       void mark(); /* put the "entering in" when needed */
   };
   
-  inline ltapi logtrace::logtrace(const std::string & module, logtrace::verbosity level) : logtrace(module, "", level) { }
-  inline ltapi logtrace::logtrace(logtrace::verbosity level) : logtrace("", "", level) { }
-  inline ltapi logtrace::logtrace(const std::string & module, const std::string & trace, logtrace::verbosity level)
-  : trace(trace)
-  , tracemodule(module)
-  , level(level)
-  , traced(false)
-  , done(true) {
-    
-    if (!check()) return;
-    mark();
-  }
-  
-  inline void ltapi logtrace::mark() {
+  inline void logtrace::mark() {
     if (traced || !check() || globalverb() < maximum || tracemodule.empty()) return;
     for (int i = 0; i < indent(); i++) *logstream() << "  ";
     *logstream() << "[ In " << tracemodule << (trace.empty() ? "" : ": ") << trace << std::endl;
@@ -250,26 +237,8 @@
     done = true;
   }
   
-  inline bool ltapi logtrace::check() {
-    if (globalverb() < level) return false; /* check if verbosity level allows */
-      
-      /* check to see if there's a filter and if this is string is in there */
-      if (!filter().empty() && filter().find(tracemodule) == filter().end()) return false;
-      
-      /* check to see if module is on the ignore list */
-      if (ignore().find(tracemodule) != ignore().end())
-        return false;
-      
-    #ifdef ANDROID
-      initandroidlog();
-    #endif
-    
-    return true;
-  }
-  
-  
-  
-  inline ltapi logtrace::~logtrace() {
+ 
+  inline logtrace::~logtrace() {
     if ((globalverb() < maximum && !traced) || tracemodule.empty() || (!check())) return;
     indent()--;
     for (int i = 0; i < indent(); i++) *logstream() << "  ";
