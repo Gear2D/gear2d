@@ -16,4 +16,6 @@ if (NOT TARGET gear2d)
 endif()
 
 set(GEAR2D_LIBRARY gear2d)
+set(GEAR2D_LIBRARY_DIR ${Gear2D_LIBRARY_DIR})
+set(GEAR2D_INCLUDE_DIR ${Gear2D_INCLUDE_DIR})
 set(GEAR2D_STATIC_LIBRARY gear2d-static)
