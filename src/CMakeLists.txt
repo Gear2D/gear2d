@@ -52,7 +52,7 @@ add_library(gear2d-static
   $<TARGET_OBJECTS:yaml> ${SDL2_framerate_source} ${public_headers}
 )
 
-set_target_properties(gear2d-objects PROPERTIES COMPILE_FLAGS "-Dgear2d_EXPORTS")
+set_target_properties(gear2d-objects PROPERTIES COMPILE_FLAGS "-Dgear2d_EXPORTS -Dlogtrace_build_dll")
 
 # link gear2d lib against SDL2
 target_link_libraries(gear2d ${SDL2_LIBRARIES})
