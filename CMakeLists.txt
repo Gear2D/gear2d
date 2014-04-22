@@ -103,7 +103,7 @@ set(LIB_INSTALL_DIR lib)
 
 # Generate gear2d-config.cmake and friends
 include(CMakePackageConfigHelpers)
-configure_package_config_file(cmake/gear2d-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/gear2d-config.cmake
+configure_package_config_file(cmake/gear2d-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/tmpg2dconfig # find_package goes crazy searching in the build in other folders
                               INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
                               PATH_VARS INCLUDE_INSTALL_DIR LIB_INSTALL_DIR)
 write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/gear2d-config-version.cmake
@@ -112,11 +112,14 @@ write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/gear2d-config-versi
 
 
 install(FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/gear2d-config.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/gear2d-config-version.cmake
         ${CMAKE_SOURCE_DIR}/cmake/gear2d-macros.cmake
         DESTINATION ${CMAKECONFIG_INSTALL_DIR} )
-
+        
+install(FILES       
+        ${CMAKE_CURRENT_BINARY_DIR}/tmpg2dconfig
+        RENAME gear2d-config.cmake
+        DESTINATION ${CMAKECONFIG_INSTALL_DIR} )
 
 # install gear2d-targets.cmake
 install(EXPORT gear2d-targets DESTINATION ${CMAKECONFIG_INSTALL_DIR})
